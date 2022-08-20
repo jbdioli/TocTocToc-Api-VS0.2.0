@@ -1,0 +1,143 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:xct="http://xamarin.com/schemas/2020/toolkit"
+             xmlns:viewModels="clr-namespace:TocTocToc.ViewModels;assembly=TocTocToc"
+             x:Class="TocTocToc.Views.MenuPage">
+    <ContentPage.BindingContext>
+        <viewModels:LanguageViewModel />
+    </ContentPage.BindingContext>
+    <NavigationPage.TitleView>
+        <AbsoluteLayout>
+            <Button BackgroundColor="#61007D"  ImageSource="streetview_white.png" AbsoluteLayout.LayoutFlags="PositionProportional"
+                    AbsoluteLayout.LayoutBounds="0,0,40,40" Clicked="OnAdvertisementPage"/>
+            <Label TextColor="White" FontAttributes="Bold" Text="{xct:Translate LabelTitleMenu}" VerticalTextAlignment="Center" HorizontalTextAlignment="Center"
+                   AbsoluteLayout.LayoutFlags="PositionProportional" AbsoluteLayout.LayoutBounds="0.5,0,100,40"/>
+            <Button BackgroundColor="#61007D"  ImageSource="person_white.png"
+                    AbsoluteLayout.LayoutFlags="PositionProportional" AbsoluteLayout.LayoutBounds="0.8,0,40,40" Clicked="OnProfilePage"/>
+            <Button BackgroundColor="#61007D"  ImageSource="settings_white.png"
+                    AbsoluteLayout.LayoutFlags="PositionProportional" AbsoluteLayout.LayoutBounds="0.95,0,40,40" Clicked="OnSettingPage"/>
+        </AbsoluteLayout>
+    </NavigationPage.TitleView>
+    <ContentPage.Content>
+        <StackLayout HorizontalOptions="Center" VerticalOptions="Center" Margin="20, 0">
+
+            <Grid  RowDefinitions="100, 100, 100, 100, 100" ColumnDefinitions="*, *">
+
+                <Button Grid.Column="0"
+                        Grid.Row="0"
+                        Clicked="OnBlogPage"
+                        Text="{xct:Translate LabelTitleBlog}"
+                        TextColor="White"
+                        BorderColor="#C96EE3"
+                        BorderWidth="1"
+                        CornerRadius="10"
+                        BackgroundColor="#61007D"
+                        Margin="20, 0, 20, 15"/>
+
+                <Button Grid.Column="1"
+                        Grid.Row="0"
+                        Clicked="OnNeighborPage"
+                        Text="{xct:Translate LabelTitleNeighbor}"
+                        TextColor="White"
+                        BorderColor="#C96EE3"
+                        BorderWidth="1"
+                        CornerRadius="10"
+                        BackgroundColor="#61007D"
+                        Margin="20, 0, 20, 15"/>
+
+
+                <Button Grid.Column="0"
+                        Grid.Row="1"
+                        Clicked="OnMessagingPage"
+                        Text="{xct:Translate LabelTitleMessaging}"
+                        TextColor="White"
+                        BorderColor="#C96EE3"
+                        BorderWidth="1"
+                        CornerRadius="10"
+                        BackgroundColor="#61007D"
+                        Margin="20, 0, 20, 15"/>
+
+                <Button Grid.Column="1"
+                        Grid.Row="1"
+                        Clicked="OnServiceExchangePage"
+                        Text="{xct:Translate LabelTitleServiceExchange}"
+                        TextColor="White"
+                        BorderColor="#C96EE3"
+                        BorderWidth="1"
+                        CornerRadius="10"
+                        BackgroundColor="#61007D"
+                        Margin="20, 0, 20, 15"/>
+
+                <Button Grid.Column="0"
+                        Grid.Row="2"
+                        Clicked="OnOfferPage"
+                        Text="{xct:Translate LabelTitleOffer}"
+                        TextColor="White"
+                        BorderColor="#C96EE3"
+                        BorderWidth="1"
+                        CornerRadius="10"
+                        BackgroundColor="#61007D"
+                        Margin="20, 0, 20, 15"/>
+
+                <Button Grid.Column="1"
+                        Grid.Row="2"
+                        Clicked="OnRentalPage"
+                        Text="{xct:Translate LabelTitleRental}"
+                        TextColor="White"
+                        BorderColor="#C96EE3"
+                        BorderWidth="1"
+                        CornerRadius="10"
+                        BackgroundColor="#61007D"
+                        Margin="20, 0, 20, 15"/>
+
+                <Button Grid.Column="0"
+                        Grid.Row="3"
+                        Clicked="OnEventPage"
+                        Text="{xct:Translate LabelTitleEvent}"
+                        TextColor="White"
+                        BorderColor="#C96EE3"
+                        BorderWidth="1"
+                        CornerRadius="10"
+                        BackgroundColor="#61007D"
+                        Margin="20, 0, 20, 15"/>
+
+                <Button Grid.Column="1"
+                        Grid.Row="3"
+                        Clicked="OnForumPage"
+                        Text="{xct:Translate LabelTitleForum}"
+                        TextColor="White"
+                        BorderColor="#C96EE3"
+                        BorderWidth="1"
+                        CornerRadius="10"
+                        BackgroundColor="#61007D"
+                        Margin="20, 0, 20, 15"/>
+
+                <Button Grid.Column="0"
+                        Grid.Row="4"
+                        Clicked="OnSolidarityPage"
+                        Text="{xct:Translate LabelTitleSolidarity}"
+                        TextColor="White"
+                        BorderColor="#C96EE3"
+                        BorderWidth="1"
+                        CornerRadius="10"
+                        BackgroundColor="#61007D"
+                        Margin="20, 0, 20, 15"/>
+
+                <Button Grid.Column="1"
+                        Grid.Row="4"
+                        Clicked="OnDirectoryPage"
+                        Text="{xct:Translate LabelTitleDirectory}"
+                        TextColor="White"
+                        BorderColor="#C96EE3"
+                        BorderWidth="1"
+                        CornerRadius="10"
+                        BackgroundColor="#61007D"
+                        Margin="20, 0, 20, 15"/>
+
+            </Grid>
+
+
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>

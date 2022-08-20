@@ -1,0 +1,36 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="TocTocToc.Views.AdvertisingPage">
+    <NavigationPage.TitleView>
+        <AbsoluteLayout>
+            <Button BackgroundColor="#61007D" ImageSource="next_plan_white.png"
+                    AbsoluteLayout.LayoutFlags="PositionProportional" AbsoluteLayout.LayoutBounds="0.95,0,40,40" Clicked="OnNextClick"/>
+        </AbsoluteLayout>
+    </NavigationPage.TitleView>
+    <ContentPage.Content>
+        <Grid RowDefinitions="*, Auto" ColumnDefinitions="Auto">
+            <ScrollView Grid.Row="0">
+                    <ListView x:Name="ListView_AdvertisingList" ItemsSource="{Binding AdsCollection}" SeparatorVisibility="None" RowHeight="400" BackgroundColor="Transparent">
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <ViewCell>
+                                    <StackLayout Margin="20">
+                                        <Image Source="{Binding Image}"/>
+                                    </StackLayout>
+                                </ViewCell>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+                </ScrollView>
+
+            <Button Grid.Row="1"
+                    Clicked="OnAddAdvertising"
+                    ImageSource="add_circle_white.png"
+                    BorderColor="#C96EE3"
+                    BorderWidth="1"
+                    BackgroundColor="#61007D"/>
+
+        </Grid>
+    </ContentPage.Content>
+</ContentPage>

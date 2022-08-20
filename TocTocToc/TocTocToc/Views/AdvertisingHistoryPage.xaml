@@ -1,0 +1,53 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:xct="http://xamarin.com/schemas/2020/toolkit"
+             xmlns:converters="clr-namespace:TocTocToc.Converters;assembly=TocTocToc"
+             x:Class="TocTocToc.Views.AdvertisingHistoryPage">
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <converters:IsPauseConverter x:Key="IsPauseConverter" />
+        </ResourceDictionary>
+    </ContentPage.Resources>
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Text="{xct:Translate LabelHistory}"
+                     Order="Primary"
+                     Priority="0" />
+    </ContentPage.ToolbarItems>
+    <ContentPage.Content>
+        <Grid RowDefinitions="*" ColumnDefinitions="*"
+                  Margin="10" 
+                  BackgroundColor="Transparent">
+            <CollectionView ItemsSource="{Binding ObserverAdvertisementViewModels}" BackgroundColor="Transparent">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+
+                        <SwipeView>
+                            <SwipeView.BackgroundColor>
+                                <OnPlatform x:TypeArguments="Color">
+                                    <On Platform="Android" Value="Transparent" />
+                                </OnPlatform>
+                            </SwipeView.BackgroundColor>
+                            <SwipeView.RightItems>
+                                <SwipeItems Mode="Reveal">
+                                    <SwipeItem BackgroundColor="Red" IconImageSource="delete_outline_white.png" Invoked="OnInvokedDeleted"/>
+                                    <SwipeItem BackgroundColor="#61007D" IconImageSource="pause_white.png" Invoked="OnInvokedPaused"/>
+                                    <SwipeItem BackgroundColor="#C96EE3" IconImageSource="edit_white.png" Invoked="OnInvokedEdited"/>
+                                </SwipeItems>
+                            </SwipeView.RightItems>
+
+                            <Frame Margin="7, 10" Padding="0" HeightRequest="92" BorderColor="{Binding IsPause, Converter={StaticResource IsPauseConverter}}"
+                                       BackgroundColor="MediumPurple" CornerRadius="20">
+                                <Grid Margin="10, 7" RowDefinitions="27, Auto" ColumnDefinitions="*,*,*">
+                                    <Label Grid.Row="0" Grid.Column="0"
+                                                   Text="{Binding Name}" TextColor="White" FontSize="Medium" FontAttributes="Bold"/>
+                                </Grid>
+                            </Frame>
+                        </SwipeView>
+
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+        </Grid>
+    </ContentPage.Content>
+</ContentPage>

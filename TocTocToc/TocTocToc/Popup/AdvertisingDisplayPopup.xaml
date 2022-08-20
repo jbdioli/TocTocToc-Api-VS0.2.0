@@ -1,0 +1,42 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<xct:Popup xmlns="http://xamarin.com/schemas/2014/forms"
+           xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+           xmlns:xct="clr-namespace:Xamarin.CommunityToolkit.UI.Views;assembly=Xamarin.CommunityToolkit"
+           xmlns:viewModel="clr-namespace:TocTocToc.ViewModels;assembly=TocTocToc"
+           Size="300, 300"
+           VerticalOptions="CenterAndExpand"
+           HorizontalOptions="CenterAndExpand"
+           x:Class="TocTocToc.Popup.AdvertisingDisplayPopup">
+    <xct:Popup.BindingContext>
+        <viewModel:AdvertisingViewModel/>
+    </xct:Popup.BindingContext>
+    <Grid RowDefinitions="*, *, *, *, *, *" ColumnDefinitions="Auto, Auto, *" 
+          BackgroundColor="Black">
+            <Label Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2"
+                   Text="{Binding Name}" TextColor="White"/>
+
+            <Label Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2"
+                   Text="{Binding Date}" TextColor="White"/>
+
+            <Label Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2"
+                   Text="{Binding Info}" TextColor="White"/>
+
+            <Label Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2"
+                   Text="{Binding Gender}" TextColor="White"/>
+
+            <Label Grid.Row="4" Grid.Column="0" 
+                   Text="{Binding AgeMini}" TextColor="White"/>
+            <Label Grid.Row="4" Grid.Column="1"
+                   Text="{Binding AgeMaxi}" TextColor="White"/>
+
+            <Label Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="2"
+                   Text="{Binding Budget}" TextColor="White"/>
+
+            <Image Grid.RowSpan="6" Grid.Column="3"
+                   HorizontalOptions="Fill" VerticalOptions="Fill"
+                   Source="{Binding FullPathImage}" BackgroundColor="Black"/>
+    </Grid>
+
+
+        
+</xct:Popup>

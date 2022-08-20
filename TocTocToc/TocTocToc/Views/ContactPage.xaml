@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="TocTocToc.Views.ContactPage">
+    <!--<ContentPage.ToolbarItems>
+        <ToolbarItem Text="Contact"
+                     Order="Primary"
+                     Priority="0" />
+    </ContentPage.ToolbarItems>-->
+    <NavigationPage.TitleView>
+        <AbsoluteLayout Margin="20">
+            <Label TextColor="White" FontAttributes="Bold" Text="CONTACT" AbsoluteLayout.LayoutFlags="PositionProportional" AbsoluteLayout.LayoutBounds="0.4,0,100,40"/>
+            <Button BackgroundColor="#61007D"  ImageSource="menu_white.png" AbsoluteLayout.LayoutFlags="PositionProportional" AbsoluteLayout.LayoutBounds="1,0,40,20"/>
+        </AbsoluteLayout>
+    </NavigationPage.TitleView>
+    <ContentPage.Content>
+        <StackLayout>
+            <Label Text="Welcome to Xamarin.Forms!"
+                VerticalOptions="CenterAndExpand"
+                HorizontalOptions="CenterAndExpand" />
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>

@@ -1,0 +1,120 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewModels="clr-namespace:TocTocToc.ViewModels;assembly=TocTocToc"
+             x:Class="TocTocToc.Views.SettingPage">
+    <NavigationPage.TitleView>
+        <AbsoluteLayout Margin="20">
+            <Label TextColor="White" FontAttributes="Bold" Text="SETTINGS" AbsoluteLayout.LayoutFlags="PositionProportional" AbsoluteLayout.LayoutBounds="0.5,0,100,40"/>
+        </AbsoluteLayout>
+    </NavigationPage.TitleView>
+    <ContentPage.BindingContext>
+        <viewModels:LanguageViewModel />
+    </ContentPage.BindingContext>
+    <ContentPage.Content>
+        <ScrollView HeightRequest="1000">
+
+            <StackLayout>
+
+                <Button Text="Langue de l'application"
+                        TextColor="White"
+                        BorderColor="#C96EE3"
+                        BorderWidth="1"
+                        CornerRadius="10"
+                        BackgroundColor="#CBA3D8"
+                        Margin="20, 5"
+                        Command="{Binding ChangeLanguageCommand}"/>
+
+                <Button Text="Notifications"
+                        TextColor="White"
+                        BorderColor="#C96EE3"
+                        BorderWidth="1"
+                        CornerRadius="10"
+                        BackgroundColor="#CBA3D8"
+                        Margin="20, 5"/>
+
+                <Button Text="Paiements"
+                        TextColor="White"
+                        BorderColor="#C96EE3"
+                        BorderWidth="1"
+                        CornerRadius="10"
+                        BackgroundColor="#CBA3D8"
+                        Margin="20, 5"/>
+
+                <Button Text="Racourcis Siri"
+                        TextColor="White"
+                        BorderColor="#C96EE3"
+                        BorderWidth="1"
+                        CornerRadius="10"
+                        BackgroundColor="#CBA3D8"
+                        Margin="20, 5"/>
+
+                <Button Text="Sécurité / Face ID"
+                        TextColor="White"
+                        BorderColor="#C96EE3"
+                        BorderWidth="1"
+                        CornerRadius="10"
+                        BackgroundColor="#CBA3D8"
+                        Margin="20, 5"/>
+
+                <Button Text="Noter l'application"
+                        TextColor="White"
+                        BorderColor="#C96EE3"
+                        BorderWidth="1"
+                        CornerRadius="10"
+                        BackgroundColor="#CBA3D8"
+                        Margin="20, 5"/>
+
+                <Button Text="Signaler un problème"
+                        TextColor="White"
+                        BorderColor="#C96EE3"
+                        BorderWidth="1"
+                        CornerRadius="10"
+                        BackgroundColor="#CBA3D8"
+                        Margin="20, 5"/>
+
+                <Button Text="Mentions légales"
+                        TextColor="White"
+                        BorderColor="#C96EE3"
+                        BorderWidth="1"
+                        CornerRadius="10"
+                        BackgroundColor="#CBA3D8"
+                        Margin="20, 5"/>
+
+                <Button Text="Vie privée"
+                        TextColor="White"
+                        BorderColor="#C96EE3"
+                        BorderWidth="1"
+                        CornerRadius="10"
+                        BackgroundColor="#CBA3D8"
+                        Margin="20, 5"/>
+
+                <Button Text="Recommander"
+                        TextColor="White"
+                        BorderColor="#C96EE3"
+                        BorderWidth="1"
+                        CornerRadius="10"
+                        BackgroundColor="#CBA3D8"
+                        Margin="20, 5"/>
+
+                <Button Text="Supprimer mon compte"
+                        TextColor="White"
+                        BorderColor="#C96EE3"
+                        BorderWidth="1"
+                        CornerRadius="10"
+                        BackgroundColor="#CBA3D8"
+                        Margin="20, 5"/>
+
+                <Button Clicked="Logout"
+                        Text="Deconnexion"
+                        TextColor="White"
+                        BorderColor="#C96EE3"
+                        BorderWidth="1"
+                        CornerRadius="10"
+                        BackgroundColor="#61007D"
+                        Margin="20, 5"/>
+            </StackLayout>
+
+        </ScrollView>
+    </ContentPage.Content>
+</ContentPage>

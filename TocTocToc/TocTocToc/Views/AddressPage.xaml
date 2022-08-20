@@ -1,0 +1,68 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:xct="http://xamarin.com/schemas/2020/toolkit"
+             xmlns:converters="clr-namespace:TocTocToc.Converters;assembly=TocTocToc"
+             x:Class="TocTocToc.Views.AddressPage">
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <converters:IsActiveAddressConverter x:Key="IsActiveConverter" />
+        </ResourceDictionary>
+    </ContentPage.Resources>
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Text="{xct:Translate LabelTitleAddress}"
+                     Order="Primary"
+                     Priority="0" />
+    </ContentPage.ToolbarItems>
+    <ContentPage.Content>
+        <Grid RowDefinitions="*, Auto" ColumnDefinitions="Auto">
+            <ScrollView Grid.Row="0">
+                <Grid RowDefinitions="*" ColumnDefinitions="*"
+                  Margin="10" 
+                  BackgroundColor="Transparent">
+                    <CollectionView ItemsSource="{Binding ObserverAddressesViewModels}" BackgroundColor="Transparent">
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate>
+
+                                <SwipeView>
+                                    <SwipeView.BackgroundColor>
+                                        <OnPlatform x:TypeArguments="Color">
+                                            <On Platform="Android" Value="Transparent" />
+                                        </OnPlatform>
+                                    </SwipeView.BackgroundColor>
+                                    <SwipeView.RightItems>
+                                        <SwipeItems Mode="Reveal">
+                                            <SwipeItem BackgroundColor="Red" IconImageSource="delete_outline_white.png" Invoked="OnInvokedDelete"/>
+                                            <SwipeItem BackgroundColor="#61007D" IconImageSource="push_pin_white.png" Invoked="OnDefine"/>
+                                            <SwipeItem BackgroundColor="#C96EE3" IconImageSource="edit_white.png" Invoked="OnInvokedEdited"/>
+                                        </SwipeItems>
+                                    </SwipeView.RightItems>
+
+                                    <Frame Margin="7, 10" Padding="0" HeightRequest="92" BorderColor="{Binding IsActived, Converter={StaticResource IsActiveConverter}}"
+                                       BackgroundColor="MediumPurple" CornerRadius="20">
+                                        <Grid Margin="10, 7" RowDefinitions="27, Auto" ColumnDefinitions="*,*,*">
+                                            <Label Grid.Row="0" Grid.Column="0"
+                                                   Text="{Binding Title}" TextColor="White" FontSize="Medium" FontAttributes="Bold"/>
+                                            <Label Grid.Row="0" Grid.Column="2"
+                                                   VerticalTextAlignment="End" 
+                                                   Text="{Binding Type}" TextColor="White" FontAttributes="Italic"/>
+                                            <Label Grid.Row="1" Grid.ColumnSpan="3" Text="{Binding FullAddress}" TextColor="White" FontSize="Small"/>
+                                            <Label Grid.Row="2" Grid.ColumnSpan="3" Text="{Binding FullPostCode}" TextColor="White" FontSize="Small"/>
+                                        </Grid>
+                                    </Frame>
+                                </SwipeView>
+
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+                </Grid>
+            </ScrollView>
+
+
+
+            <Button Grid.Row="1"
+                    Clicked="OnAddAddress" ContentLayout="Right, 0" TextColor="White" ImageSource="add_circle_white.png"
+                    BorderColor="#C96EE3" BorderWidth="1" BackgroundColor="#61007D"/>
+        </Grid>
+    </ContentPage.Content>
+</ContentPage>

@@ -1,0 +1,98 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:xct="http://xamarin.com/schemas/2020/toolkit"
+             xmlns:converters="clr-namespace:TocTocToc.Converters;assembly=TocTocToc"
+             xmlns:viewModels="clr-namespace:TocTocToc.ViewModels;assembly=TocTocToc"
+             x:Class="TocTocToc.Views.ProfilePage">
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <converters:IsNotVisibleFromStringConverter x:Key="InvisibleImageConverter" />
+            <converters:IsVisibleFromStringConverter x:Key="VisibleImageConverter" />
+        </ResourceDictionary>
+    </ContentPage.Resources>
+    <ContentPage.BindingContext>
+        <viewModels:UserViewModel/>
+    </ContentPage.BindingContext>
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Text="{xct:Translate LabelTitleProfile}"
+                     Order="Primary"
+                     Priority="0" />
+    </ContentPage.ToolbarItems>
+    <ContentPage.Content>
+        <Grid RowDefinitions="*, Auto" ColumnDefinitions="Auto">
+            <ScrollView Grid.Row="0">
+                <Grid Margin="20, 20, 20, 0" RowDefinitions="Auto" ColumnDefinitions="*,*">
+
+                    <!--Row 0 to 3-->
+                    <Button Grid.RowSpan="4" Grid.Column="0" IsVisible="{Binding FullPathPhoto, Converter={StaticResource InvisibleImageConverter}}"
+                        Clicked="OnAddPhoto" Text="{xct:Translate LabelAddPhoto}" TextColor="White"
+                        BorderColor="#C96EE3" BorderWidth="1" CornerRadius="10" BackgroundColor="#CBA3D8"/>
+                    <Image Grid.RowSpan="4" Grid.Column="0" x:Name="Image_ImageProfile" Source="{Binding FullPathPhoto}"
+                       IsVisible="{Binding FullPathPhoto, Converter={StaticResource VisibleImageConverter}}">
+                        <Image.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnAddPhoto" NumberOfTapsRequired="2" />
+                        </Image.GestureRecognizers>
+                    </Image>
+                    <!--Row 0-->
+                    <Entry Grid.Row="0" Grid.Column="1"
+                                     Text="{Binding Lastname}" TextColor="Black" Placeholder="{xct:Translate LabelLastname}" TextChanged="OnTextChanged" x:Name="XNameLastnameEntry"/>
+                    <!--Row 1-->
+                    <Entry Grid.Row="1" Grid.Column="1"
+                                     Text="{Binding Firstname}" TextColor="Black" Placeholder="{xct:Translate LabelFirstname}" TextChanged="OnTextChanged" x:Name="XNameFirstnameEntry"/>
+                    <!--Row 2-->
+                    <Picker Grid.Row="2" Grid.Column="1"
+                        x:Name="XNameGenderPicker"
+                        FontSize="17"
+                        Title="{xct:Translate LabelGender}"
+                        ItemDisplayBinding="{Binding Gender}"
+                        SelectedIndexChanged="OnGender"/>
+                    <!--Row 3-->
+                    <Entry Grid.Row="3" Grid.Column="1"
+                       Text="{Binding Languages}" TextColor="Black" Placeholder="{xct:Translate LabelLanguages}" TextChanged="OnTextChanged" x:Name="XNameLanguagesEntry"/>
+                    <!--Row 4-->
+                    <Label Grid.Row="4" Grid.Column="0" VerticalOptions="CenterAndExpand"
+                       Text="{xct:Translate LabelBirthdate}" TextColor="White"/>
+                    <DatePicker Grid.Row="4" Grid.Column="1" x:Name="XNameOnDatePicker" FontSize="17"/>
+                    <!--Row 5-->
+                    <Picker Grid.Row="5" Grid.ColumnSpan="2"
+                            x:Name="XNameMaritalStatusPicker"
+                            FontSize="17"
+                            Title="{xct:Translate LabelMaritalStatus}"
+                            ItemDisplayBinding="{Binding MaritalStatus}"
+                            SelectedIndexChanged="OnMaritalStatus"/>
+                    <!--Row 6-->
+                    <Entry Grid.Row="6" Grid.ColumnSpan="2"
+                       Text="{Binding Job}" TextColor="Black" Placeholder="{xct:Translate LabelProfession}" TextChanged="OnTextChanged" x:Name="XNameJobEntry"/>
+                    <!--Row 7-->
+                    <Entry Grid.Row="7" Grid.ColumnSpan="2"
+                       Text="{Binding Interests}" TextColor="Black" Placeholder="{xct:Translate LabelInterest}" TextChanged="OnTextChanged" x:Name="XNameInterestsEntry"/>
+                    <!--Row 8-->
+                    <Button Grid.Row="8" Grid.ColumnSpan="2"
+                        Clicked="OnAddresses" Text="{xct:Translate LabelAddModifyAddress}" TextColor="White"
+                        BorderColor="#C96EE3" BorderWidth="1" CornerRadius="10" BackgroundColor="#CBA3D8"/>
+                    <!--Row 9-->
+                    <Label Grid.Row="9" Grid.Column="0" VerticalOptions="CenterAndExpand"
+                       Text="{xct:Translate LabelShowAge}" TextColor="White" />
+                    <Switch Grid.Row="9" Grid.Column="1" IsToggled="{Binding IsAge}"/>
+                    <!--Row 10-->
+                    <Label Grid.Row="10" Grid.Column="0" VerticalOptions="CenterAndExpand"
+                       Text="{xct:Translate LabelShowMaritalStatus}" TextColor="White"/>
+                    <Switch Grid.Row="10" Grid.Column="1" IsToggled="{Binding IsStatus}"/>
+                    <!--Row 11-->
+                    <Label Grid.Row="11" Grid.Column="0" VerticalOptions="CenterAndExpand"
+                       Text="{xct:Translate LabelShowProfession}" TextColor="White"/>
+                    <Switch Grid.Row="11" Grid.Column="1" IsToggled="{Binding IsJob}"/>
+                    <!--Row 12-->
+                    <Label Grid.Row="12" Grid.Column="0" VerticalOptions="CenterAndExpand"
+                       Text="{xct:Translate LabelShowFloor}" TextColor="White"/>
+                    <Switch Grid.Row="12" Grid.Column="1" IsToggled="{Binding IsFloor}"/>
+                </Grid>
+            </ScrollView>
+
+            <Button Grid.Row="1"
+                    Clicked="OnSave" ContentLayout="Right, 0" TextColor="White" Text="{xct:Translate LabelSave}" ImageSource="save_white.png"
+                    BorderColor="#C96EE3" BorderWidth="1" BackgroundColor="#61007D" x:Name="XNameSaveButton"/>
+        </Grid>
+    </ContentPage.Content>
+</ContentPage>

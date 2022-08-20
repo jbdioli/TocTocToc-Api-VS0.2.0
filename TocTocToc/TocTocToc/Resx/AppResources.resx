@@ -1,0 +1,393 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="About" xml:space="preserve">
+    <value>Bla</value>
+  </data>
+  <data name="AppDescription" xml:space="preserve">
+    <value>TocTocToc application bla bla bla ....</value>
+  </data>
+  <data name="Arabic" xml:space="preserve">
+    <value>العربية</value>
+  </data>
+  <data name="Bengali" xml:space="preserve">
+    <value>বাংলা</value>
+  </data>
+  <data name="ChangeLanguage" xml:space="preserve">
+    <value>Change language</value>
+  </data>
+  <data name="Chinese" xml:space="preserve">
+    <value>中国人</value>
+  </data>
+  <data name="English" xml:space="preserve">
+    <value>English</value>
+  </data>
+  <data name="French" xml:space="preserve">
+    <value>Français</value>
+  </data>
+  <data name="German" xml:space="preserve">
+    <value>Deutsch</value>
+  </data>
+  <data name="Hindi" xml:space="preserve">
+    <value>हिन्दी</value>
+  </data>
+  <data name="Indonesian" xml:space="preserve">
+    <value>Bahasa Indonesia</value>
+  </data>
+  <data name="Italian" xml:space="preserve">
+    <value>Italiana</value>
+  </data>
+  <data name="LabelAddAddress" xml:space="preserve">
+    <value>Create an address</value>
+  </data>
+  <data name="LabelAddModifyAddress" xml:space="preserve">
+    <value>Add / Modify an address</value>
+  </data>
+  <data name="LabelAddPhoto" xml:space="preserve">
+    <value>Add Photo</value>
+  </data>
+  <data name="LabelAddress1" xml:space="preserve">
+    <value>Address 1</value>
+  </data>
+  <data name="LabelAddress2" xml:space="preserve">
+    <value>Address 2</value>
+  </data>
+  <data name="LabelAddress3" xml:space="preserve">
+    <value>Address 3</value>
+  </data>
+  <data name="LabelAddressNamed" xml:space="preserve">
+    <value>Name your address</value>
+  </data>
+  <data name="LabelBirthdate" xml:space="preserve">
+    <value>Birthdate</value>
+  </data>
+  <data name="LabelCity" xml:space="preserve">
+    <value>City</value>
+  </data>
+  <data name="LabelCountry" xml:space="preserve">
+    <value>Country</value>
+  </data>
+  <data name="LabelFirstname" xml:space="preserve">
+    <value>Fisrt name</value>
+  </data>
+  <data name="LabelFloor" xml:space="preserve">
+    <value>Floor</value>
+  </data>
+  <data name="LabelGender" xml:space="preserve">
+    <value>Gender</value>
+  </data>
+  <data name="LabelHousingType" xml:space="preserve">
+    <value>Define the address type</value>
+  </data>
+  <data name="LabelInterest" xml:space="preserve">
+    <value>Interest</value>
+  </data>
+  <data name="LabelLanguage" xml:space="preserve">
+    <value>Language</value>
+  </data>
+  <data name="LabelLanguages" xml:space="preserve">
+    <value>Languages</value>
+  </data>
+  <data name="LabelLastname" xml:space="preserve">
+    <value>Last name</value>
+  </data>
+  <data name="LabelMaritalStatus" xml:space="preserve">
+    <value>Marital status</value>
+  </data>
+  <data name="LabelProfession" xml:space="preserve">
+    <value>Profession</value>
+  </data>
+  <data name="LabelSave" xml:space="preserve">
+    <value>Save</value>
+  </data>
+  <data name="LabelShowAge" xml:space="preserve">
+    <value>Show age</value>
+  </data>
+  <data name="LabelShowFloor" xml:space="preserve">
+    <value>Show floor</value>
+  </data>
+  <data name="LabelShowMaritalStatus" xml:space="preserve">
+    <value>Show marital status</value>
+  </data>
+  <data name="LabelShowProfession" xml:space="preserve">
+    <value>Show profession</value>
+  </data>
+  <data name="LabelState" xml:space="preserve">
+    <value>State</value>
+  </data>
+  <data name="LabelTitleAddDirectory" xml:space="preserve">
+    <value>Create a sign</value>
+  </data>
+  <data name="LabelTitleAddEvent" xml:space="preserve">
+    <value>Create an event</value>
+  </data>
+  <data name="LabelTitleAddPost" xml:space="preserve">
+    <value>Create a post</value>
+  </data>
+  <data name="LabelTitleAddRental" xml:space="preserve">
+    <value>Create a rental</value>
+  </data>
+  <data name="LabelTitleAddress" xml:space="preserve">
+    <value>My Addresses</value>
+  </data>
+  <data name="LabelTitleAddSolidarityCall" xml:space="preserve">
+    <value>Create a call for solidarity</value>
+  </data>
+  <data name="LabelTitleAddSolidarityOffer" xml:space="preserve">
+    <value>Create an offer to solidarity</value>
+  </data>
+  <data name="LabelTitleAdvertisement" xml:space="preserve">
+    <value>Advertising</value>
+  </data>
+  <data name="LabelTitleBlog" xml:space="preserve">
+    <value>Blog</value>
+  </data>
+  <data name="LabelTitleCommunity" xml:space="preserve">
+    <value>My communities</value>
+  </data>
+  <data name="LabelTitleConnection" xml:space="preserve">
+    <value>Login</value>
+  </data>
+  <data name="LabelTitleContact" xml:space="preserve">
+    <value>Contacts</value>
+  </data>
+  <data name="LabelTitleDeal" xml:space="preserve">
+    <value>Deal</value>
+  </data>
+  <data name="LabelTitleDirectory" xml:space="preserve">
+    <value>Proximity directory</value>
+  </data>
+  <data name="LabelTitleEvent" xml:space="preserve">
+    <value>Events</value>
+  </data>
+  <data name="LabelTitleForum" xml:space="preserve">
+    <value>Forum</value>
+  </data>
+  <data name="LabelTitleGroupMessaging" xml:space="preserve">
+    <value>Group messaging</value>
+  </data>
+  <data name="LabelTitleMenu" xml:space="preserve">
+    <value>Menu</value>
+  </data>
+  <data name="LabelTitleMessaging" xml:space="preserve">
+    <value>Messaging</value>
+  </data>
+  <data name="LabelTitleNeighbor" xml:space="preserve">
+    <value>My neighbors</value>
+  </data>
+  <data name="LabelTitleOffer" xml:space="preserve">
+    <value>Offers</value>
+  </data>
+  <data name="LabelTitleProfile" xml:space="preserve">
+    <value>Edit my profile</value>
+  </data>
+  <data name="LabelTitleRental" xml:space="preserve">
+    <value>Equipment rental</value>
+  </data>
+  <data name="LabelTitleServiceExchange" xml:space="preserve">
+    <value>Exchange of services</value>
+  </data>
+  <data name="LabelTitleSetting" xml:space="preserve">
+    <value>Settings</value>
+  </data>
+  <data name="LabelTitleSolidarity" xml:space="preserve">
+    <value>Solidarity Service</value>
+  </data>
+  <data name="LabelTitleSolidarityCall" xml:space="preserve">
+    <value>Calls for solidarity</value>
+  </data>
+  <data name="LabelTitleSolidarityOffer" xml:space="preserve">
+    <value>Solidarity offers</value>
+  </data>
+  <data name="LabelZipcode" xml:space="preserve">
+    <value>Zip code</value>
+  </data>
+  <data name="Portuguese" xml:space="preserve">
+    <value>Português</value>
+  </data>
+  <data name="Russian" xml:space="preserve">
+    <value>Русский</value>
+  </data>
+  <data name="Spanish" xml:space="preserve">
+    <value>Española</value>
+  </data>
+  <data name="System" xml:space="preserve">
+    <value>System</value>
+  </data>
+  <data name="Version" xml:space="preserve">
+    <value>Version: {0}</value>
+  </data>
+  <data name="Welcome" xml:space="preserve">
+    <value />
+  </data>
+  <data name="LabelInterests" xml:space="preserve">
+    <value>Interests</value>
+  </data>
+  <data name="LabelTitleEditAddress" xml:space="preserve">
+    <value>Edit an address</value>
+  </data>
+  <data name="LabelTitleAddAddress" xml:space="preserve">
+    <value>Create an address</value>
+  </data>
+  <data name="LabelStreetNumber" xml:space="preserve">
+    <value>Street Number</value>
+  </data>
+  <data name="LabelAddress" xml:space="preserve">
+    <value>Address</value>
+  </data>
+  <data name="LabelResidenceName" xml:space="preserve">
+    <value>Residence Name</value>
+  </data>
+  <data name="LabelBuildingName" xml:space="preserve">
+    <value>Building Name</value>
+  </data>
+  <data name="LabelBuildingNumber" xml:space="preserve">
+    <value>Building Number</value>
+  </data>
+  <data name="LabelBuildingEntrance" xml:space="preserve">
+    <value>Entry</value>
+  </data>
+  <data name="LabelAdvertisingName" xml:space="preserve">
+    <value>Name</value>
+  </data>
+  <data name="LabelAdvertisingAddMedia" xml:space="preserve">
+    <value>Add a media</value>
+  </data>
+  <data name="LabelDescription" xml:space="preserve">
+    <value>Description</value>
+  </data>
+  <data name="LabelArea" xml:space="preserve">
+    <value>Target locations</value>
+  </data>
+  <data name="LabelAge" xml:space="preserve">
+    <value>Age</value>
+  </data>
+  <data name="LabelBudget" xml:space="preserve">
+    <value>Budget / Duration</value>
+  </data>
+  <data name="LabelHistory" xml:space="preserve">
+    <value>History</value>
+  </data>
+  <data name="LabelPreview" xml:space="preserve">
+    <value>Preview</value>
+  </data>
+  <data name="LabelValidationPay" xml:space="preserve">
+    <value>Confirm and pay</value>
+  </data>
+</root>
