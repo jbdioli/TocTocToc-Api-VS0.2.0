@@ -2,7 +2,7 @@
 <xct:Popup xmlns="http://xamarin.com/schemas/2014/forms"
            xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
            xmlns:xct="clr-namespace:Xamarin.CommunityToolkit.UI.Views;assembly=Xamarin.CommunityToolkit"
-           xmlns:viewModel="clr-namespace:TocTocToc.ViewModels;assembly=TocTocToc"
+           xmlns:viewModel="clr-namespace:TocTocToc.Models.View;assembly=TocTocToc"
            Size="300, 300"
            VerticalOptions="CenterAndExpand"
            HorizontalOptions="CenterAndExpand"
@@ -10,33 +10,52 @@
     <xct:Popup.BindingContext>
         <viewModel:AdvertisingViewModel/>
     </xct:Popup.BindingContext>
-    <Grid RowDefinitions="*, *, *, *, *, *" ColumnDefinitions="Auto, Auto, *" 
-          BackgroundColor="Black">
-            <Label Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2"
-                   Text="{Binding Name}" TextColor="White"/>
+    <StackLayout BackgroundColor="Black">
+        <RelativeLayout>
+            <Image RelativeLayout.HeightConstraint="{ConstraintExpression Type=RelativeToParent, Property=Height, Factor=1}"
+                   RelativeLayout.WidthConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=0.3}"
+                   RelativeLayout.XConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=0.7}"
+                   Source="{Binding FullPathImage}" Aspect="AspectFill" />
 
-            <Label Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2"
-                   Text="{Binding Date}" TextColor="White"/>
+            <Label RelativeLayout.HeightConstraint="{ConstraintExpression Type=RelativeToParent, Property=Height, Factor=0.08}"
+                   RelativeLayout.WidthConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=0.69}"
+                   x:Name="XNameTitle"
+                   Text="{Binding Name}"
+                   LineBreakMode="CharacterWrap" LineHeight="1.1" TextColor="White" HorizontalTextAlignment="End" VerticalTextAlignment="Center" FontSize="Small" BackgroundColor="#11543B"/>
 
-            <Label Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2"
-                   Text="{Binding Info}" TextColor="White"/>
+            <Label RelativeLayout.HeightConstraint="{ConstraintExpression Type=RelativeToParent, Property=Height, Factor=0.40}"
+                   RelativeLayout.WidthConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=0.69}"
+                   RelativeLayout.YConstraint="{ConstraintExpression Type=RelativeToView, ElementName=XNameTitle, Property=Height, Factor=1, Constant=3}"
+                   x:Name="XNameP1"
+                   Text="{Binding Info}"
+                   LineBreakMode="WordWrap" LineHeight="1.1" TextColor="White" FontSize="Micro" HorizontalTextAlignment="End"/>
 
-            <Label Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2"
-                   Text="{Binding Gender}" TextColor="White"/>
+            <Label RelativeLayout.WidthConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=0.69}"
+                   RelativeLayout.YConstraint="{ConstraintExpression Type=RelativeToView, ElementName=XNameP1, Property=Height, Factor=1, Constant=37}"
+                   Text="Bla Bla Bla"
+                   LineBreakMode="WordWrap" LineHeight="1.1" TextColor="White" FontSize="Micro" HorizontalTextAlignment="End"/>
 
-            <Label Grid.Row="4" Grid.Column="0" 
-                   Text="{Binding AgeMini}" TextColor="White"/>
-            <Label Grid.Row="4" Grid.Column="1"
-                   Text="{Binding AgeMaxi}" TextColor="White"/>
-
-            <Label Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="2"
-                   Text="{Binding Budget}" TextColor="White"/>
-
-            <Image Grid.RowSpan="6" Grid.Column="3"
-                   HorizontalOptions="Fill" VerticalOptions="Fill"
-                   Source="{Binding FullPathImage}" BackgroundColor="Black"/>
-    </Grid>
-
-
-        
+        </RelativeLayout>
+    </StackLayout>
+       
 </xct:Popup>
+
+
+<!--<Grid RowDefinitions="*, *, *, *, *, *" ColumnDefinitions="Auto, Auto, *" 
+      BackgroundColor="Black">
+
+    <Label Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2"
+           Text="{Binding Date}" TextColor="White"/>
+
+    <Label Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2"
+           Text="{Binding Gender}" TextColor="White"/>
+
+    <Label Grid.Row="4" Grid.Column="0" 
+           Text="{Binding AgeMini}" TextColor="White"/>
+    <Label Grid.Row="4" Grid.Column="1"
+           Text="{Binding AgeMaxi}" TextColor="White"/>
+
+    <Label Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="2"
+           Text="{Binding Budget}" TextColor="White"/>
+
+</Grid>-->

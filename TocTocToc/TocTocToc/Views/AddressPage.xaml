@@ -6,7 +6,7 @@
              x:Class="TocTocToc.Views.AddressPage">
     <ContentPage.Resources>
         <ResourceDictionary>
-            <converters:IsActiveAddressConverter x:Key="IsActiveConverter" />
+            <converters:IsChangeColorConverter x:Key="Active" />
         </ResourceDictionary>
     </ContentPage.Resources>
     <ContentPage.ToolbarItems>
@@ -38,7 +38,7 @@
                                         </SwipeItems>
                                     </SwipeView.RightItems>
 
-                                    <Frame Margin="7, 10" Padding="0" HeightRequest="92" BorderColor="{Binding IsActived, Converter={StaticResource IsActiveConverter}}"
+                                    <Frame Margin="7, 10" Padding="0" HeightRequest="92" BorderColor="{Binding IsActive, Converter={StaticResource Active}, ConverterParameter='BorderActive'}"
                                        BackgroundColor="MediumPurple" CornerRadius="20">
                                         <Grid Margin="10, 7" RowDefinitions="27, Auto" ColumnDefinitions="*,*,*">
                                             <Label Grid.Row="0" Grid.Column="0"

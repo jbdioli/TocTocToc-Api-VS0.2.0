@@ -1,0 +1,334 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<xct:Popup xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:xct="clr-namespace:Xamarin.CommunityToolkit.UI.Views;assembly=Xamarin.CommunityToolkit"
+             xmlns:budgetDtoModel="clr-namespace:TocTocToc.Models.Dto;assembly=TocTocToc"
+             xmlns:converters="clr-namespace:TocTocToc.Converters;assembly=TocTocToc"
+             Size="340,500"
+             x:Class="TocTocToc.Popup.BudgetPopup"
+             x:TypeArguments="budgetDtoModel:BudgetDtoModel">
+    <xct:Popup.Resources>
+        <ResourceDictionary>
+            <converters:IsNotVisibleConverter x:Key="Invisible" />
+            <converters:IsVisibleConverter x:Key="Visible" />
+        </ResourceDictionary>
+    </xct:Popup.Resources>
+    <xct:Popup.Content>
+        <StackLayout  BackgroundColor="#ebb549">
+            <RelativeLayout Margin="20,20, 20, 0">
+                <Label RelativeLayout.HeightConstraint="{ConstraintExpression Type=RelativeToParent, Property=Height, Factor=0.08}"
+                       RelativeLayout.WidthConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=1}"
+                       x:Name="XNameBudgetLabel"
+                       IsVisible="{Binding IsBudgetEntry, Converter={StaticResource Invisible}}"
+                       Text="{Binding Source={x:Reference XNameSliderBudget}, Path=Value, StringFormat='{0:C0}'}" TextColor="Blue" FontSize="Title"
+                       VerticalTextAlignment="Center" HorizontalTextAlignment="Center"/>
+
+                <Entry x:Name="XNameBudgetEntry"
+                   IsVisible="{Binding IsBudgetEntry, Converter={StaticResource Visible}}"
+                   Text="{Binding Budget}" TextColor="Blue" FontSize="Title" Keyboard="Numeric" MaxLength="3"
+                   PropertyChanged="OnBudgetEntry"
+                   VerticalTextAlignment="Center" HorizontalTextAlignment="Center">
+                    <RelativeLayout.HeightConstraint>
+                        <OnPlatform x:TypeArguments="Constraint">
+                            <On Platform="Android" Value="{ConstraintExpression Type=RelativeToParent, Property=Height, Factor=0.1}"/>
+                            <On Platform="iOS" Value="{ConstraintExpression Type=RelativeToParent, Property=Height, Factor=0.08}"/>
+                        </OnPlatform>
+                    </RelativeLayout.HeightConstraint>
+                    <RelativeLayout.WidthConstraint>
+                        <OnPlatform x:TypeArguments="Constraint">
+                            <On Platform="Android" Value="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=0.2}"/>
+                            <On Platform="iOS" Value="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=0.22}"/>
+                        </OnPlatform>
+                    </RelativeLayout.WidthConstraint>
+                    <RelativeLayout.XConstraint>
+                        <OnPlatform x:TypeArguments="Constraint">
+                            <On Platform="Android" Value="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=0.36}"/>
+                            <On Platform="iOS" Value="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=0.4}"/>
+                        </OnPlatform>
+                    </RelativeLayout.XConstraint>
+                </Entry>
+
+                <Image RelativeLayout.HeightConstraint="{ConstraintExpression Type=RelativeToParent, Property=Height, Factor=0.03}"
+                       RelativeLayout.WidthConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=0.1}"
+                       RelativeLayout.YConstraint="{ConstraintExpression Type=RelativeToView, ElementName=XNameBudgetLabel, Property=Height, Factor=0.5}"
+                       RelativeLayout.XConstraint="{ConstraintExpression Type=RelativeToView, ElementName=XNameBudgetLabel, Property=Width, Factor=0.55, Constant=18}"
+                       Source="edit_black_48dp">
+                    <Image.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnIsBudgetEntry" NumberOfTapsRequired="1"/>
+                    </Image.GestureRecognizers>
+                </Image>
+
+                <Slider RelativeLayout.HeightConstraint="{ConstraintExpression Type=RelativeToParent, Property=Height, Factor=0.08}"
+                    RelativeLayout.YConstraint="{ConstraintExpression Type=RelativeToParent, Property=Height, Factor=0.08}"
+                    x:Name="XNameSliderBudget"
+                    Minimum="0" Maximum="500" MinimumTrackColor="Blue" MaximumTrackColor="Black"
+                    ValueChanged="OnSliderBudget">
+                    <RelativeLayout.WidthConstraint>
+                        <OnPlatform x:TypeArguments="Constraint">
+                            <On Platform="Android" Value="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=0.9}"/>
+                            <On Platform="iOS" Value="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=0.73}"/>
+                        </OnPlatform>
+                    </RelativeLayout.WidthConstraint>
+                    <RelativeLayout.XConstraint>
+                        <OnPlatform x:TypeArguments="Constraint">
+                            <On Platform="Android" Value="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=0.05}"/>
+                            <On Platform="iOS" Value="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=0.09}"/>
+                        </OnPlatform>
+                    </RelativeLayout.XConstraint>
+                </Slider>
+
+                <Label RelativeLayout.HeightConstraint="{ConstraintExpression Type=RelativeToParent, Property=Height, Factor=0.08}"
+                       RelativeLayout.WidthConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=0.1}"
+                       RelativeLayout.YConstraint="{ConstraintExpression Type=RelativeToParent, Property=Height, Factor=0.078}"
+                       Text="{Binding BudgetMini, StringFormat='{0:C0}'}" TextColor="Black" FontSize="Subtitle" HorizontalTextAlignment="Center" VerticalTextAlignment="Center"/>
+
+                <Label RelativeLayout.HeightConstraint="{ConstraintExpression Type=RelativeToParent, Property=Height, Factor=0.08}"
+                   RelativeLayout.YConstraint="{ConstraintExpression Type=RelativeToParent, Property=Height, Factor=0.078}"
+                       Text="{Binding BudgetMaxi, StringFormat='{0:C0}'}" TextColor="Black" FontSize="Subtitle" HorizontalTextAlignment="Center" VerticalTextAlignment="Center">
+                    <RelativeLayout.WidthConstraint>
+                        <OnPlatform x:TypeArguments="Constraint">
+                            <On Platform="Android" Value="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=0.15}"/>
+                            <On Platform="iOS" Value="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=0.18}"/>
+                        </OnPlatform>
+                    </RelativeLayout.WidthConstraint>
+                    <RelativeLayout.XConstraint>
+                        <OnPlatform x:TypeArguments="Constraint">
+                            <On Platform="Android" Value="{ConstraintExpression Type=RelativeToView, ElementName=XNameSliderBudget, Property=Width, Factor=1}"/>
+                            <On Platform="iOS" Value="{ConstraintExpression Type=RelativeToView, ElementName=XNameSliderBudget, Property=Width, Factor=1.12}"/>
+                        </OnPlatform>
+                    </RelativeLayout.XConstraint>
+                </Label>
+
+                <!--Date and duration-->
+
+                <Line RelativeLayout.WidthConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=1}"
+                      RelativeLayout.YConstraint="{ConstraintExpression Type=RelativeToParent, Property=Height, Factor=0.17}"
+                      X1="0" Y1="0" X2="300" Y2="0" Stroke="Brown" HorizontalOptions="CenterAndExpand"/>
+
+                <Label RelativeLayout.HeightConstraint="{ConstraintExpression Type=RelativeToParent, Property=Height, Factor=0.08}"
+                   RelativeLayout.YConstraint="{ConstraintExpression Type=RelativeToParent, Property=Height, Factor=0.18}"
+                   Text="Date and duration" TextColor="Black" FontSize="Title"/>
+
+                <!--Starting Date-->
+
+                <Label RelativeLayout.HeightConstraint="{ConstraintExpression Type=RelativeToParent, Property=Height, Factor=0.08}"
+                       RelativeLayout.YConstraint="{ConstraintExpression Type=RelativeToParent, Property=Height, Factor=0.25}"
+                       RelativeLayout.XConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=0.12}"
+                       Text="Starting date" TextColor="Black" FontSize="Subtitle"/>
+
+                <Image RelativeLayout.HeightConstraint="{ConstraintExpression Type=RelativeToParent, Property=Height, Factor=0.08}"
+                       RelativeLayout.WidthConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=0.1}"
+                       Source="calendar_month_black_48dp">
+                    <RelativeLayout.YConstraint>
+                        <OnPlatform x:TypeArguments="Constraint">
+                            <On Platform="Android" Value="{ConstraintExpression Type=RelativeToParent, Property=Height, Factor=0.25}"/>
+                            <On Platform="iOS" Value="{ConstraintExpression Type=RelativeToParent, Property=Height, Factor=0.25, Constant=5}"/>
+                        </OnPlatform>
+                    </RelativeLayout.YConstraint>
+                </Image>
+
+                <DatePicker RelativeLayout.WidthConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=0.88}"
+                        RelativeLayout.XConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=0.12}"
+                        x:Name="XNameStartDate"
+                        TextColor="Blue" Date="{Binding StartDate}"
+                        DateSelected="OnStartDate">
+                    <RelativeLayout.HeightConstraint>
+                        <OnPlatform x:TypeArguments="Constraint">
+                            <On Platform="Android" Value="{ConstraintExpression Type=RelativeToParent, Property=Height, Factor=0.08}"/>
+                            <On Platform="iOS" Value="{ConstraintExpression Type=RelativeToParent, Property=Height, Factor=0.06}"/>
+                        </OnPlatform>
+                    </RelativeLayout.HeightConstraint>
+                    <RelativeLayout.YConstraint>
+                        <OnPlatform x:TypeArguments="Constraint">
+                            <On Platform="Android" Value="{ConstraintExpression Type=RelativeToParent, Property=Height, Factor=0.28}"/>
+                            <On Platform="iOS" Value="{ConstraintExpression Type=RelativeToParent, Property=Height, Factor=0.3, Constant=2}"/>
+                        </OnPlatform>
+                    </RelativeLayout.YConstraint>
+                </DatePicker>
+
+                <Line RelativeLayout.WidthConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=1}"
+                      RelativeLayout.YConstraint="{ConstraintExpression Type=RelativeToParent, Property=Height, Factor=0.4}"
+                      X1="0" Y1="0" X2="300" Y2="0" Stroke="Brown" HorizontalOptions="CenterAndExpand"/>
+
+                <!--Start Time-->
+
+                <Label RelativeLayout.HeightConstraint="{ConstraintExpression Type=RelativeToParent, Property=Height, Factor=0.08}"
+                       RelativeLayout.XConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=0.12}"
+                       RelativeLayout.YConstraint="{ConstraintExpression Type=RelativeToParent, Property=Height, Factor=0.41}"
+                       Text="Start time" TextColor="Black" FontSize="Subtitle"/>
+
+                <Image RelativeLayout.HeightConstraint="{ConstraintExpression Type=RelativeToParent, Property=Height, Factor=0.08}"
+                       RelativeLayout.WidthConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=0.1}"
+                       Source="schedule_black_48dp">
+                    <RelativeLayout.YConstraint>
+                        <OnPlatform x:TypeArguments="Constraint">
+                            <On Platform="Android" Value="{ConstraintExpression Type=RelativeToParent, Property=Height, Factor=0.41}"/>
+                            <On Platform="iOS" Value="{ConstraintExpression Type=RelativeToParent, Property=Height, Factor=0.41, Constant=5}"/>
+                        </OnPlatform>
+                    </RelativeLayout.YConstraint>
+                </Image>
+
+                <TimePicker RelativeLayout.WidthConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=0.88}"
+                        RelativeLayout.XConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=0.12}"
+                        x:Name="XNameTimeStart"
+                        TextColor="Blue" FontSize="Body"
+                        PropertyChanged="OnTimeStart">
+                    <RelativeLayout.HeightConstraint>
+                        <OnPlatform x:TypeArguments="Constraint">
+                            <On Platform="Android" Value="{ConstraintExpression Type=RelativeToParent, Property=Height, Factor=0.08}"/>
+                            <On Platform="iOS" Value="{ConstraintExpression Type=RelativeToParent, Property=Height, Factor=0.06}"/>
+                        </OnPlatform>
+                    </RelativeLayout.HeightConstraint>
+                    <RelativeLayout.YConstraint>
+                        <OnPlatform x:TypeArguments="Constraint">
+                            <On Platform="Android" Value="{ConstraintExpression Type=RelativeToParent, Property=Height, Factor=0.44}"/>
+                            <On Platform="iOS" Value="{ConstraintExpression Type=RelativeToParent, Property=Height, Factor=0.46, Constant=2}"/>
+                        </OnPlatform>
+                    </RelativeLayout.YConstraint>
+                </TimePicker>
+
+                <Label RelativeLayout.HeightConstraint="{ConstraintExpression Type=RelativeToParent, Property=Height, Factor=0.08}"
+                   RelativeLayout.XConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=0.03}"
+                   Text="The time can't be lower than the current time" TextColor="Red" FontSize="Small"
+                   IsVisible="{Binding IsWrongTime}">
+                    <RelativeLayout.YConstraint>
+                        <OnPlatform x:TypeArguments="Constraint">
+                            <On Platform="Android" Value="{ConstraintExpression Type=RelativeToParent, Property=Height, Factor=0.46, Constant=24}"/>
+                            <On Platform="iOS" Value="{ConstraintExpression Type=RelativeToParent, Property=Height, Factor=0.46, Constant=30}"/>
+                        </OnPlatform>
+                    </RelativeLayout.YConstraint>
+                </Label>
+
+                <Line RelativeLayout.WidthConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=1}"
+                      RelativeLayout.YConstraint="{ConstraintExpression Type=RelativeToParent, Property=Height, Factor=0.56}"
+                      X1="0" Y1="0" X2="300" Y2="0" Stroke="Brown" HorizontalOptions="CenterAndExpand"/>
+
+                <!--Days-->
+
+                <Label RelativeLayout.HeightConstraint="{ConstraintExpression Type=RelativeToParent, Property=Height, Factor=0.08}"
+                   RelativeLayout.YConstraint="{ConstraintExpression Type=RelativeToParent, Property=Height, Factor=0.57}"
+                   RelativeLayout.XConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=0.12}"
+                   Text="Days" TextColor="Black" FontSize="Subtitle"/>
+
+                <Image RelativeLayout.HeightConstraint="{ConstraintExpression Type=RelativeToParent, Property=Height, Factor=0.08}"
+                   RelativeLayout.WidthConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=0.1}"
+                   Source="date_range_black_48dp">
+                    <RelativeLayout.YConstraint>
+                        <OnPlatform x:TypeArguments="Constraint">
+                            <On Platform="Android" Value="{ConstraintExpression Type=RelativeToParent, Property=Height, Factor=0.57}"/>
+                            <On Platform="iOS" Value="{ConstraintExpression Type=RelativeToParent, Property=Height, Factor=0.57, Constant=5}"/>
+                        </OnPlatform>
+                    </RelativeLayout.YConstraint>
+                </Image>
+
+                <Entry RelativeLayout.WidthConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=0.15}"
+                   RelativeLayout.XConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=0.12}"
+                   x:Name="XNameEntryDays"
+                   Text="{Binding Duration}" TextColor="Blue" Keyboard="Numeric" MaxLength="3" HorizontalTextAlignment="Start"
+                   TextChanged="OnDuration">
+                    <RelativeLayout.HeightConstraint>
+                        <OnPlatform x:TypeArguments="Constraint">
+                            <On Platform="Android" Value="{ConstraintExpression Type=RelativeToParent, Property=Height, Factor=0.08}"/>
+                            <On Platform="iOS" Value="{ConstraintExpression Type=RelativeToParent, Property=Height, Factor=0.06}"/>
+                        </OnPlatform>
+                    </RelativeLayout.HeightConstraint>
+                    <RelativeLayout.YConstraint>
+                        <OnPlatform x:TypeArguments="Constraint">
+                            <On Platform="Android" Value="{ConstraintExpression Type=RelativeToParent, Property=Height, Factor=0.60}"/>
+                            <On Platform="iOS" Value="{ConstraintExpression Type=RelativeToParent, Property=Height, Factor=0.62, Constant=2}"/>
+                        </OnPlatform>
+                    </RelativeLayout.YConstraint>
+                </Entry>
+
+                <Label RelativeLayout.HeightConstraint="{ConstraintExpression Type=RelativeToParent, Property=Height, Factor=0.08}"
+                   RelativeLayout.XConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=0.03}"
+                   Text="You need at list to have 1 day" TextColor="Red" FontSize="Small"
+                   IsVisible="{Binding IsDurationMissing}">
+                    <RelativeLayout.YConstraint>
+                        <OnPlatform x:TypeArguments="Constraint">
+                            <On Platform="Android" Value="{ConstraintExpression Type=RelativeToParent, Property=Height, Factor=0.62, Constant=24}"/>
+                            <On Platform="iOS" Value="{ConstraintExpression Type=RelativeToParent, Property=Height, Factor=0.62, Constant=30}"/>
+                        </OnPlatform>
+                    </RelativeLayout.YConstraint>
+                </Label>
+
+                <Image RelativeLayout.HeightConstraint="{ConstraintExpression Type=RelativeToParent, Property=Height, Factor=0.08}"
+                   RelativeLayout.WidthConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=0.1}"
+                   RelativeLayout.XConstraint="{ConstraintExpression Type=RelativeToView, ElementName=XNameEntryDays, Property=Width, Factor=4.5}"
+                   Source="remove_circle_outline_black_48dp">
+                    <Image.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnMinusDay" NumberOfTapsRequired="1"/>
+                    </Image.GestureRecognizers>
+                    <RelativeLayout.YConstraint>
+                        <OnPlatform x:TypeArguments="Constraint">
+                            <On Platform="Android" Value="{ConstraintExpression Type=RelativeToParent, Property=Height, Factor=0.58}"/>
+                            <On Platform="iOS" Value="{ConstraintExpression Type=RelativeToParent, Property=Height, Factor=0.60}"/>
+                        </OnPlatform>
+                    </RelativeLayout.YConstraint>
+                </Image>
+
+                <Image RelativeLayout.HeightConstraint="{ConstraintExpression Type=RelativeToParent, Property=Height, Factor=0.08}"
+                   RelativeLayout.WidthConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=0.1}"
+                   RelativeLayout.XConstraint="{ConstraintExpression Type=RelativeToView, ElementName=XNameEntryDays, Property=Width, Factor=5.5}"
+                   Source="add_circle_outline_black_48dp">
+                    <Image.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnPlusDay" NumberOfTapsRequired="1"/>
+                    </Image.GestureRecognizers>
+                    <RelativeLayout.YConstraint>
+                        <OnPlatform x:TypeArguments="Constraint">
+                            <On Platform="Android" Value="{ConstraintExpression Type=RelativeToParent, Property=Height, Factor=0.58}"/>
+                            <On Platform="iOS" Value="{ConstraintExpression Type=RelativeToParent, Property=Height, Factor=0.60}"/>
+                        </OnPlatform>
+                    </RelativeLayout.YConstraint>
+                </Image>
+
+                <Line RelativeLayout.WidthConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=1}"
+                  RelativeLayout.YConstraint="{ConstraintExpression Type=RelativeToParent, Property=Height, Factor=0.72}"
+                  X1="0" Y1="0" X2="300" Y2="0" Stroke="Brown" HorizontalOptions="CenterAndExpand"/>
+
+                <!--Run this advertisement until-->
+                <Label RelativeLayout.HeightConstraint="{ConstraintExpression Type=RelativeToParent, Property=Height, Factor=0.08}"
+                       RelativeLayout.YConstraint="{ConstraintExpression Type=RelativeToParent, Property=Height, Factor=0.73}"
+                       RelativeLayout.XConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=0.12}"
+                       Text="Run this advertisement until" TextColor="Black" FontSize="Subtitle"/>
+
+                <Image RelativeLayout.HeightConstraint="{ConstraintExpression Type=RelativeToParent, Property=Height, Factor=0.08}"
+                   RelativeLayout.WidthConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=0.1}"
+                   Source="calendar_month_black_48dp">
+                    <RelativeLayout.YConstraint>
+                        <OnPlatform x:TypeArguments="Constraint">
+                            <On Platform="Android" Value="{ConstraintExpression Type=RelativeToParent, Property=Height, Factor=0.73}"/>
+                            <On Platform="iOS" Value="{ConstraintExpression Type=RelativeToParent, Property=Height, Factor=0.73, Constant=5}"/>
+                        </OnPlatform>
+                    </RelativeLayout.YConstraint>
+                </Image>
+
+                <DatePicker RelativeLayout.WidthConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=0.88}"
+                        RelativeLayout.XConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=0.12}"
+                        x:Name="XNameEndDate"
+                        TextColor="Blue" FontSize="Body" DateSelected="OnEndDate">
+                    <RelativeLayout.HeightConstraint>
+                        <OnPlatform x:TypeArguments="Constraint">
+                            <On Platform="Android" Value="{ConstraintExpression Type=RelativeToParent, Property=Height, Factor=0.08}"/>
+                            <On Platform="iOS" Value="{ConstraintExpression Type=RelativeToParent, Property=Height, Factor=0.06}"/>
+                        </OnPlatform>
+                    </RelativeLayout.HeightConstraint>
+                    <RelativeLayout.YConstraint>
+                        <OnPlatform x:TypeArguments="Constraint">
+                            <On Platform="Android" Value="{ConstraintExpression Type=RelativeToParent, Property=Height, Factor=0.76}"/>
+                            <On Platform="iOS" Value="{ConstraintExpression Type=RelativeToParent, Property=Height, Factor=0.78, Constant=2}"/>
+                        </OnPlatform>
+                    </RelativeLayout.YConstraint>
+                </DatePicker>
+
+            </RelativeLayout>
+        </StackLayout>
+    </xct:Popup.Content>
+</xct:Popup>
+
+<!--<DatePicker RelativeLayout.HeightConstraint="{ConstraintExpression Type=RelativeToParent, Property=Height, Factor=0.06}"
+            RelativeLayout.WidthConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=0.88}"
+            RelativeLayout.YConstraint="{ConstraintExpression Type=RelativeToView, ElementName=XNameBudgetLabel, Property=Height, Factor=8.97, Constant=18}"
+            RelativeLayout.XConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=0.12}"
+            x:Name="XNameEndDate"
+            TextColor="Blue" FontSize="Body" DateSelected="OnEndDate"/>-->

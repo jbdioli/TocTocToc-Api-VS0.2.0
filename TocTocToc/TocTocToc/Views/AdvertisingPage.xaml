@@ -10,8 +10,9 @@
     </NavigationPage.TitleView>
     <ContentPage.Content>
         <Grid RowDefinitions="*, Auto" ColumnDefinitions="Auto">
+            <ActivityIndicator Grid.RowSpan="1" x:Name="XNameActivityIndicator"  Margin="150"  Color="White"/>
             <ScrollView Grid.Row="0">
-                    <ListView x:Name="ListView_AdvertisingList" ItemsSource="{Binding AdsCollection}" SeparatorVisibility="None" RowHeight="400" BackgroundColor="Transparent">
+                    <ListView x:Name="XNameAdvertisingListView" ItemsSource="{Binding AdsCollection}" SeparatorVisibility="None" RowHeight="400" BackgroundColor="Transparent">
                         <ListView.ItemTemplate>
                             <DataTemplate>
                                 <ViewCell>

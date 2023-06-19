@@ -1,98 +1,189 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using TocTocToc.DtoModels;
+using TocTocToc.Models.Dto;
 using TocTocToc.Shared;
 
 namespace TocTocToc.Services
 {
     public class ItemsStorageService
     {
+        //private const bool IsFile = false;
+        //private readonly HttpMethods _httpMethods = new(IsFile);
+
         private readonly string _url = WebConstants.Url;
-        private string _userId = "";
 
-        private async Task<IList<GenderDto>> GetGenders(string settingId)
+
+        /*
+         * GET
+         */
+
+        public async Task<List<GenderDtoModel>> GetGendersAsync()
         {
-            //IList<GenderDto> genders = new List<GenderDto>();
-
-            const bool isFile = false;
-            var httpMethods = new HttpMethods(isFile);
-
-            var url = _url + WebConstants.GetGenders + settingId;
+            var settingId = LocalStorageService.GetSettingId(); // to take item in function of the language
             var token = LocalStorageService.GetAccessToken();
 
-            IList<GenderDto> genders = await httpMethods.HttpGet<IList<GenderDto>>(url, token) ?? new List<GenderDto>();
+            var url = _url + WebConstants.GetGenders + settingId;
+
+            var genders = await HttpMethods.HttpGetAsync<List<GenderDtoModel>>(url, token);
+
+            genders ??= new List<GenderDtoModel>();
 
             return genders;
         }
 
-        private async Task<IList<MaritalStatusDto>> GetMaritalStatus(string settingId)
+
+        public async Task<List<MaritalStatusDtoModel>> GetMaritalStatusAsync()
         {
-            const bool isFile = false;
-            var httpMethods = new HttpMethods(isFile);
+            var token = LocalStorageService.GetAccessToken();
+            var settingId = LocalStorageService.GetSettingId(); // to take item in function of the language
 
             var url = _url + WebConstants.GetMaritalStatus + settingId;
-            var token = LocalStorageService.GetAccessToken();
 
-            IList<MaritalStatusDto> maritalStatus = await httpMethods.HttpGet<IList<MaritalStatusDto>>(url, token) ?? new List<MaritalStatusDto>();
-            
+            var maritalStatus = await HttpMethods.HttpGetAsync<List<MaritalStatusDtoModel>>(url, token);
+
+            maritalStatus ??= new List<MaritalStatusDtoModel>();
+
             return maritalStatus;
         }
 
-        private async Task<IList<HousingTypeDto>> GetHousingTypes(string settingId)
+
+        public async Task<List<HousingTypeDtoModel>> GetHousingTypesAsync()
         {
-            const bool isFile = false;
-            var httpMethods = new HttpMethods(isFile);
+            var token = LocalStorageService.GetAccessToken();
+            var settingId = LocalStorageService.GetSettingId(); // to take item in function of the language
 
             var url = _url + WebConstants.GetHousingTypes + settingId;
-            var token = LocalStorageService.GetAccessToken();
 
-            IList<HousingTypeDto> housingTypes = await httpMethods.HttpGet<IList<HousingTypeDto>>(url, token) ?? new List<HousingTypeDto>();
-            
+            var housingTypes = await HttpMethods.HttpGetAsync<List<HousingTypeDtoModel>>(url, token);
+
+            housingTypes ??= new List<HousingTypeDtoModel>();
+
             return housingTypes;
         }
 
 
 
-        public async Task<T> SetGenders<T>(T objectDetails)
+        public async Task<List<InterestDtoModel>> GetInterestsAsync()
         {
-            var genderProperty = objectDetails.GetType().GetProperty("Genders");
+            var url = _url + WebConstants.GetInterests;
+            var token = LocalStorageService.GetAccessToken();
 
-            var settingId = LocalStorageService.GetSettingId();
-            var buffer = GetGenders(settingId);
-            var genderList = await buffer;
-            if (genderProperty != null)
-                genderProperty.SetValue(objectDetails, new List<GenderDto>(genderList));
+            var interests = await HttpMethods.HttpGetAsync<List<InterestDtoModel>>(url, token);
 
-            return objectDetails;
+            interests ??= new List<InterestDtoModel>();
+
+            return interests;
         }
 
 
-        public async Task<T> SetMaritalStatuses<T>(T objectDetails)
+
+        public async Task<List<CountryDtoModel>> GetCountriesAsync()
         {
-            var genderProperty = objectDetails.GetType().GetProperty("MaritalStatuses");
+            var url = _url + WebConstants.GetCountries;
+            var token = LocalStorageService.GetAccessToken();
 
-            var settingId = LocalStorageService.GetSettingId();
-            var buffer = GetMaritalStatus(settingId);
-            var maritalStatusList = await buffer;
-            if (genderProperty != null)
-                genderProperty.SetValue(objectDetails, new List<MaritalStatusDto>(maritalStatusList));
+            var countries = await HttpMethods.HttpGetAsync<List<CountryDtoModel>>(url, token);
 
-            return objectDetails;
+            countries ??= new List<CountryDtoModel>();
+
+            return countries;
         }
 
 
-        public async Task<T> SetHousingTypes<T>(T objectDetails)
+        public async Task<List<StateDtoModel>> GetStatesAsync(CountryDtoModel country)
         {
-            var genderProperty = objectDetails.GetType().GetProperty("HousingTypes");
+            var url = _url + WebConstants.GetStates + country.Id.ToString();
+            var token = LocalStorageService.GetAccessToken();
 
-            var settingId = LocalStorageService.GetSettingId();
-            var buffer = GetHousingTypes(settingId);
-            var housingTypeList = await buffer;
-            if (genderProperty != null)
-                genderProperty.SetValue(objectDetails, new List<HousingTypeDto>(housingTypeList));
+            var states = await HttpMethods.HttpGetAsync<List<StateDtoModel>>(url, token);
 
-            return objectDetails;
+            states ??= new List<StateDtoModel>();
+
+            return states;
         }
 
+
+        public async Task<List<CountyDtoModel>> GetCountiesAsync(StateDtoModel states)
+        {
+            var url = _url + WebConstants.GetCounties + states.Id.ToString();
+            var token = LocalStorageService.GetAccessToken();
+
+            var counties = await HttpMethods.HttpGetAsync<List<CountyDtoModel>>(url, token);
+
+            counties ??= new List<CountyDtoModel>();
+
+            return counties;
+        }
+
+
+        public async Task<List<CityDtoModel>> GetCitiesAsync(CountyDtoModel counties)
+        {
+            var url = _url + WebConstants.GetCities + counties.Id.ToString();
+            var token = LocalStorageService.GetAccessToken();
+
+            var cities= await HttpMethods.HttpGetAsync<List<CityDtoModel>>(url, token);
+
+            cities ??= new List<CityDtoModel>();
+
+            return cities;
+        }
+
+
+        /*
+         * SAVE
+         */
+
+
+        public async Task<List<StateDtoModel>> SaveStatesAsync(List<StateDtoModel> states)
+        {
+            var url = _url + WebConstants.PostStates;
+            var token = LocalStorageService.GetAccessToken();
+
+            var statesUpdated = await HttpMethods.HttpPostAsync<List<StateDtoModel>, List<StateDtoModel>>(url, token, states, false);
+
+            statesUpdated ??= new List<StateDtoModel>();
+
+            return statesUpdated;
+        }
+
+
+        public async Task<List<CountyDtoModel>> SaveCountiesAsync(List<CountyDtoModel> counties)
+        {
+            var url = _url + WebConstants.PostCounties;
+            var token = LocalStorageService.GetAccessToken();
+
+            var countiesUpdated = await HttpMethods.HttpPostAsync<List<CountyDtoModel>, List<CountyDtoModel>>(url, token, counties, false);
+
+            countiesUpdated ??= new List<CountyDtoModel>();
+
+            return countiesUpdated;
+        }
+
+
+        public async Task<List<CityDtoModel>> SaveCitiesAsync(List<CityDtoModel> cities)
+        {
+            var url = _url + WebConstants.PostCities;
+            var token = LocalStorageService.GetAccessToken();
+
+            var citiesUpdated = await HttpMethods.HttpPostAsync<List<CityDtoModel>, List<CityDtoModel>>(url, token, cities, false);
+
+            citiesUpdated ??= new List<CityDtoModel>();
+
+            return citiesUpdated;
+        }
+
+
+        public async Task<List<InterestDtoModel>> SaveInterestsAsync(List<InterestDtoModel> interests)
+        {
+            var settingId = LocalStorageService.GetSettingId();
+            var url = _url + WebConstants.GetInterests + settingId;
+            var token = LocalStorageService.GetAccessToken();
+
+            var interestsUpdated = await HttpMethods.HttpPostAsync<List<InterestDtoModel>, List<InterestDtoModel>>(url, token, interests, false);
+
+            interestsUpdated ??= new List<InterestDtoModel>();
+
+            return interestsUpdated;
+        }
     }
 }

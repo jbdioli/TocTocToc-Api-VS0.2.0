@@ -2,7 +2,7 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:xct="http://xamarin.com/schemas/2020/toolkit"
-             xmlns:viewModels="clr-namespace:TocTocToc.ViewModels;assembly=TocTocToc"
+             xmlns:viewModels="clr-namespace:TocTocToc.Models.View;assembly=TocTocToc"
              x:Class="TocTocToc.Views.MenuPage">
     <ContentPage.BindingContext>
         <viewModels:LanguageViewModel />

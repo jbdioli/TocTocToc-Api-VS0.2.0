@@ -1,4 +1,4 @@
-﻿using TocTocToc.ViewModels;
+﻿using TocTocToc.Models.View;
 using Xamarin.Forms.Xaml;
 
 namespace TocTocToc.Popup
@@ -6,14 +6,11 @@ namespace TocTocToc.Popup
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class AdvertisingDisplayPopup : Xamarin.CommunityToolkit.UI.Views.Popup
     {
-
-        public AdvertisingViewModel AdvertisingView;
-
-        public AdvertisingDisplayPopup(AdvertisingViewModel advertisingView)
+        public AdvertisingDisplayPopup(AdvertisingViewModel advertising)
         {
             InitializeComponent();
-            AdvertisingView = advertisingView ?? new AdvertisingViewModel();
-            BindingContext = AdvertisingView;
+            var advertisingView = advertising ?? new AdvertisingViewModel();
+            BindingContext = advertisingView;
         }
     }
 }

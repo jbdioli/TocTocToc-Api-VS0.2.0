@@ -27,51 +27,76 @@
                         <maps:Map x:Name="XNameMap" IsShowingUser="True" HasZoomEnabled="False" BackgroundColor="#61007D" />
                     </StackLayout>
 
-                    <Entry Grid.Row="1" Grid.ColumnSpan="4" Text="{Binding Title}" TextColor="Black"
-                       Placeholder="{xct:Translate LabelAddressNamed}" TextChanged="OnTextChanged"
-                       x:Name="AddressNamedEntry" />
+                    <Entry Grid.Row="1" Grid.ColumnSpan="4"
+                           x:Name="AddressNamedEntry"
+                           FontSize="Body" TextColor="Black"
+                           Text="{Binding Title}" 
+                           Placeholder="{xct:Translate LabelAddressNamed}" TextChanged="OnTextChanged"/>
+
                     <Picker Grid.Row="2" Grid.ColumnSpan="4"
-                        x:Name="XNameHousingTypePicker"
-                        Title="{xct:Translate LabelHousingType}"
-                        ItemsSource="{Binding HousingTypes}"
-                        ItemDisplayBinding="{Binding Type}"
-                        SelectedIndexChanged="OnAddressType" />
+                            x:Name="XNameHousingTypePicker"
+                            FontSize="Body"
+                            Title="{xct:Translate LabelHousingType}"
+                            ItemDisplayBinding="{Binding Item}"
+                            SelectedIndexChanged="OnAddressType" />
 
-                    <Entry Grid.Row="3" Grid.Column="0" Text="{Binding StreetNumber}" TextColor="Black"
-                       Placeholder="{xct:Translate LabelStreetNumber}" />
+                    <Entry Grid.Row="3" Grid.Column="0"
+                           FontSize="Body" TextColor="Black"
+                           Text="{Binding StreetNumber}"
+                           Placeholder="{xct:Translate LabelStreetNumber}" />
 
-                    <Entry Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="3" Text="{Binding Address}" TextColor="Black"
-                       Placeholder="{xct:Translate LabelAddress}" />
+                    <Entry Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="3"
+                           FontSize="Body" TextColor="Black"
+                           Text="{Binding Address}"
+                           Placeholder="{xct:Translate LabelAddress}" />
 
-                    <Entry Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2" Text="{Binding ResidenceName}" TextColor="Black"
-                       Placeholder="{xct:Translate LabelResidenceName}" />
+                    <Entry Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2"
+                           FontSize="Body" TextColor="Black"
+                           Text="{Binding ResidenceName}"
+                           Placeholder="{xct:Translate LabelResidenceName}" />
 
-                    <Entry Grid.Row="4" Grid.Column="2" Grid.ColumnSpan="2" Text="{Binding BuildingName}" TextColor="Black"
-                       Placeholder="{xct:Translate LabelBuildingName}" />
+                    <Entry Grid.Row="4" Grid.Column="2" Grid.ColumnSpan="2"
+                           FontSize="Body" TextColor="Black"
+                           Text="{Binding BuildingName}"
+                           Placeholder="{xct:Translate LabelBuildingName}" />
 
-                    <Entry Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="2" Text="{Binding BuildingNumber}" TextColor="Black"
-                       Placeholder="{xct:Translate LabelBuildingNumber}" />
+                    <Entry Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="2"
+                           FontSize="Body" TextColor="Black"
+                           Text="{Binding BuildingNumber}"
+                           Placeholder="{xct:Translate LabelBuildingNumber}" />
 
-                    <Entry Grid.Row="5" Grid.Column="2" Text="{Binding BuildingEntrance}" TextColor="Black"
+                    <Entry Grid.Row="5" Grid.Column="2"
+                           FontSize="Body" TextColor="Black"
+                           Text="{Binding BuildingEntrance}"
                            Placeholder="{xct:Translate LabelBuildingEntrance}" />
 
-                    <Entry Grid.Row="5" Grid.Column="3" Text="{Binding Floor}" TextColor="Black"
-                       Placeholder="{xct:Translate LabelFloor}" />
+                    <Entry Grid.Row="5" Grid.Column="3"
+                           FontSize="Body" TextColor="Black" Keyboard="Numeric"
+                           Text="{Binding Floor}"
+                           Placeholder="{xct:Translate LabelFloor}" />
 
-                    <Entry Grid.Row="6" Grid.Column="0" Text="{Binding Zipcode}" TextColor="Black"
-                       Placeholder="{xct:Translate LabelZipcode}" />
+                    <Entry Grid.Row="6" Grid.Column="0"
+                           FontSize="Body" TextColor="Black"
+                           Text="{Binding Zipcode}"
+                           Placeholder="{xct:Translate LabelZipcode}" />
 
-                    <Entry Grid.Row="6" Grid.Column="1" Grid.ColumnSpan="3" Text="{Binding City}" TextColor="Black"
-                       Placeholder="{xct:Translate LabelCity}"
-                       x:Name="XNameCityEntry"/>
+                    <Entry Grid.Row="6" Grid.Column="1" Grid.ColumnSpan="3"
+                           x:Name="XNameCityEntry"
+                           FontSize="Body" TextColor="Black"
+                           Text="{Binding City}"
+                           Placeholder="{xct:Translate LabelCity}"/>
 
-                    <Entry Grid.Row="7" Grid.Column="0" Grid.ColumnSpan="2" Text="{Binding State}" TextColor="Black"
-                       Placeholder="{xct:Translate LabelState}"
-                       x:Name="XNameStateEntry"/>
+                    <Entry Grid.Row="7" Grid.Column="0" Grid.ColumnSpan="2"
+                           x:Name="XNameStateEntry"
+                           FontSize="Body" TextColor="Black"
+                           Text="{Binding State}"
+                           Placeholder="{xct:Translate LabelState}"/>
 
-                    <Entry Grid.Row="7" Grid.Column="2" Grid.ColumnSpan="2" Text="{Binding Country}" TextColor="Black"
-                       Placeholder="{xct:Translate LabelCountry}"
-                       x:Name="XNameCountryEntry"/>
+                    <Entry Grid.Row="7" Grid.Column="2" Grid.ColumnSpan="2"
+                           x:Name="XNameCountryEntry"
+                           FontSize="Body" TextColor="Black"
+                           Text="{Binding Country}"
+                           Placeholder="{xct:Translate LabelCountry}"/>
 
                 </Grid>
             </ScrollView>

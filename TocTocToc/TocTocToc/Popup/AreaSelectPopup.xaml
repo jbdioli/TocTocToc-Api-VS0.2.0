@@ -1,0 +1,181 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<xct:Popup xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:xct="clr-namespace:Xamarin.CommunityToolkit.UI.Views;assembly=Xamarin.CommunityToolkit"
+             xmlns:areaSelectedDtoModel="clr-namespace:TocTocToc.Models.Dto;assembly=TocTocToc"
+             Size="340,340"
+             x:Class="TocTocToc.Popup.AreaSelectPopup"
+             x:TypeArguments="areaSelectedDtoModel:AreaSelectedDtoModel"
+             x:Name="XNameAutoCompletePage">
+    <xct:Popup.Content>
+        <Grid RowDefinitions="Auto, Auto, Auto, Auto, 10, Auto" ColumnDefinitions="*, Auto, Auto"
+              Padding="10"
+              BackgroundColor="DarkCyan">
+
+            <!--Country-->
+            <Label Grid.Row="0" x:Name="XNameCountryLabel"/>
+            <StackLayout Grid.Row="0" Grid.Column="1"
+                         x:Name="XNameCountryCheckBoxIcon"
+                         VerticalOptions="Center" Orientation="Horizontal">
+                <CheckBox x:Name="XNameCountryCheckBox"
+                          Color="#ebb549" CheckedChanged="OnCheckedCountry"/>
+                <Label HorizontalTextAlignment="Center" VerticalTextAlignment="Center" Text="All" />
+            </StackLayout>
+
+            <!--State-->
+            <Grid Grid.Row="1" Grid.Column="0"
+                  ColumnDefinitions="*, Auto" 
+                  x:Name="XNameState">
+                <Entry Grid.Row="0" x:Name="XNameStateSearch"
+                       TextColor="White" Placeholder="Type a state here..."
+                       TextChanged="OnStateTextChanged" Completed="OnStateCompleted" Unfocused="OnStateUnfocused"/>
+                <Image Grid.Column="1" 
+                       x:Name="XNameStateReturnButton"
+                       VerticalOptions="Center" HorizontalOptions="Center" WidthRequest="25" IsVisible="False" Source="keyboard_return_black_48dp.png">
+                    <Image.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnStateCompleted" NumberOfTapsRequired="1" />
+                    </Image.GestureRecognizers>
+                </Image>
+            </Grid>
+            <StackLayout Grid.Row="1" Grid.Column="1"
+                         x:Name="XNameStateCheckBoxIcon"
+                         VerticalOptions="Center" Orientation="Horizontal">
+                <CheckBox x:Name="XNameStateCheckBox"
+                          Color="#ebb549" CheckedChanged="OnStateChecked"/>
+                <Label HorizontalTextAlignment="Center" VerticalTextAlignment="Center" Text="All" />
+            </StackLayout>
+
+            <!--County-->
+            <Grid Grid.Row="2" Grid.Column="0"
+                  ColumnDefinitions="*, Auto"
+                  x:Name="XNameCounty">
+                <Entry Grid.Row="0" x:Name="XNameCountySearch"
+                       TextColor="White" Placeholder="Type county here..."
+                       TextChanged="OnCountyTextChanged" Completed="OnCountyCompleted" Unfocused="OnCountyUnfocused"/>
+                <Image Grid.Column="1" 
+                       x:Name="XNameCountyReturnButton"
+                       VerticalOptions="Center" HorizontalOptions="Center" WidthRequest="25" IsVisible="False" Source="keyboard_return_black_48dp.png">
+                    <Image.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnCountyCompleted" NumberOfTapsRequired="1" />
+                    </Image.GestureRecognizers>
+                </Image>
+            </Grid>
+            <StackLayout Grid.Row="2" Grid.Column="1"
+                         x:Name="XNameCountyCheckBoxIcon"
+                         VerticalOptions="Center" Orientation="Horizontal">
+                <CheckBox x:Name="XNameCountyCheckBox"
+                          Color="#ebb549" CheckedChanged="OnCountyChecked"/>
+                <Label HorizontalTextAlignment="Center" VerticalTextAlignment="Center" Text="All" />
+            </StackLayout>
+
+            <!--City-->
+            <Grid Grid.Row="3" Grid.ColumnSpan="2"
+                  ColumnDefinitions="*, Auto"
+                  x:Name="XNameCity">
+                <Entry Grid.Row="0" x:Name="XNameCitySearch"
+                       TextColor="White" Placeholder="Type city here..."
+                       TextChanged="OnCityTextChanged" Completed="OnCityCompleted" Unfocused="OnCityUnfocused"/>
+                <Image Grid.Column="1" 
+                       x:Name="XNameCityReturnButton"
+                       VerticalOptions="Center" HorizontalOptions="Center" WidthRequest="25" IsVisible="False" Source="keyboard_return_black_48dp.png">
+                    <Image.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnCityCompleted" NumberOfTapsRequired="1" />
+                    </Image.GestureRecognizers>
+                </Image>
+            </Grid>
+
+
+            <!--Token display-->
+            <Line Grid.Row="4" Grid.ColumnSpan="2"
+                  VerticalOptions="Start" HorizontalOptions="Center"
+                  X1="0" Y1="0"
+                  X2="200" Y2="0"
+                  StrokeLineCap="Square"
+                  Stroke="MediumAquamarine"
+                  StrokeThickness="5"/>
+
+            <CollectionView Grid.Row="5" Grid.ColumnSpan="2"
+                            x:Name="XNameTokensView"
+                            BackgroundColor="Transparent">
+                <CollectionView.ItemsLayout>
+                    <GridItemsLayout Orientation="Vertical" Span="3" HorizontalItemSpacing="7" VerticalItemSpacing="10"/>
+                </CollectionView.ItemsLayout>
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <Frame HorizontalOptions="CenterAndExpand" Padding="7" CornerRadius="20" BorderColor="DarkCyan" BackgroundColor="LightGreen" HasShadow="True">
+                            <Grid ColumnDefinitions="*, 15">
+                                <Label Grid.Column="0" HorizontalOptions="CenterAndExpand" VerticalOptions="Center" Text="{Binding Item}" FontSize="Small" TextColor="Black"/>
+                                <Image Grid.Column="1" VerticalOptions="Center" HorizontalOptions="Center"  Source="close_black_48dp.png">
+                                    <Image.GestureRecognizers>
+                                        <TapGestureRecognizer NumberOfTapsRequired="2"
+                                                              Command="{Binding Path=TappedDeleteTokenCommand, Source={x:Reference XNameAutoCompletePage}}"
+                                                              CommandParameter="{Binding Item}"/>
+                                    </Image.GestureRecognizers>
+                                </Image>
+                            </Grid>
+                        </Frame>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+
+
+
+            <!--Suggestion State box-->
+            <ListView Grid.Row="1" Grid.RowSpan="5" Grid.Column="0"
+                      Margin="8, 42, 15, 250"
+                      x:Name="XNameStateSuggestionsView"
+                      IsVisible="False" CachingStrategy="RecycleElement" BackgroundColor="White"
+                      ItemTapped="OnStateItemTapped">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <ViewCell>
+                            <Frame>
+                                <StackLayout BackgroundColor="White">
+                                    <Label Text="{Binding Item}" FontSize="16" TextColor="#FF464859"/>
+                                </StackLayout>
+                            </Frame>
+                        </ViewCell>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+
+            <!--Suggestion County box-->
+            <ListView Grid.Row="2" Grid.RowSpan="4" Grid.Column="0"
+                      Margin="8, 42, 15, 250"
+                      x:Name="XNameCountySuggestionsView"
+                      IsVisible="False" CachingStrategy="RecycleElement" BackgroundColor="White"
+                      ItemTapped="OnCountyItemTapped">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <ViewCell>
+                            <Frame>
+                                <StackLayout BackgroundColor="White">
+                                    <Label Text="{Binding Item}" FontSize="16" TextColor="#FF464859"/>
+                                </StackLayout>
+                            </Frame>
+                        </ViewCell>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+
+            <!--Suggestion City box-->
+            <ListView Grid.Row="3" Grid.RowSpan="3" Grid.Column="0"
+                      Margin="8, 42, 15, 250"
+                      x:Name="XNameCitySuggestionsView"
+                      IsVisible="False" CachingStrategy="RecycleElement" BackgroundColor="White"
+                      ItemTapped="OnCityItemTapped">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <ViewCell>
+                            <Frame>
+                                <StackLayout BackgroundColor="White">
+                                    <Label Text="{Binding Item}" FontSize="16" TextColor="#FF464859"/>
+                                </StackLayout>
+                            </Frame>
+                        </ViewCell>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+        </Grid>
+    </xct:Popup.Content>
+</xct:Popup>

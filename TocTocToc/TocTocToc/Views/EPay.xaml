@@ -1,0 +1,161 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:xct="http://xamarin.com/schemas/2020/toolkit"
+             xmlns:converters="clr-namespace:TocTocToc.Converters;assembly=TocTocToc"
+             x:Class="TocTocToc.Views.EPay">
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <converters:IsChangeColorConverter x:Key="isValidValue" />
+        </ResourceDictionary>
+    </ContentPage.Resources>
+    <ContentPage.ToolbarItems >
+        <ToolbarItem Text="ePay" Order="Primary" Priority="0"/>
+    </ContentPage.ToolbarItems>
+    <ContentPage.Content>
+
+        <RelativeLayout Margin="0, 10, 0, 0" >
+            <Label RelativeLayout.HeightConstraint="{ConstraintExpression Type=RelativeToParent, Property=Height, Factor=0.08}"
+                   RelativeLayout.WidthConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=1}"
+                   x:Name="XNameAmount"
+                   Padding="0" Margin="0"
+                   HorizontalTextAlignment="Center"
+                   Text="{Binding EPayPayment.CurrencyValue, StringFormat='{0:C0}'}" FontSize="Title" TextColor="DarkSlateGray"/>
+
+
+            <Frame RelativeLayout.HeightConstraint="{ConstraintExpression Type=RelativeToParent, Property=Height, Factor=0.24}"
+                   RelativeLayout.WidthConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=0.9}"
+                   RelativeLayout.YConstraint="{ConstraintExpression Type=RelativeToParent, Property=Height, Factor=0.06}"
+                   RelativeLayout.XConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=0.05}"
+                   x:Name="XNameCardFrame"
+                   Padding="0" Margin="0"
+                   BackgroundColor="SeaGreen" BorderColor="Aqua">
+
+                <Grid RowDefinitions="*, *, *" ColumnDefinitions="Auto, *, Auto, Auto"
+                      Margin="10" Padding="0">
+
+                    <Label Grid.Row="0" Grid.ColumnSpan="3" VerticalTextAlignment="Center" Text="Debit / credit card"/>
+                    <Image Grid.Row="0" Grid.Column="3" HeightRequest="30" Source="credit_card_white_48dp.png"/>
+
+                    <Label Grid.Row="1" Grid.Column="0" VerticalTextAlignment="Center" Text="Card number"/>
+                    <Entry Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="3"
+                           x:Name="XNameCardNumber"
+                           HorizontalTextAlignment="Center"
+                           Placeholder="Number" FontSize="Body" Keyboard="Numeric"
+                           TextColor="{Binding IsCardNumber, Converter={StaticResource isValidValue}, ConverterParameter='TextError'}"
+                           Text="{Binding EPayPayment.CardNo}" PropertyChanged="OnCardNumber" Completed="OnCardNumberEnterKey"/>
+
+                    <Label Grid.Row="2" Grid.Column="0" VerticalTextAlignment="Center" Text="Expiry"/>
+                    <StackLayout Grid.Row="2" Grid.Column="1" Orientation="Horizontal" HorizontalOptions="StartAndExpand" VerticalOptions="CenterAndExpand">
+                        <Entry HorizontalOptions="Start" HorizontalTextAlignment="Center"
+                               x:Name="XNameExpireMonth"
+                               Placeholder="MM" FontSize="Body" Keyboard="Numeric" WidthRequest="41" 
+                               TextColor="{Binding IsExpMonth, Converter={StaticResource isValidValue}, ConverterParameter='TextError'}"
+                               Text="{Binding EPayPayment.ExpMonth}" PropertyChanged="OnExpMonth" Completed="OnExpMonthEnterKey"/>
+                        <Label HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand" Text="/" WidthRequest="10"/>
+                        <Entry HorizontalOptions="End" HorizontalTextAlignment="Center"
+                               x:Name="XNameExpireYear"
+                               Placeholder="YY" FontSize="Body" Keyboard="Numeric" WidthRequest="41"
+                               TextColor="{Binding IsExpYear, Converter={StaticResource isValidValue}, ConverterParameter='TextError'}"
+                               Text="{Binding EPayPayment.ExpYear}" PropertyChanged="OnExpYear" Completed="OnExpYearEnterKey"/>
+                    </StackLayout>
+                    <Label Grid.Row="2" Grid.Column="2" VerticalTextAlignment="Center" HorizontalTextAlignment="Center" Text="CVC"/>
+                    <Entry Grid.Row="2" Grid.Column="3" VerticalTextAlignment="Center"
+                           x:Name="XNameCardCvv"
+                           Placeholder="CVV" FontSize="Body" Keyboard="Numeric" WidthRequest="46"
+                           TextColor="{Binding IsCardCvv, Converter={StaticResource isValidValue}, ConverterParameter='TextError'}"
+                           Text="{Binding EPayPayment.CardCvv}" PropertyChanged="OnCardCvv" Completed="OnCardCvvEnterKey"/>
+                </Grid>
+            </Frame>
+
+
+            <Frame RelativeLayout.HeightConstraint="{ConstraintExpression Type=RelativeToParent, Property=Height, Factor=0.24}"
+                   RelativeLayout.WidthConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=0.9}"
+                   RelativeLayout.YConstraint="{ConstraintExpression Type=RelativeToView, ElementName=XNameCardFrame, Property=Height, Factor=1.35}"
+                   RelativeLayout.XConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=0.05}"
+                   x:Name="XNameUserInfoFrame"
+                   Padding="0" Margin="0"
+                   BackgroundColor="SeaGreen" BorderColor="Aqua">
+
+                <Grid RowDefinitions="*, *, *" ColumnDefinitions="*, *"
+                      Margin="10" Padding="0">
+
+                    <Entry Grid.Row="0" Grid.Column="0"
+                           x:Name="XNameFirstname"
+                           Placeholder="Firstname" FontSize="Body"
+                           TextColor="{Binding IsFirstname, Converter={StaticResource isValidValue}, ConverterParameter='TextError'}"
+                           Text="{Binding EPayOrder.BillingAddress.Firstname}" PropertyChanged="OnFirstname" Completed="OnFirstNameEnterKey"/>
+                    <Entry Grid.Row="0" Grid.Column="1"
+                           x:Name="XNameLastname"
+                           Placeholder="Lastname" FontSize="Body"
+                           TextColor="{Binding IsLastname, Converter={StaticResource isValidValue}, ConverterParameter='TextError'}"
+                           Text="{Binding EPayOrder.BillingAddress.Lastname}" PropertyChanged="OnLastname" Completed="OnLastnameEnterKey"/>
+                    <Entry Grid.Row="1" Grid.ColumnSpan="2"
+                           x:Name="XNameEmail"
+                           Placeholder="Email" FontSize="Body" Keyboard="Email"
+                           TextColor="{Binding IsEmail, Converter={StaticResource isValidValue}, ConverterParameter='TextError'}"
+                           Text="{Binding EPayOrder.BillingAddress.Email}" Focused="OnEmailFocused" PropertyChanged="OnEmail" Completed="OnEmailEnterKey"/>
+                    <Entry Grid.Row="2" Grid.ColumnSpan="2"
+                           x:Name="XNamePhoneNumber"
+                           Placeholder="Phone Number" FontSize="Body" Keyboard="Numeric" MaxLength="15"
+                           TextColor="{Binding IsPhoneNumber, Converter={StaticResource isValidValue}, ConverterParameter='TextError'}"
+                           Text="{Binding EPayOrder.BillingAddress.PhoneNumber}" PropertyChanged="OnPhoneNumber" Completed="OnPhoneNumberEnterKey"/>
+                </Grid>
+
+            </Frame>
+
+            <Frame RelativeLayout.HeightConstraint="{ConstraintExpression Type=RelativeToParent, Property=Height, Factor=0.296}"
+                   RelativeLayout.WidthConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=0.9}"
+                   RelativeLayout.YConstraint="{ConstraintExpression Type=RelativeToView, ElementName=XNameUserInfoFrame, Property=Height, Factor=2.45}"
+                   RelativeLayout.XConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=0.05}"
+                   Padding="0" Margin="0"
+                   BackgroundColor="SeaGreen" BorderColor="Aqua">
+
+                <Grid RowDefinitions="*, *, *, *" ColumnDefinitions="*, *"
+                      Margin="10" Padding="0">
+
+                    <Entry Grid.Row="0" Grid.ColumnSpan="2"
+                           x:Name="XNameAddress1"
+                           Placeholder="Address 1" FontSize="Body"
+                           TextColor="{Binding IsAddress1, Converter={StaticResource isValidValue}, ConverterParameter='TextError'}"
+                           Text="{Binding EPayOrder.BillingAddress.Address1}" PropertyChanged="OnAddress" Completed="OnAddress1EnterKey"/>
+                    <Entry Grid.Row="1" Grid.ColumnSpan="2"
+                           x:Name="XNameAddress2"
+                           Placeholder="Address 2" FontSize="Body"
+                           Text="{Binding EPayOrder.BillingAddress.Address2}" Completed="OnAddress2EnterKey"/>
+                    <Entry Grid.Row="2" Grid.Column="0"
+                           x:Name="XNameZipcode"
+                           Placeholder="ZipCode" FontSize="Body" MaxLength="10"
+                           TextColor="{Binding IsZipcode, Converter={StaticResource isValidValue}, ConverterParameter='TextError'}"
+                           Text="{Binding EPayOrder.BillingAddress.Zipcode}" PropertyChanged="OnZipcode" Completed="OnZipcodeEnterKey"/>
+                    <Entry Grid.Row="2" Grid.Column="1"
+                           x:Name="XNameCity"
+                           Placeholder="City" FontSize="Body"
+                           TextColor="{Binding IsCity, Converter={StaticResource isValidValue}, ConverterParameter='TextError'}"
+                           Text="{Binding EPayOrder.BillingAddress.City}" PropertyChanged="OnCity" Completed="OnCityEnterKey"/>
+                    <Entry Grid.Row="3" Grid.Column="0"
+                           x:Name="XNameState"
+                           Placeholder="State" FontSize="Body"
+                           TextColor="{Binding IsState, Converter={StaticResource isValidValue}, ConverterParameter='TextError'}"
+                           Text="{Binding AddressDetails.State}" PropertyChanged="OnState" Completed="OnStateEnterKey"/>
+                    <Entry Grid.Row="3" Grid.Column="1"
+                           x:Name="XNameCountry"
+                           Placeholder="Country" FontSize="Body"
+                           TextColor="{Binding IsCountry, Converter={StaticResource isValidValue}, ConverterParameter='TextError'}"
+                           Text="{Binding EPayOrder.BillingAddress.Country}" PropertyChanged="OnCountry"/>
+                </Grid>
+
+            </Frame>
+
+            <Button RelativeLayout.HeightConstraint="{ConstraintExpression Type=RelativeToParent, Property=Height, Factor=0.08}"
+                    RelativeLayout.WidthConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=0.9}"
+                    RelativeLayout.YConstraint="{ConstraintExpression Type=RelativeToParent, Property=Height, Factor=0.9}"
+                    RelativeLayout.XConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=0.05}"
+                    BackgroundColor="DarkSlateGray" BorderColor="LightSlateGray"
+                    Text="Pay" TextColor="White"
+                    IsEnabled="{Binding IsEPayValid}"
+                    Clicked="OnPaying"/>
+
+        </RelativeLayout>
+    </ContentPage.Content>
+</ContentPage>

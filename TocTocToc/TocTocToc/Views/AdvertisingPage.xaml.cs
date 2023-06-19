@@ -1,14 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
-using TocTocToc.DtoModels;
+using TocTocToc.ENumerations;
+using TocTocToc.Models.Dto;
+using TocTocToc.Models.View;
 using TocTocToc.Services;
 using TocTocToc.Shared;
-using TocTocToc.ViewModels;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
@@ -18,59 +16,78 @@ namespace TocTocToc.Views
     public partial class AdvertisingPage : ContentPage
     {
 
-        private Auth _auth = new();
+        private readonly TokenHandler _auth = new(new KeycloakServerChannel());
 
-        private readonly UserStorageService _userStorageService = new();
-        private AdvertisingStorageService _advertisingStorageService;
-        private CopyModel _copyModel = new ();
+        private readonly HttpRequestChannelHandler _httpAdvertisingRequestChannelHandler = new(new AdvertisingStorageServiceChannel());
+        private readonly HttpRequestChannelHandler _httpUserRequestChannelHandler = new(new UserStorageServiceChannel());
 
-        private IDisposable _disposed = null;
-        private string _userId = null;
-        private List<AdvertisingDto> _adsDto = new ();
+        private List<AdvertisingDtoModel> _adsDto = new ();
         private List<AdvertisingViewModel> _adsViewModel = new ();
+        
         public ObservableCollection<AdvertisingViewModel> AdsCollection { get; set; }
 
-        private ActivityIndicator _activityIndicator = new();
+        private readonly ActivityIndicator _activityIndicator = new();
+        private readonly SettingHandler _settingHandler = new();
 
         private bool _isInit;
+        private IDisposable _disposed;
+        private string _userId;
+
 
         public AdvertisingPage()
         {
             InitializeComponent();
             _isInit = false;
-            Init();
         }
 
-        protected override void OnAppearing()
+        protected override async void OnAppearing()
         {
-            if (String.IsNullOrEmpty(_userId) && !_isInit) return;
-            FindAds();
-            if (_disposed != null) return;
-            SubscribeToData();
+            XNameActivityIndicator.IsRunning = true;
+
+            if (_disposed == null)
+            {
+                SubscribeToData();
+            }
+
+            if (string.IsNullOrEmpty(_userId) && !_isInit)
+            {
+                Init();
+            }
+            if (!_isInit) return;
+            await _httpAdvertisingRequestChannelHandler.GenericHttpRequestAsync<List<AdvertisingDtoModel>, List<AdvertisingDtoModel>>(EAdvertisingHttpRequest.AdsGetRequest, null);
+
+            XNameActivityIndicator.IsRunning = false;
         }
 
         private async void Init()
         {
-            var value = RequestNewToken();
-            var token = await value;
-            if (String.IsNullOrEmpty(token)) return;
-            
-            var userId = GetUserAccessInfo();
-            _activityIndicator.IsRunning = true;
-            _userId = await userId;
-            _activityIndicator.IsRunning = false;
+            var bearer = await _auth.GetBearerAsync();
+            Console.WriteLine("[ Bearer ] " + bearer);
 
-            ListView_AdvertisingList.ItemSelected += AdvertisingListOnItemSelected;
+            if (string.IsNullOrEmpty(bearer))
+            {
+                _isInit = false;
+                return;
+            }
 
-            if (string.IsNullOrEmpty(_userId)) return;
-            _advertisingStorageService = new AdvertisingStorageService(_userId);
+            _userId = await GetUserAccessInfo();
+            await _settingHandler.ApplicationSetup();
+
+            XNameAdvertisingListView.ItemSelected += AdvertisingListOnItemSelected;
+
+            if (string.IsNullOrEmpty(_userId))
+            {
+                _isInit = false;
+                return;
+            }
             _isInit = true;
             OnAppearing();
         }
 
+
         private void OnAddAdvertising(object sender, EventArgs e)
         {
-            Navigation.PushAsync(new AdvertisingAddPage());
+            Navigation.PushAsync(new AdvertisingAddOrModifyPage());
         }
 
         private void OnNextClick(object sender, EventArgs e)
@@ -82,11 +99,14 @@ namespace TocTocToc.Views
 
         private async Task<string> GetUserAccessInfo()
         {
-            var value = _userStorageService.GetUserRegistrationDetails();
-            var userDetails = await value;
+            var userDetails =
+                await _httpUserRequestChannelHandler.GenericHttpRequestAsync<UserDtoModel, UserDtoModel>(EUserHttpRequest.UserRegistrationDetailsGetRequest, null);
+            if (userDetails == null) return null;
+            if (string.IsNullOrWhiteSpace(userDetails.UserId)) return null;
+
             var userId = userDetails.UserId;
 
-            if (userDetails.Addresses == null || userDetails.Addresses.Length == 0)
+            if (userDetails.Addresses == null || userDetails.Addresses.Count == 0)
             {
                 LocalStorageService.SaveIsAddresses(false);
                 await Navigation.PushAsync(new ProfilePage());
@@ -95,22 +115,15 @@ namespace TocTocToc.Views
             {
                 LocalStorageService.SaveIsAddresses(true);
             }
-            await _userStorageService.GetUserIdsDetails(userId);
+            await _httpUserRequestChannelHandler.GenericHttpRequestAsync<UserInfoDtoModel, UserInfoDtoModel>(EUserHttpRequest.UserIdsDetailsGetRequest, null);
             return userId;
-        }
-
-
-
-        private async void FindAds()
-        {
-            await _advertisingStorageService.FindAds();
         }
 
 
 
         private void SubscribeToData()
         {
-            _disposed = _advertisingStorageService.AdSubject.Subscribe(
+            _disposed = RxNetHandler.AdsSubject.Subscribe(
                 ads =>
                 {
                     _adsDto = ads;
@@ -120,7 +133,7 @@ namespace TocTocToc.Views
                 },
                 () =>
                 {
-                    Console.WriteLine("[ completed ]");
+                    Console.WriteLine("[ Completed ]");
                 }
             );
         }
@@ -134,7 +147,7 @@ namespace TocTocToc.Views
             foreach (var ad in _adsDto)
             {
                 var adViewModel = new AdvertisingViewModel();
-                _copyModel.AdvertisingCopyDtoToViewModel(ad, adViewModel);
+                CopyModel.AdvertisingCopyDtoToViewModel(ad, adViewModel);
                 _adsViewModel.Add(adViewModel);
             }
 
@@ -144,55 +157,19 @@ namespace TocTocToc.Views
 
         private void AdvertisingListOnItemSelected(object sender, SelectedItemChangedEventArgs e)
         {
-            if (ListView_AdvertisingList.SelectedItem == null) return;
-            var item = ListView_AdvertisingList.SelectedItem as AdvertisingViewModel;
-            DisplayAlert("Publicité Info", $"{item.Name}", "OK");
-            ListView_AdvertisingList.SelectedItem = null;
+            //if (ListView_AdvertisingList.SelectedItem == null) return;
+            //var item = ListView_AdvertisingList.SelectedItem as AdvertisingViewModel;
+            //DisplayAlert("Publicité Info", $"{item.Name}", "OK");
+            //ListView_AdvertisingList.SelectedItem = null;
         }
 
 
-
-        /*
-         * Authentication
-         */
-
-        public async Task<string> RequestNewToken()
+        protected override void OnDisappearing()
         {
-            var isToken = LocalStorageService.IsToken();
-            var ctrlExpiredTokens = _auth.CtrlExpiredTokens();
-            string token = null;
-
-            if (!isToken || (ctrlExpiredTokens.IsExpiredToken && ctrlExpiredTokens.IsExpiredRefreshToken))
-            {
-                var value = NewToken();
-                token = await value;
-            }
-            else
-            {
-                token = LocalStorageService.GetAccessToken();
-            }
-
-            return token;
+            _disposed?.Dispose();
+            _disposed = null;
         }
 
-
-        private async Task<string> NewToken()
-        {
-            var authPage = new AuthPage();
-            string token = null;
-
-            var waitHandle = new EventWaitHandle(false, EventResetMode.AutoReset);
-
-            authPage.Disappearing += (sender, e) =>
-            {
-                waitHandle.Set();
-            };
-
-            await Navigation.PushModalAsync(authPage);
-            await Task.Run(() => waitHandle.WaitOne());
-            token = LocalStorageService.GetAccessToken();
-            return token;
-        }
 
     }
 }

@@ -124,6 +124,15 @@ namespace TocTocToc.Resx {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Error.
+        /// </summary>
+        internal static string Error {
+            get {
+                return ResourceManager.GetString("Error", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Français.
         /// </summary>
         internal static string French {
@@ -151,11 +160,128 @@ namespace TocTocToc.Resx {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Internal server error..
+        /// </summary>
+        internal static string HttpError500 {
+            get {
+                return ResourceManager.GetString("HttpError500", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Please insert the words separated by &apos;,&apos; or &apos;;&apos;.
+        /// </summary>
+        internal static string IncorrectSeparatorCharacter {
+            get {
+                return ResourceManager.GetString("IncorrectSeparatorCharacter", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Please write a valid word.
+        /// </summary>
+        internal static string IncorrectValidWord {
+            get {
+                return ResourceManager.GetString("IncorrectValidWord", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The definition of the word is incorrect. Please write a correct word.
+        /// </summary>
+        internal static string IncorrectWordDefinition {
+            get {
+                return ResourceManager.GetString("IncorrectWordDefinition", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Incorrect Word Spelling.
+        /// </summary>
+        internal static string IncorrectWordSpelling {
+            get {
+                return ResourceManager.GetString("IncorrectWordSpelling", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Bahasa Indonesia.
         /// </summary>
         internal static string Indonesian {
             get {
                 return ResourceManager.GetString("Indonesian", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Info.
+        /// </summary>
+        internal static string Info {
+            get {
+                return ResourceManager.GetString("Info", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to address has been activated.
+        /// </summary>
+        internal static string IsActiveAddress {
+            get {
+                return ResourceManager.GetString("IsActiveAddress", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Details of the place are incomplete.
+        /// </summary>
+        internal static string IsAreaSelectedIncomplete {
+            get {
+                return ResourceManager.GetString("IsAreaSelectedIncomplete", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to You can&apos;t delete an activated address.
+        /// </summary>
+        internal static string IsDeleteActiveAddressInvalid {
+            get {
+                return ResourceManager.GetString("IsDeleteActiveAddressInvalid", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to You can&apos;t delete an empty address list.
+        /// </summary>
+        internal static string IsEmptyAddressInvalid {
+            get {
+                return ResourceManager.GetString("IsEmptyAddressInvalid", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Impossible to delete, You need at list one address.
+        /// </summary>
+        internal static string IsOneAddressNeeded {
+            get {
+                return ResourceManager.GetString("IsOneAddressNeeded", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Payment is need it.
+        /// </summary>
+        internal static string IsPayedNeed {
+            get {
+                return ResourceManager.GetString("IsPayedNeed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Impossible to update the media.
+        /// </summary>
+        internal static string IsUpdatedMediaFalse {
+            get {
+                return ResourceManager.GetString("IsUpdatedMediaFalse", resourceCulture);
             }
         }
         
@@ -259,6 +385,15 @@ namespace TocTocToc.Resx {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Update media.
+        /// </summary>
+        internal static string LabelAdvertisingUpdateMedia {
+            get {
+                return ResourceManager.GetString("LabelAdvertisingUpdateMedia", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Age.
         /// </summary>
         internal static string LabelAge {
@@ -340,6 +475,15 @@ namespace TocTocToc.Resx {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Delete account.
+        /// </summary>
+        internal static string LabelDeleteAccount {
+            get {
+                return ResourceManager.GetString("LabelDeleteAccount", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Description.
         /// </summary>
         internal static string LabelDescription {
@@ -372,6 +516,15 @@ namespace TocTocToc.Resx {
         internal static string LabelGender {
             get {
                 return ResourceManager.GetString("LabelGender", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to My position.
+        /// </summary>
+        internal static string LabelGeolocPosition {
+            get {
+                return ResourceManager.GetString("LabelGeolocPosition", resourceCulture);
             }
         }
         
@@ -412,7 +565,7 @@ namespace TocTocToc.Resx {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Language.
+        ///   Looks up a localized string similar to Languages.
         /// </summary>
         internal static string LabelLanguage {
             get {
@@ -439,11 +592,38 @@ namespace TocTocToc.Resx {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Logout.
+        /// </summary>
+        internal static string LabelLogout {
+            get {
+                return ResourceManager.GetString("LabelLogout", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Marital status.
         /// </summary>
         internal static string LabelMaritalStatus {
             get {
                 return ResourceManager.GetString("LabelMaritalStatus", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Notifications.
+        /// </summary>
+        internal static string LabelNotification {
+            get {
+                return ResourceManager.GetString("LabelNotification", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Payment.
+        /// </summary>
+        internal static string LabelPayment {
+            get {
+                return ResourceManager.GetString("LabelPayment", resourceCulture);
             }
         }
         
@@ -457,11 +637,47 @@ namespace TocTocToc.Resx {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Privacy policy.
+        /// </summary>
+        internal static string LabelPrivacy {
+            get {
+                return ResourceManager.GetString("LabelPrivacy", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Profession.
         /// </summary>
         internal static string LabelProfession {
             get {
                 return ResourceManager.GetString("LabelProfession", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Rate the application.
+        /// </summary>
+        internal static string LabelRateApp {
+            get {
+                return ResourceManager.GetString("LabelRateApp", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Recommend.
+        /// </summary>
+        internal static string LabelRecommend {
+            get {
+                return ResourceManager.GetString("LabelRecommend", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Report a problem.
+        /// </summary>
+        internal static string LabelReport {
+            get {
+                return ResourceManager.GetString("LabelReport", resourceCulture);
             }
         }
         
@@ -480,6 +696,15 @@ namespace TocTocToc.Resx {
         internal static string LabelSave {
             get {
                 return ResourceManager.GetString("LabelSave", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Security.
+        /// </summary>
+        internal static string LabelSecurity {
+            get {
+                return ResourceManager.GetString("LabelSecurity", resourceCulture);
             }
         }
         
@@ -534,6 +759,15 @@ namespace TocTocToc.Resx {
         internal static string LabelStreetNumber {
             get {
                 return ResourceManager.GetString("LabelStreetNumber", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Terms &amp; Conditions.
+        /// </summary>
+        internal static string LabelTermConditions {
+            get {
+                return ResourceManager.GetString("LabelTermConditions", resourceCulture);
             }
         }
         
@@ -867,6 +1101,15 @@ namespace TocTocToc.Resx {
         internal static string Version {
             get {
                 return ResourceManager.GetString("Version", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Warning.
+        /// </summary>
+        internal static string Warning {
+            get {
+                return ResourceManager.GetString("Warning", resourceCulture);
             }
         }
         

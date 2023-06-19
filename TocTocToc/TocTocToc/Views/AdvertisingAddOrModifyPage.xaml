@@ -1,0 +1,130 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:xct="http://xamarin.com/schemas/2020/toolkit"
+             x:Class="TocTocToc.Views.AdvertisingAddOrModifyPage">
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Text="{xct:Translate LabelTitleAdvertisement}"
+                     Order="Primary"
+                     Priority="0" />
+    </ContentPage.ToolbarItems>
+    <ContentPage.Content>
+        <Grid RowDefinitions="*, Auto" ColumnDefinitions="Auto">
+
+            <ScrollView Grid.Row="0">
+                <Grid RowDefinitions="40, 40, 40, 40, 40, 40, 40, 40, 200" ColumnDefinitions="*,*"
+                      Margin="20, 20, 20, 0">
+                    
+                    <!--Row 0-->
+                    <Button Grid.Row="0" Grid.ColumnSpan="2"
+                            x:Name="XNameSaveMediaButton"
+                            Clicked="OnAddMedia" Text="{xct:Translate LabelAdvertisingAddMedia}" TextColor="White"
+                            BorderColor="{StaticResource ButtonBorderColor}" BorderWidth="1" CornerRadius="10" BackgroundColor="{StaticResource ButtonColorDetails}"/>
+                    <Button Grid.Row="0" Grid.ColumnSpan="2"
+                            x:Name="XNameUpdateMediaButton"
+                            IsVisible="False"
+                            Clicked="OnUpdateMedia" Text="{xct:Translate LabelAdvertisingUpdateMedia}" TextColor="White"
+                            BorderColor="{StaticResource ButtonBorderColor}" BorderWidth="1" CornerRadius="10" BackgroundColor="{StaticResource ButtonColorDetails}"/>
+
+                    <!--Row 1-->
+                    <Entry Grid.Row="1" Grid.Column="0"
+                           x:Name="XNameTitle"
+                           Text="{Binding Name}" TextColor="Black"
+                           Placeholder="{xct:Translate LabelAdvertisingName}"
+                           Unfocused="OnNameUnfocused"/>
+                    <Button Grid.Row="1" Grid.Column="1"
+                            x:Name="XNameDescription"
+                            Clicked="OnAddDescription" Text="{xct:Translate LabelDescription}" TextColor="White"
+                            BorderColor="{StaticResource ButtonBorderColor}" BorderWidth="1" CornerRadius="10" BackgroundColor="{StaticResource ButtonColorDetails}"/>
+
+                    <!--Row 2-->
+                    <Button Grid.Row="2" Grid.ColumnSpan="2"
+                            x:Name="XNameArea"
+                            Clicked="OnAddAreaSelect" Text="{xct:Translate LabelArea}" TextColor="White"
+                            BorderColor="{StaticResource ButtonBorderColor}" BorderWidth="1" CornerRadius="10" BackgroundColor="{StaticResource ButtonColorDetails}"/>
+
+                    <!--Row 3-->
+                    <Picker Grid.Row="3" Grid.Column="0"
+                            x:Name="XNameGenderPicker"
+                            FontSize="17" TextColor="Black"
+                            Title="{xct:Translate LabelGender}"
+                            ItemDisplayBinding="{Binding Item}"
+                            SelectedIndexChanged="OnGender"/>
+                    <Button Grid.Row="3" Grid.Column="1"
+                            x:Name="XNameAge"
+                            Clicked="OnAddAge" Text="{xct:Translate LabelAge}" TextColor="White"
+                            BorderColor="{StaticResource ButtonBorderColor}" BorderWidth="1" CornerRadius="10" BackgroundColor="{StaticResource ButtonColorDetails}"/>
+                    
+                    <!--Row 4 Interest see at the end of the grid-->
+                    <!--Text="{Binding Interests}"-->
+                    <Entry Grid.Row="4" Grid.ColumnSpan="2"
+                           x:Name="XNameInterestsSearch" Margin="0"
+                           IsSpellCheckEnabled="True"
+                           TextColor="Black"
+                           Placeholder="{xct:Translate LabelInterests}"
+                           TextChanged="OnInterestTextChanged" Unfocused="OnInterestUnfocused"/>
+
+                    <!--Row 5 Budget-->
+                    <Button Grid.Row="5" Grid.ColumnSpan="2"
+                            x:Name="XNameBudget"
+                            Clicked="OnBudget" Text="{xct:Translate LabelBudget}" TextColor="White"
+                            BorderColor="{StaticResource ButtonBorderColor}" BorderWidth="1" CornerRadius="10" BackgroundColor="{StaticResource ButtonColorDetails}"/>
+
+                    <!--Row 6 Save / History-->
+                    <Button Grid.Row="6" Grid.Column="0"
+                            x:Name="XNameSave"
+                            IsEnabled="False"
+                            Clicked="OnSave" Text="{xct:Translate LabelSave}" TextColor="White"
+                            BorderColor="{StaticResource ButtonBorderColor}" BorderWidth="1" CornerRadius="10" BackgroundColor="{StaticResource ButtonColorValidation}"/>
+                    <Button Grid.Row="6" Grid.Column="1"
+                            x:Name="XNameHistory"
+                            Clicked="OnHistory" Text="{xct:Translate LabelHistory}" TextColor="White"
+                            BorderColor="{StaticResource ButtonBorderColor}" BorderWidth="1" CornerRadius="10" BackgroundColor="{StaticResource ButtonColorValidation}"/>
+
+                    <!--Row 7-->
+                    <Label Grid.Row="7" Grid.ColumnSpan="2"
+                           x:Name="XNamePreview"
+                           VerticalTextAlignment="Center" HorizontalTextAlignment="Center"
+                           TextColor="{StaticResource LabelColor}" Text="{xct:Translate LabelPreview}"/>
+
+                    <!--Row 8-->
+                    <Image Grid.Row="8" Grid.ColumnSpan="2"
+                           HorizontalOptions="Center" Source="{Binding FullPathImage}">
+                        <Image.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnShowMediaDetails" NumberOfTapsRequired="1" />
+                            <TapGestureRecognizer Tapped="OnUpdateMedia" NumberOfTapsRequired="2" />
+                        </Image.GestureRecognizers>
+                    </Image>
+
+                    <!--Row 4 Interest at the end of the grid to over layout all the element-->
+
+                    <ListView Grid.Row="4" Grid.RowSpan="4" Grid.ColumnSpan="2"
+                              Margin="10, 35, 10, 0"
+                              x:Name="XNameInterestSuggestionsView"
+                              IsVisible="False" CachingStrategy="RecycleElement" BackgroundColor="White"
+                              ItemTapped="OnInterestItemTapped">
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <ViewCell>
+                                    <Frame>
+                                        <StackLayout BackgroundColor="White">
+                                            <Label Text="{Binding .}" FontSize="16" TextColor="#FF464859"/>
+                                        </StackLayout>
+                                    </Frame>
+                                </ViewCell>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+
+                </Grid>
+            </ScrollView>
+
+
+            <Button Grid.Row="1"
+                    x:Name="XNameValidationPay"
+                    Clicked="OnPay" TextColor="White" Text="{xct:Translate LabelValidationPay}"
+                    BorderColor="{StaticResource ButtonBorderColor}" BorderWidth="1" BackgroundColor="#61007D"/>
+
+        </Grid>
+    </ContentPage.Content>
+</ContentPage>

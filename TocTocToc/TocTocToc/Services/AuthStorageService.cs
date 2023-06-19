@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
-using TocTocToc.DtoModels;
+using TocTocToc.Models.Dto;
 
 namespace TocTocToc.Services
 {
@@ -17,7 +17,7 @@ namespace TocTocToc.Services
 
         }
 
-        public async Task<TokenDetailsDto> RequestToken(IEnumerable<KeyValuePair<string, string>> data)
+        public async Task<TokenDetailsDtoModel> RequestToken(IEnumerable<KeyValuePair<string, string>> data)
         {
             var tokensDetails = await HttpPost(_url, data);
 
@@ -25,10 +25,10 @@ namespace TocTocToc.Services
         }
 
 
-        public async Task<TokenDetailsDto> HttpPost(string url, IEnumerable<KeyValuePair<string, string>> postData)
+        public async Task<TokenDetailsDtoModel> HttpPost(string url, IEnumerable<KeyValuePair<string, string>> postData)
         {
 
-            var returnObject = new TokenDetailsDto();
+            var returnObject = new TokenDetailsDtoModel();
 
             try
             {
@@ -44,7 +44,7 @@ namespace TocTocToc.Services
                         if (response.IsSuccessStatusCode)
                         {
                             var jsonDataResponse = await response.Content.ReadAsStringAsync();
-                            returnObject = JsonConvert.DeserializeObject<TokenDetailsDto>(jsonDataResponse);
+                            returnObject = JsonConvert.DeserializeObject<TokenDetailsDtoModel>(jsonDataResponse);
                         }
                         else
                         {

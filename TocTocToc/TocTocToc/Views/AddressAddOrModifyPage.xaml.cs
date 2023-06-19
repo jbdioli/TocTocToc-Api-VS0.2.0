@@ -1,33 +1,30 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
-using System.Threading.Tasks;
+using System.Reactive.Linq;
 using TocTocToc.Services;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
-using Xamarin.Forms.Maps;
-using Xamarin.Essentials;
-using System.Collections;
-using TocTocToc.DtoModels;
 using TocTocToc.Shared;
-using TocTocToc.ViewModels;
-using Geolocation = Xamarin.Essentials.Geolocation;
+using PropertyChanged;
+using TocTocToc.Models.Dto;
+using TocTocToc.Models.View;
 
 namespace TocTocToc.Views
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class AddressAddOrModifyPage : ContentPage
     {
-        private readonly CopyModel copyModel;
-        private ItemsStorageService _itemsStorageService;
-        private AddressStorageService _addressStorageService;
+        private readonly GeolocationHandler _geolocationHandler;
+        private readonly LocationDtoModel _locationDto = new();
+
+        private readonly ItemRequestChannelHandler _itemRequestHousingTypeHandler = new(new HousingTypesItemRequest());
+        //private readonly AddressStorageService _addressStorageService;
+        private readonly HttpRequestChannelHandler _httpRequestChannelHandler = new(new AddressStorageServiceChannel());
         private AddressViewModel _addressViewModel;
-        private readonly Geocoder _geocoder = new Geocoder();
-        private AddressDto _addressDto = new AddressDto();
-        private IList<HousingTypeDto> _housingTypes;
-        private string _settingId;
-        private string _userId;
+        private readonly AddressDtoModel _addressDto = new();
+
+        private List<ItemDtoModel> _housingTypesItem;
 
         private bool _isAddressNamed;
         private bool _isHousingType;
@@ -39,67 +36,64 @@ namespace TocTocToc.Views
         public AddressAddOrModifyPage(AddressViewModel address)
         {
             InitializeComponent();
-            copyModel = new CopyModel();
-            
-            _userId = LocalStorageService.GetUserId();
+
+            InitGeolocation();
+            _geolocationHandler = new GeolocationHandler(_locationDto);
+
+            var userId = LocalStorageService.GetUserId();
             SaveButton.IsEnabled = false;
-            _addressStorageService = new AddressStorageService(_userId);
-            _itemsStorageService = new ItemsStorageService();
+            //_addressStorageService = new AddressStorageService(userId);
 
             InitEntries();
-            GetDataFromDB(address);
+            ImportData(address);
             BodyApp();
+        }
+
+
+        private void InitGeolocation()
+        {
+            _locationDto.XNameMap = XNameMap;
+            _locationDto.Distance = 500;
+            XNameMap.HasZoomEnabled = false;
         }
 
 
         private async void BodyApp()
         {
-            _addressViewModel = await _itemsStorageService.SetHousingTypes(_addressViewModel);
+            _housingTypesItem = await _itemRequestHousingTypeHandler.GetItemsAsync(null);
 
             InitPicker();
 
             if (_addressViewModel.IsEditMode)
             {
-                SetGeolocationDetails(_addressViewModel);
+                _geolocationHandler.DisplayPositionWithPin();
                 PopulatePicker();
             }
             else
             {
-                _addressDto = await GetGeolocationDetails(_addressDto);
-                copyModel.AddressCopyDtoToViewModel(_addressDto, _addressViewModel);
-                //_addressViewModel.Lon = _addressDto.Lon;
-                //_addressViewModel.Lat = _addressDto.Lat;
-                //_addressViewModel.Address = _addressDto.Address;
-                //_addressViewModel.Zipcode = _addressDto.Zipcode;
-                //_addressViewModel.City = _addressDto.City;
-                //_addressViewModel.County = _addressDto.County;
-                //_addressViewModel.State = _addressDto.State;
-                //_addressViewModel.Country = _addressDto.Country;
+                await _geolocationHandler.DisplayAndGetLocationDetailsAsync();
+                LocationDtoCopyAddressDto();
+                CopyModel.AddressCopyDtoToViewModel(_addressDto, _addressViewModel);
+                _addressViewModel.Floor = string.Empty;
+
             }
 
             BindingContext = _addressViewModel;
         }
 
-        private void SetGeolocationDetails(AddressViewModel addressViewModel)
+        private void LocationDtoCopyAddressDto()
         {
-            var lat = addressViewModel.Lat;
-            var lon = addressViewModel.Lon;
-            var locationName = addressViewModel.Title;
+            _addressDto.Lat = _locationDto.Lat;
+            _addressDto.Lon = _locationDto.Lon;
+            _addressDto.Address = _locationDto.Address;
+            _addressDto.Zipcode = _locationDto.ZipCode;
 
-            var position = new Position(lat, lon);
-            var distance = new Distance(500);
-
-            var pin = new Pin()
-            {
-                Position = position,
-                Label = locationName,
-            };
-
-            var mapSpan = MapSpan.FromCenterAndRadius(position, distance);
-
-            XNameMap.MoveToRegion(mapSpan);
-            XNameMap.Pins.Add(pin);
+            _addressDto.Country = _locationDto.Country;
+            _addressDto.State = _locationDto.State;
+            _addressDto.County = _locationDto.County;
+            _addressDto.City = _locationDto.City;
         }
+
 
         private void InitEntries()
         {
@@ -116,15 +110,16 @@ namespace TocTocToc.Views
 
         }
 
-        private void GetDataFromDB(AddressViewModel address)
+        private void ImportData(AddressViewModel address)
         {
-            _settingId = LocalStorageService.GetSettingId();
-            // _addressViewModel = address ?? new AddressViewModel();
             var addressId = address.AddressId;
             if (!string.IsNullOrEmpty(addressId))
             {
                 _addressViewModel = address;
                 _addressViewModel.IsEditMode = true;
+                _locationDto.Lat = _addressViewModel.Lat;
+                _locationDto.Lon = _addressViewModel.Lon;
+                _locationDto.LocationName = _addressViewModel.Title;
             }
             else
             {
@@ -133,6 +128,7 @@ namespace TocTocToc.Views
             
         }
 
+        [SuppressPropertyChangedWarnings]
         private void OnTextChanged(object sender, TextChangedEventArgs e)
         {
             ButtonApproval();
@@ -141,8 +137,8 @@ namespace TocTocToc.Views
         private void OnAddressType(object sender, EventArgs e)
         {
             var picker = (Picker)sender;
-            var addressTypeDetails = (HousingTypeDto)picker.SelectedItem;
-            _addressViewModel.Type = addressTypeDetails.Type;
+            var addressTypeDetails = (ItemDtoModel)picker.SelectedItem;
+            _addressViewModel.Type = addressTypeDetails.Item;
             _addressViewModel.IdHousingTypes = addressTypeDetails.Id;
 
             ButtonApproval();
@@ -151,15 +147,15 @@ namespace TocTocToc.Views
 
         private void ButtonApproval()
         {
-            if (!String.IsNullOrEmpty(_addressViewModel.Title))
+            if (!string.IsNullOrEmpty(_addressViewModel.Title))
                 _isAddressNamed = true;
-            if (!String.IsNullOrEmpty(_addressViewModel.Type))
+            if (!string.IsNullOrEmpty(_addressViewModel.Type))
                 _isHousingType = true;
-            if (!String.IsNullOrEmpty(_addressViewModel.Address))
+            if (!string.IsNullOrEmpty(_addressViewModel.Address))
                 _isAddress1 = true;
-            if (!String.IsNullOrEmpty(_addressViewModel.City))
+            if (!string.IsNullOrEmpty(_addressViewModel.City))
                 _isCity = true;
-            if (!String.IsNullOrEmpty(_addressViewModel.Country))
+            if (!string.IsNullOrEmpty(_addressViewModel.Country))
                 _isCountry = true;
 
             if (_isAddressNamed && _isHousingType && _isAddress1 && _isCity && _isCountry)
@@ -168,133 +164,34 @@ namespace TocTocToc.Views
 
         private async void OnSave(object sender, EventArgs e)
         {
+            
             LocalStorageService.SaveIsAddresses(true);
-            _addressViewModel.IsActived = true;
+            _addressViewModel.IsActive = true;
             _addressViewModel.DistanceWanted = 0;
 
-            copyModel.AddressCopyViewModelToDto(_addressViewModel, _addressDto);
+            CopyModel.AddressCopyViewModelToDto(_addressViewModel, _addressDto);
             if (_addressViewModel.IsEditMode)
             {
-                var addressId = _addressViewModel.AddressId;
-                await _addressStorageService.UpdateAddress(addressId, _addressDto);
+                _addressDto.AddressId = _addressViewModel.AddressId;
+                await _httpRequestChannelHandler.UpdateHttpAsync<AddressDtoModel, List<AddressDtoModel>>(_addressDto);
             }
             else
-                await _addressStorageService.SaveAddress(_addressDto);
-            await this.Navigation.PopAsync();
-
-        }
-
-
-
-        private async Task<AddressDto> GetGeolocationDetails(AddressDto address)
-        { 
-            address = await GetCoordinate(address);
-            await GetAddressCoordinate();
-            address = await GetAddressByPosition(address);
-
-            return address;
-        }
-
-
-        private async Task GetAddressCoordinate()
-        {
-            var position = SizeScale();
-
-            var address = await _geocoder.GetAddressesForPositionAsync(position);
-        }
-
-        private Position SizeScale()
-        {
-
-            var position = new Position(_addressDto.Lat, _addressDto.Lon);
-            // move to position
-            XNameMap.MoveToRegion(MapSpan.FromCenterAndRadius(position, Distance.FromMeters(200)));
-
-            return position;
-        }
-
-
-        private async Task<AddressDto> GetCoordinate(AddressDto addressDto)
-        {
-            try
             {
-                var geolocation = await Geolocation.GetLocationAsync(new GeolocationRequest
-                {
-                    DesiredAccuracy = GeolocationAccuracy.Medium,
-                    Timeout = TimeSpan.FromSeconds(30)
-                });
-
-                if (geolocation == null)
-                    await DisplayAlert("Waring", "No GPS signal detected", "OK");
-                else
-                {
-                    addressDto.Lat = geolocation.Latitude;
-                    addressDto.Lon = geolocation.Longitude;
-                }
-
+                await _httpRequestChannelHandler.SaveHttpAsync<AddressDtoModel, List<AddressDtoModel>>(_addressDto);
             }
-            catch (Exception exception)
-            {
-                Debug.WriteLine($"Error message from geolocation: {exception.Message}");
-            }
+            await Navigation.PopAsync();
 
-            return addressDto;
         }
 
-        private async Task<AddressDto> GetAddressByPosition(AddressDto address)
+
+        private void InitPicker()
         {
-            // var returnAddress = new AddressDto();
-
-            try
-            {
-                var placemarks = await Geocoding.GetPlacemarksAsync(address.Lat, address.Lon);
-
-                var placemark = placemarks?.FirstOrDefault();
-                if (placemark != null)
-                {
-                    address.Address = placemark.SubThoroughfare + ' ' + placemark.Thoroughfare;
-                    address.Country = placemark.CountryName;
-                    address.State = placemark.AdminArea;
-                    address.County = placemark.SubAdminArea;
-                    address.City = placemark.Locality;
-                    address.Zipcode = placemark.PostalCode;
-                }
-            }
-            catch (FeatureNotSupportedException fnsEx)
-            {
-                // Feature not supported on device
-            }
-            catch (Exception ex)
-            {
-                // Handle exception that may have occurred in geocoding
-            }
-
-            //var position = new Position(addressDto.Lat,addressDto.Lon);
-            //var addresses = await _geocoder.GetAddressesForPositionAsync(position);
-
-            //var address = addresses.FirstOrDefault();
-            //string[] addressSplit = address.Split(',');
-            //addressSplit[0] = addressSplit[0].Substring(1);
-            //addressSplit[1] = addressSplit[1].Substring(1);
-            //string[] zipcodeAndcity = addressSplit[1].Split(' ');
-
-            //returnAddress.Address1 = addressSplit[0];
-            //if(addressSplit.Length >2)
-            //  returnAddress.Country = addressSplit[2];
-            //returnAddress.Zipcode = zipcodeAndcity[0];
-            //returnAddress.City = zipcodeAndcity[1];
-
-            return address;
-        }
-
-        private async void InitPicker()
-        {
-            XNameHousingTypePicker.ItemsSource = (IList)_addressViewModel.HousingTypes;
+            XNameHousingTypePicker.ItemsSource = _housingTypesItem;
         }
 
         private void PopulatePicker()
         {
-            XNameHousingTypePicker.SelectedItem = ((List<HousingTypeDto>)XNameHousingTypePicker.ItemsSource)
+            XNameHousingTypePicker.SelectedItem = ((List<ItemDtoModel>)XNameHousingTypePicker.ItemsSource)
                 .FirstOrDefault(element => element.Id == _addressViewModel.IdHousingTypes);
         }
 

@@ -346,7 +346,7 @@
     <value>Créer une adresse</value>
   </data>
   <data name="LabelStreetNumber" xml:space="preserve">
-    <value>Numéro de rue</value>
+    <value>Rue N°</value>
   </data>
   <data name="LabelAddress" xml:space="preserve">
     <value>Adresse</value>
@@ -389,5 +389,86 @@
   </data>
   <data name="LabelAdvertisingAddMedia" xml:space="preserve">
     <value>Ajouter un média</value>
+  </data>
+  <data name="IncorrectWordDefinition" xml:space="preserve">
+    <value>La définition du mot est incorrecte. Veuillez écrire un mot correct</value>
+  </data>
+  <data name="IncorrectSeparatorCharacter" xml:space="preserve">
+    <value>Veuillez insérer les mots séparés par "," ou " ;"</value>
+  </data>
+  <data name="IncorrectValidWord" xml:space="preserve">
+    <value>Veuillez écrire un mot valide</value>
+  </data>
+  <data name="IncorrectWordSpelling" xml:space="preserve">
+    <value>Orthographe incorrecte du mot</value>
+  </data>
+  <data name="Warning" xml:space="preserve">
+    <value>Avertissement</value>
+  </data>
+  <data name="Error" xml:space="preserve">
+    <value>Erreur</value>
+  </data>
+  <data name="Info" xml:space="preserve">
+    <value>Info</value>
+  </data>
+  <data name="LabelGeolocPosition" xml:space="preserve">
+    <value>Ma position</value>
+  </data>
+  <data name="IsActiveAddress" xml:space="preserve">
+    <value>adresse a été activée</value>
+  </data>
+  <data name="IsDeleteActiveAddressInvalid" xml:space="preserve">
+    <value>Vous ne pouvez pas supprimer une adresse activée</value>
+  </data>
+  <data name="IsEmptyAddressInvalid" xml:space="preserve">
+    <value>Vous ne pouvez pas supprimer une liste d'adresses vide</value>
+  </data>
+  <data name="IsOneAddressNeeded" xml:space="preserve">
+    <value>Impossible à supprimer, vous avez besoin d'au moins une adresse</value>
+  </data>
+  <data name="HttpError500" xml:space="preserve">
+    <value>Erreur interne du serveur.</value>
+  </data>
+  <data name="LabelAdvertisingUpdateMedia" xml:space="preserve">
+    <value>Mise à jour du média</value>
+  </data>
+  <data name="IsUpdatedMediaFalse" xml:space="preserve">
+    <value>Impossible de mettre à jour le media</value>
+  </data>
+  <data name="IsPayedNeed" xml:space="preserve">
+    <value>Le paiement est nécessaire</value>
+  </data>
+  <data name="IsAreaSelectedIncomplete" xml:space="preserve">
+    <value>Les détails du lieu sont incomplets</value>
+  </data>
+  <data name="LabelLogout" xml:space="preserve">
+    <value>Déconnexion</value>
+  </data>
+  <data name="LabelDeleteAccount" xml:space="preserve">
+    <value>Supprimer le compte</value>
+  </data>
+  <data name="LabelRecommend" xml:space="preserve">
+    <value>Recommander</value>
+  </data>
+  <data name="LabelPrivacy" xml:space="preserve">
+    <value>Politique de confidentialité</value>
+  </data>
+  <data name="LabelTermConditions" xml:space="preserve">
+    <value>Mentions légales</value>
+  </data>
+  <data name="LabelReport" xml:space="preserve">
+    <value>Signaler un problème</value>
+  </data>
+  <data name="LabelRateApp" xml:space="preserve">
+    <value>Noter l'application</value>
+  </data>
+  <data name="LabelSecurity" xml:space="preserve">
+    <value>Sécurité</value>
+  </data>
+  <data name="LabelPayment" xml:space="preserve">
+    <value>Paiement</value>
+  </data>
+  <data name="LabelNotification" xml:space="preserve">
+    <value>Notifications</value>
   </data>
 </root>

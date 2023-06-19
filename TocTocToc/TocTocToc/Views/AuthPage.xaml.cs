@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Web;
-using TocTocToc.DtoModels;
+using TocTocToc.Models.Dto;
 using TocTocToc.Services;
 using TocTocToc.Shared;
 using Xamarin.Forms;
@@ -30,7 +30,7 @@ namespace TocTocToc.Views
         private string oAuth2()
         {
             var k = new Keycloak(30);
-            var auth = new AuthDto();
+            var auth = new AuthDtoModel();
 
             var clientId = AuthConstants.ClientId;
             var redirectUri = AuthConstants.RedirectUri;
@@ -69,7 +69,7 @@ namespace TocTocToc.Views
         private async void GetToken(string url)
         {
             var keycloak = new Keycloak();
-            var auth = new AuthDto();
+            var auth = new AuthDtoModel();
             var redirectUrl = new Uri(url);
             var state = "";
             var code = "";
@@ -90,8 +90,7 @@ namespace TocTocToc.Views
             LocalStorageService.SaveAuth(auth);
 
             if (string.IsNullOrEmpty(code)) return;
-            var value = keycloak.PostAuthorize(state, code);
-            var tokenDetails = await value;
+            var tokenDetails = await keycloak.PostAuthorize(state, code);
             LocalStorageService.SaveTokenDetails(tokenDetails);
 
             if (tokenDetails != null) CloseCurrentView();

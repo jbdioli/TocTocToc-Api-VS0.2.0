@@ -199,7 +199,7 @@
     <value>Interest</value>
   </data>
   <data name="LabelLanguage" xml:space="preserve">
-    <value>Language</value>
+    <value>Languages</value>
   </data>
   <data name="LabelLanguages" xml:space="preserve">
     <value>Languages</value>
@@ -389,5 +389,86 @@
   </data>
   <data name="LabelValidationPay" xml:space="preserve">
     <value>Confirm and pay</value>
+  </data>
+  <data name="IncorrectWordDefinition" xml:space="preserve">
+    <value>The definition of the word is incorrect. Please write a correct word</value>
+  </data>
+  <data name="IncorrectWordSpelling" xml:space="preserve">
+    <value>Incorrect Word Spelling</value>
+  </data>
+  <data name="IncorrectSeparatorCharacter" xml:space="preserve">
+    <value>Please insert the words separated by ',' or ';'</value>
+  </data>
+  <data name="IncorrectValidWord" xml:space="preserve">
+    <value>Please write a valid word</value>
+  </data>
+  <data name="Warning" xml:space="preserve">
+    <value>Warning</value>
+  </data>
+  <data name="Error" xml:space="preserve">
+    <value>Error</value>
+  </data>
+  <data name="Info" xml:space="preserve">
+    <value>Info</value>
+  </data>
+  <data name="LabelGeolocPosition" xml:space="preserve">
+    <value>My position</value>
+  </data>
+  <data name="IsActiveAddress" xml:space="preserve">
+    <value>address has been activated</value>
+  </data>
+  <data name="IsDeleteActiveAddressInvalid" xml:space="preserve">
+    <value>You can't delete an activated address</value>
+  </data>
+  <data name="IsEmptyAddressInvalid" xml:space="preserve">
+    <value>You can't delete an empty address list</value>
+  </data>
+  <data name="IsOneAddressNeeded" xml:space="preserve">
+    <value>Impossible to delete, You need at list one address</value>
+  </data>
+  <data name="HttpError500" xml:space="preserve">
+    <value>Internal server error.</value>
+  </data>
+  <data name="LabelAdvertisingUpdateMedia" xml:space="preserve">
+    <value>Update media</value>
+  </data>
+  <data name="IsUpdatedMediaFalse" xml:space="preserve">
+    <value>Impossible to update the media</value>
+  </data>
+  <data name="IsPayedNeed" xml:space="preserve">
+    <value>Payment is need it</value>
+  </data>
+  <data name="IsAreaSelectedIncomplete" xml:space="preserve">
+    <value>Details of the place are incomplete</value>
+  </data>
+  <data name="LabelLogout" xml:space="preserve">
+    <value>Logout</value>
+  </data>
+  <data name="LabelDeleteAccount" xml:space="preserve">
+    <value>Delete account</value>
+  </data>
+  <data name="LabelRecommend" xml:space="preserve">
+    <value>Recommend</value>
+  </data>
+  <data name="LabelPrivacy" xml:space="preserve">
+    <value>Privacy policy</value>
+  </data>
+  <data name="LabelTermConditions" xml:space="preserve">
+    <value>Terms &amp; Conditions</value>
+  </data>
+  <data name="LabelReport" xml:space="preserve">
+    <value>Report a problem</value>
+  </data>
+  <data name="LabelRateApp" xml:space="preserve">
+    <value>Rate the application</value>
+  </data>
+  <data name="LabelSecurity" xml:space="preserve">
+    <value>Security</value>
+  </data>
+  <data name="LabelPayment" xml:space="preserve">
+    <value>Payment</value>
+  </data>
+  <data name="LabelNotification" xml:space="preserve">
+    <value>Notifications</value>
   </data>
 </root>

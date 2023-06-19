@@ -1,0 +1,79 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<xct:Popup xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:xct="clr-namespace:Xamarin.CommunityToolkit.UI.Views;assembly=Xamarin.CommunityToolkit"
+             xmlns:ageViewModel="clr-namespace:TocTocToc.Models.View;assembly=TocTocToc"
+             xmlns:converters="clr-namespace:TocTocToc.Converters;assembly=TocTocToc"
+             Size="340, 180"
+             VerticalOptions="CenterAndExpand"
+             HorizontalOptions="CenterAndExpand"
+             IsLightDismissEnabled="False"
+             x:Class="TocTocToc.Popup.AgePopup"
+             x:TypeArguments="ageViewModel:AgeViewModel">
+
+    <xct:Popup.Resources>
+        <ResourceDictionary>
+            <converters:IsConverter x:Key="IsValue" />
+            <converters:TwoNumberComparatorConverter x:Key="AgeComparator" />
+        </ResourceDictionary>
+    </xct:Popup.Resources>
+    <AbsoluteLayout BackgroundColor="CadetBlue">
+        <RelativeLayout AbsoluteLayout.LayoutBounds="0, 0, 1, 1" AbsoluteLayout.LayoutFlags="All" Margin="10, 0">
+            <CheckBox RelativeLayout.HeightConstraint="{ConstraintExpression Type=RelativeToParent, Property=Height, Factor=0.22}"
+                      RelativeLayout.WidthConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=0.08}"
+                      RelativeLayout.YConstraint="{ConstraintExpression Type=RelativeToParent, Property=Height, Factor=0.1, Constant=0}"
+                      x:Name="XNameIsAllAge"
+                      CheckedChanged="OnIsAllAge"
+                      Color="Black"/>
+
+            <Label RelativeLayout.HeightConstraint="{ConstraintExpression Type=RelativeToParent, Property=Height, Factor=0.22}"
+                   RelativeLayout.XConstraint="{ConstraintExpression Type=RelativeToView, ElementName=XNameIsAllAge, Property=Width, Factor=1, Constant=5}"
+                   RelativeLayout.YConstraint="{ConstraintExpression Type=RelativeToParent, Property=Height, Factor=0.1, Constant=0}"
+                   VerticalTextAlignment="Center"
+                   Text="It's for all age" TextColor="Black"/>
+
+            <Entry RelativeLayout.HeightConstraint="{ConstraintExpression Type=RelativeToParent, Property=Height, Factor=0.22}"
+                   RelativeLayout.WidthConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=0.4}"
+                   RelativeLayout.YConstraint="{ConstraintExpression Type=RelativeToParent, Property=Height, Factor=0.35, Constant=0}"
+                   x:Name="XNameAgeMini"
+                   Placeholder="Minimum age" FontSize="Body" TextColor="Black" PlaceholderColor="Black" HorizontalTextAlignment="Center"
+                   MaxLength="3" Keyboard="Numeric" Text="{Binding AgeMini}" TextChanged="OnAgeMini"/>
+
+            <Label RelativeLayout.HeightConstraint="{ConstraintExpression Type=RelativeToParent, Property=Height, Factor=0.22}"
+                   RelativeLayout.WidthConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=0.08}"
+                   RelativeLayout.YConstraint="{ConstraintExpression Type=RelativeToParent, Property=Height, Factor=0.35, Constant=0}"
+                   RelativeLayout.XConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=0.455}"
+                   x:Name="XNameLabelTo"
+                   Text="To" TextColor="Black" HorizontalTextAlignment="Center" VerticalTextAlignment="Center"/>
+
+            <Entry RelativeLayout.HeightConstraint="{ConstraintExpression Type=RelativeToParent, Property=Height, Factor=0.22}"
+                   RelativeLayout.WidthConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=0.4}"
+                   RelativeLayout.YConstraint="{ConstraintExpression Type=RelativeToParent, Property=Height, Factor=0.35, Constant=0}"
+                   RelativeLayout.XConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=0.6}"
+                   x:Name="XNameAgeMaxi"
+                   Placeholder="Maximum age" FontSize="Body" PlaceholderColor="Black" HorizontalTextAlignment="Center"
+                   MaxLength="3" Keyboard="Numeric" Text="{Binding AgeMaxi}" TextChanged="OnAgeMaxi"
+                   IsEnabled="{Binding IsAgeMini, Converter={StaticResource IsValue}}" >
+                <Entry.TextColor>
+                    <MultiBinding  Converter="{StaticResource AgeComparator}">
+                        <Binding Path="AgeMini"/>
+                        <Binding Path="AgeMaxi"/>
+                    </MultiBinding>
+                </Entry.TextColor>
+            </Entry>
+
+            <Label RelativeLayout.HeightConstraint="{ConstraintExpression Type=RelativeToParent, Property=Height, Factor=0.22}"
+                   RelativeLayout.YConstraint="{ConstraintExpression Type=RelativeToParent, Property=Height, Factor=0.50, Constant=0}"
+                   x:Name="XNameAgeAlert"
+                   Text="Please insert a correct maximum age" TextColor="Red" HorizontalTextAlignment="Center" VerticalTextAlignment="Center"/>
+
+        </RelativeLayout>
+
+        <Button AbsoluteLayout.LayoutBounds="0, 1, 1, 40" AbsoluteLayout.LayoutFlags="PositionProportional, WidthProportional"
+                x:Name="XNameValidated"
+                Text="OK" TextColor="White" BackgroundColor="#ebb549" Clicked="OnValidated"/>
+    </AbsoluteLayout>
+</xct:Popup>
+
+
+<!--RelativeLayout.XConstraint="{ConstraintExpression Type=RelativeToView, ElementName=XNameAgeMini, Property=Width, Factor=1, Constant=5}"-->

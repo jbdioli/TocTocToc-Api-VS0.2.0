@@ -6,7 +6,7 @@
              x:Class="TocTocToc.Views.AdvertisingHistoryPage">
     <ContentPage.Resources>
         <ResourceDictionary>
-            <converters:IsPauseConverter x:Key="IsPauseConverter" />
+            <converters:IsChangeColorConverter x:Key="ColorSwitch" />
         </ResourceDictionary>
     </ContentPage.Resources>
     <ContentPage.ToolbarItems>
@@ -18,36 +18,50 @@
         <Grid RowDefinitions="*" ColumnDefinitions="*"
                   Margin="10" 
                   BackgroundColor="Transparent">
-            <CollectionView ItemsSource="{Binding ObserverAdvertisementViewModels}" BackgroundColor="Transparent">
-                <CollectionView.ItemTemplate>
-                    <DataTemplate>
+            <!--<Grid RowDefinitions="*, Auto" ColumnDefinitions="Auto">-->
+            <ScrollView Grid.Row="0">
 
-                        <SwipeView>
-                            <SwipeView.BackgroundColor>
-                                <OnPlatform x:TypeArguments="Color">
-                                    <On Platform="Android" Value="Transparent" />
-                                </OnPlatform>
-                            </SwipeView.BackgroundColor>
-                            <SwipeView.RightItems>
-                                <SwipeItems Mode="Reveal">
-                                    <SwipeItem BackgroundColor="Red" IconImageSource="delete_outline_white.png" Invoked="OnInvokedDeleted"/>
-                                    <SwipeItem BackgroundColor="#61007D" IconImageSource="pause_white.png" Invoked="OnInvokedPaused"/>
-                                    <SwipeItem BackgroundColor="#C96EE3" IconImageSource="edit_white.png" Invoked="OnInvokedEdited"/>
-                                </SwipeItems>
-                            </SwipeView.RightItems>
+                <CollectionView ItemsSource="{Binding ObserverAdvertisingViewModels}" BackgroundColor="Transparent">
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate>
 
-                            <Frame Margin="7, 10" Padding="0" HeightRequest="92" BorderColor="{Binding IsPause, Converter={StaticResource IsPauseConverter}}"
-                                       BackgroundColor="MediumPurple" CornerRadius="20">
-                                <Grid Margin="10, 7" RowDefinitions="27, Auto" ColumnDefinitions="*,*,*">
-                                    <Label Grid.Row="0" Grid.Column="0"
-                                                   Text="{Binding Name}" TextColor="White" FontSize="Medium" FontAttributes="Bold"/>
-                                </Grid>
-                            </Frame>
-                        </SwipeView>
+                            <SwipeView>
+                                <SwipeView.BackgroundColor>
+                                    <OnPlatform x:TypeArguments="Color">
+                                        <On Platform="Android" Value="Transparent" />
+                                    </OnPlatform>
+                                </SwipeView.BackgroundColor>
+                                <SwipeView.RightItems>
+                                    <SwipeItems Mode="Reveal">
+                                        <SwipeItem BackgroundColor="Red" IconImageSource="delete_outline_white.png" Invoked="OnInvokedDeleted"/>
+                                        <SwipeItem BackgroundColor="#61007D" IconImageSource="pause_white.png" Invoked="OnInvokedPaused"/>
+                                        <SwipeItem BackgroundColor="#C96EE3" IconImageSource="edit_white.png" Invoked="OnInvokedEdited"/>
+                                    </SwipeItems>
+                                </SwipeView.RightItems>
 
-                    </DataTemplate>
-                </CollectionView.ItemTemplate>
-            </CollectionView>
+                                <Frame Margin="7, 10" Padding="0" HeightRequest="92"
+                                       BorderColor="{Binding IsPayed, Converter={StaticResource ColorSwitch}, ConverterParameter='BorderPayed'}"
+                                       BackgroundColor="{Binding IsPause, Converter={StaticResource ColorSwitch}, ConverterParameter='BackgroundPause'}" CornerRadius="20">
+                                    <Frame Margin="1" Padding="0" HeightRequest="92"
+                                           BorderColor="{Binding IsPayed, Converter={StaticResource ColorSwitch}, ConverterParameter='BorderPayed'}"
+                                           BackgroundColor="{Binding IsPause, Converter={StaticResource ColorSwitch}, ConverterParameter='BackgroundPause'}" CornerRadius="20">
+
+                                    <!--<Frame Margin="4, 4" Padding="0" HeightRequest="92"
+                                           BorderColor="{Binding IsPause, Converter={StaticResource Pause}, ConverterParameter='BorderPause'}"
+                                           BackgroundColor="MediumPurple" CornerRadius="20">-->
+                                        <Grid Margin="10, 7" RowDefinitions="27, Auto" ColumnDefinitions="*,*,*">
+                                            <Image Grid.RowSpan="2" Grid.Column="0" Source="{Binding FullPathImage}"/>
+                                            <Label Grid.Row="0" Grid.Column="1"
+                                                Text="{Binding Name}" TextColor="White" FontSize="Medium" FontAttributes="Bold"/>
+                                        </Grid>
+                                    </Frame>
+                                </Frame>
+                            </SwipeView>
+
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+            </ScrollView>
         </Grid>
     </ContentPage.Content>
 </ContentPage>

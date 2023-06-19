@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using TocTocToc.DtoModels;
+using TocTocToc.ENumerations;
+using TocTocToc.Models.Dto;
+using TocTocToc.Models.View;
 using TocTocToc.Services;
 using TocTocToc.Shared;
-using TocTocToc.ViewModels;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
@@ -15,12 +16,14 @@ namespace TocTocToc.Views
     {
         private IDisposable _disposed;
 
-        private readonly AddressStorageService _addressStorageService;
-        private readonly CopyModel copyModel;
+        private readonly HttpRequestChannelHandler _httpRequestChannelHandler = new(new AddressStorageServiceChannel());
+        private readonly NotificationChannelHandler _notificationChannelHandler = new(new DisplayNotification());
+
+        //private readonly AddressStorageService _addressStorageService;
 
         private List<AddressViewModel> _addressesViewModel;
         private AddressViewModel _addressViewModel;
-        private List<AddressDto> _addressesDto;
+        private List<AddressDtoModel> _addressesDto;
 
 
         public ObservableCollection<AddressViewModel> ObserverAddressesViewModels { get; set; }
@@ -28,13 +31,9 @@ namespace TocTocToc.Views
         public AddressPage()
         {
             InitializeComponent();
-            copyModel = new CopyModel();
-            var userId = LocalStorageService.GetUserId();
-            _addressStorageService = new AddressStorageService(userId);
 
             _addressesViewModel = new List<AddressViewModel>();
-            //_addressViewModel = new AddressViewModel();
-            _addressesDto = new List<AddressDto>();
+            _addressesDto = new List<AddressDtoModel>();
 
             Init();
 
@@ -42,7 +41,19 @@ namespace TocTocToc.Views
 
         protected override void OnAppearing()
         {
-            _disposed = _addressStorageService.AddressesSubject.Subscribe(
+            //_disposed = _httpRequestChannelHandler.HandelHttpEvents< List<AddressDtoModel>, List <AddressDtoModel>>(EEventsHandler.ListenEvent, null).Subscribe(
+            //    addresses =>
+            //    {
+            //        _addressesDto = addresses;
+            //        CopyAddressesToCollection();
+
+            //    },
+            //    () =>
+            //    {
+            //        Console.WriteLine("[ completed ]");
+            //    }
+            //);
+            _disposed = RxNetHandler.AddressesSubject.Subscribe(
                 addresses =>
                 {
                     _addressesDto = addresses;
@@ -54,13 +65,12 @@ namespace TocTocToc.Views
                     Console.WriteLine("[ completed ]");
                 }
             );
-
         }
 
 
         private async void Init()
         {
-            await _addressStorageService.GetAddress();
+            await _httpRequestChannelHandler.GetHttpAsync<List<AddressDtoModel>>();
         }
 
         private void CopyAddressesToCollection()
@@ -70,7 +80,7 @@ namespace TocTocToc.Views
             foreach (var address in _addressesDto)
             {
                 var addressViewModel = new AddressViewModel();
-                copyModel.AddressCopyDtoToViewModel(address, addressViewModel);
+                CopyModel.AddressCopyDtoToViewModel(address, addressViewModel);
                 _addressesViewModel.Add(addressViewModel);
             }
 
@@ -102,25 +112,27 @@ namespace TocTocToc.Views
         {
             if (sender is not SwipeItem { BindingContext: AddressViewModel address }) return;
             var addressId = address.AddressId;
-            var isActived = address.IsActived;
-            if (isActived)
+            var isActive = address.IsActive;
+            if (isActive)
             {
-                await DisplayAlert("Alert", "You can't delete an activated address", "OK");
+                _notificationChannelHandler.SendNotification(ENotificationType.IsDeleteActiveAddressInvalid, null);
                 return;
             }
                 
-            var index = _addressesViewModel.FindIndex(elmt => elmt.AddressId == addressId);
+            var index = _addressesViewModel.FindIndex(el => el.AddressId == addressId);
             switch (index)
             {
                 case -1:
-                    await DisplayAlert("Alert", "You can't delete an empty address list", "OK");
+                    _notificationChannelHandler.SendNotification(ENotificationType.IsEmptyAddressInvalid, null);
                     return;
                 case 0:
-                    await DisplayAlert("Alert", "Impossible to delete, You need at list one address", "OK");
+                    _notificationChannelHandler.SendNotification(ENotificationType.IsOneAddressNeeded, null);
                     return;
                 default:
                     _addressesViewModel.RemoveAt(index);
-                    ObserverAddressesViewModels = new ObservableCollection<AddressViewModel>(_addressesViewModel);
+                    await _httpRequestChannelHandler.DeleteHttpAsync<List<AddressDtoModel>>(addressId);
+                    //_addressesDto = await _httpRequestChannelHandler.DeleteHttpAsync<List<AddressDtoModel>>(addressId);
+                    //ObserverAddressesViewModels = new ObservableCollection<AddressViewModel>(_addressesViewModel);
                     break;
             }
         }
@@ -130,33 +142,56 @@ namespace TocTocToc.Views
             if (sender is not SwipeItem item) return;
             var address = item.BindingContext as AddressViewModel;
 
-            //_addressViewModel = new addressViewModel();
-            //_addressViewModel = _addressesViewModel[0];
-            // var result = await Navigation.ShowPopupAsync(new AddressPopup(address));
             await Navigation.PushAsync(new AddressAddOrModifyPage(address));
         }
-
+        
         private async void OnDefine(object sender, EventArgs e)
         {
-            var fullAddress = "";
+            var addressToActivate = new AddressDtoModel();
+            if (addressToActivate == null) throw new ArgumentNullException(nameof(addressToActivate), "[ Error ] object AddressPage");
 
             if (sender is not SwipeItem item) return;
-            var address = item.BindingContext as AddressViewModel;
-            if (address != null) address.IsActived = true;
-            if (address != null)
-                fullAddress = address.Address + " " + address.City;
+            if (item.BindingContext is not AddressViewModel address) return;
+            
+            var currentIndex = _addressesDto.FindIndex(el => el.AddressId.Equals(address.AddressId));
+            _addressesDto[currentIndex].IsActive = true;
 
-            await DisplayAlert("Alert", fullAddress + " " + "has been activated", "OK");
+            addressToActivate = _addressesDto[currentIndex];
+
+            await _httpRequestChannelHandler.GenericHttpRequestAsync<AddressDtoModel, List<AddressDtoModel>>(EAddressHttpRequest.IsActivePutRequest, addressToActivate);
+            //_addressesDto = await _httpRequestChannelHandler.GenericHttpRequestAsync<AddressDtoModel, List<AddressDtoModel>>(EAddressHttpRequest.IsActivePutRequest, addressToActivate);
+            //if (_addressesDto == null) return;
+            //CopyAddressesToCollection();
+            //_notificationChannelHandler.SendNotification(ENotificationType.IsActiveAddress, address.FullStreetAddressWithCity);
         }
 
         private async void OnAddAddress(object sender, EventArgs e)
         {
             _addressViewModel = new AddressViewModel();
-            //var result = await Navigation.ShowPopupAsync(new AddressPopup(_addressViewModel));
 
-            await Navigation.PushAsync(new AddressAddOrModifyPage(_addressViewModel));
+            var addressAddOrModifyPage = new AddressAddOrModifyPage(_addressViewModel);
 
-            //new NavigationPage(new AdvertisingPage());
+            //var waitHandle = new EventWaitHandle(false, EventResetMode.AutoReset);
+
+            //addressAddOrModifyPage.Disappearing += (sender, e) =>
+            //{
+            //    waitHandle.Set();
+            //};
+
+            //await Navigation.PushAsync(addressAddOrModifyPage);
+
+            //await Task.Run(() => waitHandle.WaitOne());
+            //_addressesDto.Clear();
+            //_addressesDto = await _httpRequestChannelHandler.GetHttpAsync<List<AddressDtoModel>>();
+            //CopyAddressesToCollection();
+
+            await Navigation.PushAsync(addressAddOrModifyPage);
+
+        }
+
+        protected override void OnDisappearing()
+        {
+            _disposed?.Dispose();
         }
 
 

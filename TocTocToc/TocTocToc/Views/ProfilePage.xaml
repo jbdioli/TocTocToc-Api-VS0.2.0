@@ -3,17 +3,17 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:xct="http://xamarin.com/schemas/2020/toolkit"
              xmlns:converters="clr-namespace:TocTocToc.Converters;assembly=TocTocToc"
-             xmlns:viewModels="clr-namespace:TocTocToc.ViewModels;assembly=TocTocToc"
+             xmlns:viewModels="clr-namespace:TocTocToc.Models.View;assembly=TocTocToc"
              x:Class="TocTocToc.Views.ProfilePage">
     <ContentPage.Resources>
         <ResourceDictionary>
-            <converters:IsNotVisibleFromStringConverter x:Key="InvisibleImageConverter" />
-            <converters:IsVisibleFromStringConverter x:Key="VisibleImageConverter" />
+            <converters:IsNotVisibleConverter x:Key="InvisibleImage" />
+            <converters:IsVisibleConverter x:Key="VisibleImage" />
         </ResourceDictionary>
     </ContentPage.Resources>
-    <ContentPage.BindingContext>
+    <!--<ContentPage.BindingContext>
         <viewModels:UserViewModel/>
-    </ContentPage.BindingContext>
+    </ContentPage.BindingContext>-->
     <ContentPage.ToolbarItems>
         <ToolbarItem Text="{xct:Translate LabelTitleProfile}"
                      Order="Primary"
@@ -25,11 +25,11 @@
                 <Grid Margin="20, 20, 20, 0" RowDefinitions="Auto" ColumnDefinitions="*,*">
 
                     <!--Row 0 to 3-->
-                    <Button Grid.RowSpan="4" Grid.Column="0" IsVisible="{Binding FullPathPhoto, Converter={StaticResource InvisibleImageConverter}}"
+                    <Button Grid.RowSpan="4" Grid.Column="0" IsVisible="{Binding FullPathPhoto, Converter={StaticResource InvisibleImage}}"
                         Clicked="OnAddPhoto" Text="{xct:Translate LabelAddPhoto}" TextColor="White"
                         BorderColor="#C96EE3" BorderWidth="1" CornerRadius="10" BackgroundColor="#CBA3D8"/>
                     <Image Grid.RowSpan="4" Grid.Column="0" x:Name="Image_ImageProfile" Source="{Binding FullPathPhoto}"
-                       IsVisible="{Binding FullPathPhoto, Converter={StaticResource VisibleImageConverter}}">
+                       IsVisible="{Binding FullPathPhoto, Converter={StaticResource VisibleImage}}">
                         <Image.GestureRecognizers>
                             <TapGestureRecognizer Tapped="OnAddPhoto" NumberOfTapsRequired="2" />
                         </Image.GestureRecognizers>
@@ -45,7 +45,7 @@
                         x:Name="XNameGenderPicker"
                         FontSize="17"
                         Title="{xct:Translate LabelGender}"
-                        ItemDisplayBinding="{Binding Gender}"
+                        ItemDisplayBinding="{Binding Item}"
                         SelectedIndexChanged="OnGender"/>
                     <!--Row 3-->
                     <Entry Grid.Row="3" Grid.Column="1"
@@ -59,7 +59,7 @@
                             x:Name="XNameMaritalStatusPicker"
                             FontSize="17"
                             Title="{xct:Translate LabelMaritalStatus}"
-                            ItemDisplayBinding="{Binding MaritalStatus}"
+                            ItemDisplayBinding="{Binding Item}"
                             SelectedIndexChanged="OnMaritalStatus"/>
                     <!--Row 6-->
                     <Entry Grid.Row="6" Grid.ColumnSpan="2"

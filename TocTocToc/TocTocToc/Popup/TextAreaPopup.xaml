@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<xct:Popup xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:xct="clr-namespace:Xamarin.CommunityToolkit.UI.Views;assembly=Xamarin.CommunityToolkit"
+             xmlns:viewModels="clr-namespace:TocTocToc.Models.View;assembly=TocTocToc"
+             Size="340,300"
+             x:Class="TocTocToc.Popup.TextAreaPopup"
+             x:TypeArguments="viewModels:ValueDetailsViewModel">
+    <AbsoluteLayout>
+        <Editor AbsoluteLayout.LayoutBounds="0, 0, 1, 1" AbsoluteLayout.LayoutFlags="All"
+               PlaceholderColor="Black" Placeholder="Info ..." BackgroundColor="White"
+               Text="{Binding Text}" TextColor="Black" MaxLength="500"/>
+    </AbsoluteLayout>
+</xct:Popup>
