@@ -24,8 +24,8 @@ namespace TocTocToc.Models.Dto
         [JsonProperty("area")]
         public AreaSelectedDtoModel Area { get; set; }
 
-        [JsonProperty("idGender")]
-        public int IdGender { get; set; }
+        [JsonProperty("idGenders")]
+        public int IdGenders { get; set; }
 
         [JsonProperty("gender")]
         public string Gender { get; set; }

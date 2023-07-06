@@ -15,11 +15,11 @@
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageReference Include="PropertyChanged.Fody" Version="4.1.0" PrivateAssets="All" />
-    <PackageReference Include="Stripe.net" Version="41.20.0" />
+    <PackageReference Include="Stripe.net" Version="41.22.0" />
     <PackageReference Include="System.Reactive" Version="6.0.0" />
     <PackageReference Include="Xamarin.CommunityToolkit" Version="2.0.6" />
     <PackageReference Include="Xamarin.Forms" Version="5.0.0.2578" />
-    <PackageReference Include="Xamarin.Essentials" Version="1.7.5" />
+    <PackageReference Include="Xamarin.Essentials" Version="1.7.7" />
     <PackageReference Include="Xamarin.Forms.Maps" Version="5.0.0.2578" />
   </ItemGroup>
 
@@ -37,9 +37,6 @@
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
       <DependentUpon>AppResources.resx</DependentUpon>
-    </Compile>
-    <Compile Update="Views\AdvertisingAddOrModifyPage.xaml.cs">
-      <DependentUpon>AdvertisingAddOrModifyPage.xaml</DependentUpon>
     </Compile>
   </ItemGroup>
 
@@ -73,7 +70,7 @@
       <Generator>MSBuild:Compile</Generator>
     </EmbeddedResource>
     <EmbeddedResource Update="Views\AdvertisingAddOrModifyPage.xaml">
-      <Generator>MSBuild:Compile</Generator>
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
     <EmbeddedResource Update="Views\AdvertisingHistoryPage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>

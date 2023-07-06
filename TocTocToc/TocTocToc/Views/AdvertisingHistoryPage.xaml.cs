@@ -20,7 +20,7 @@ namespace TocTocToc.Views
         public ObservableCollection<AdvertisingViewModel> ObserverAdvertisingViewModels { get; set; }
         private List<AdvertisingViewModel> _advertisingView = new();
         private List<AdvertisingDtoModel> _advertisementsDto = new();
-        private AdvertisingDtoModel _advertising = new();
+        //private AdvertisingDtoModel _advertising = new();
         private IDisposable _disposed = null;
 
         public AdvertisingHistoryPage()
@@ -32,6 +32,8 @@ namespace TocTocToc.Views
 
         protected override void OnAppearing()
         {
+            XNameActivityIndicator.IsRunning = true;
+
             GetAdvertising();
             if (_disposed != null) return;
             SubscribeToData();
@@ -101,6 +103,8 @@ namespace TocTocToc.Views
                     Console.WriteLine("[ completed ]");
                 }
             );
+
+            XNameActivityIndicator.IsRunning = false;
         }
 
 

@@ -14,7 +14,7 @@
             <ScrollView Grid.Row="0">
                 <Grid RowDefinitions="40, 40, 40, 40, 40, 40, 40, 40, 200" ColumnDefinitions="*,*"
                       Margin="20, 20, 20, 0">
-                    
+
                     <!--Row 0-->
                     <Button Grid.Row="0" Grid.ColumnSpan="2"
                             x:Name="XNameSaveMediaButton"
@@ -54,7 +54,7 @@
                             x:Name="XNameAge"
                             Clicked="OnAddAge" Text="{xct:Translate LabelAge}" TextColor="White"
                             BorderColor="{StaticResource ButtonBorderColor}" BorderWidth="1" CornerRadius="10" BackgroundColor="{StaticResource ButtonColorDetails}"/>
-                    
+
                     <!--Row 4 Interest see at the end of the grid-->
                     <!--Text="{Binding Interests}"-->
                     <Entry Grid.Row="4" Grid.ColumnSpan="2"

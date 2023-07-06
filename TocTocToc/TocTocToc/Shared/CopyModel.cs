@@ -131,7 +131,7 @@ public static class CopyModel
 
         AreaCopyDtoToViewModel(adDto.Area, adView.Area);
 
-        adView.IdGenders = adDto.IdGender;
+        adView.IdGenders = adDto.IdGenders;
         adView.Gender = adDto.Gender;
         adView.IsAllAge = adDto.IsAllAge;
         adView.AgeMini = adDto.AgeMini.ToString();
@@ -173,7 +173,7 @@ public static class CopyModel
 
         AreaCopyViewModelToDto(adView.Area, adDto.Area);
 
-        adDto.IdGender = adView.IdGenders;
+        adDto.IdGenders = adView.IdGenders;
         adDto.Gender = adView.Gender;
         adDto.Interests = adView.Interests;
 
