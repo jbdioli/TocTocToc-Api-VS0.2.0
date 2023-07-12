@@ -65,7 +65,8 @@ namespace TocTocToc.Services
 
         public async Task<List<InterestDtoModel>> GetInterestsAsync()
         {
-            var url = _url + WebConstants.GetInterests;
+            var settingId = LocalStorageService.GetSettingId();
+            var url = _url + WebConstants.GetInterests + settingId;
             var token = LocalStorageService.GetAccessToken();
 
             var interests = await HttpMethods.HttpGetAsync<List<InterestDtoModel>>(url, token);

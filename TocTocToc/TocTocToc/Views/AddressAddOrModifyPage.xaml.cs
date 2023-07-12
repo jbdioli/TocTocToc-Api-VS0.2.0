@@ -1,12 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reactive.Linq;
 using TocTocToc.Services;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 using TocTocToc.Shared;
-using PropertyChanged;
 using TocTocToc.Models.Dto;
 using TocTocToc.Models.View;
 
@@ -128,7 +126,6 @@ namespace TocTocToc.Views
             
         }
 
-        [SuppressPropertyChangedWarnings]
         private void OnTextChanged(object sender, TextChangedEventArgs e)
         {
             ButtonApproval();

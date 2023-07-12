@@ -1,12 +1,17 @@
-﻿using PropertyChanged;
+﻿
+using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace TocTocToc.Models.View;
 
-[AddINotifyPropertyChangedInterface]
-public class CountyViewModel
+public partial class CountyViewModel : ObservableObject
 {
-    public int Id { get; set; }
-    public int IdStates { get; set; }
-    public string County { get; set; }
+    [ObservableProperty]
+    private int _id;
+    
+    [ObservableProperty]
+    private int _idStates;
+
+    [ObservableProperty]
+    private string _county;
 
 }

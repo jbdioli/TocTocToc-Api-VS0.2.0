@@ -1,28 +1,38 @@
-﻿using PropertyChanged;
+﻿
+using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace TocTocToc.Models.View;
 
-[AddINotifyPropertyChangedInterface]
-public class EPayOrderLinesViewModel
+public partial class EPayOrderLinesViewModel : ObservableObject
 {
-    public int IdOrders { get; set; }
+    [ObservableProperty]
+    private int _idOrders;
 
-    public string ProductRef { get; set; }
+    [ObservableProperty]
+    private string _productRef;
 
-    public string Wording { get; set; }
+    [ObservableProperty]
+    private string _wording;
 
-    public int Quantity { get; set; }
+    [ObservableProperty]
+    private int _quantity;
 
-    public float PriceUnitHt { get; set; }
+    [ObservableProperty]
+    private float _priceUnitHt;
 
-    public float PriceUnitTtc { get; set; }
+    [ObservableProperty]
+    private float _priceUnitTtc;
 
-    public float PriceBaseHt { get; set; }
+    [ObservableProperty]
+    private float _priceBaseHt;
 
-    public float PriceBaseTtc { get; set; }
+    [ObservableProperty]
+    private float _priceBaseTtc;
 
-    public float TvaRate { get; set; }
+    [ObservableProperty]
+    private float _tvaRate;
 
-    public int DiscountPercent { get; set; }
+    [ObservableProperty]
+    private int _discountPercent;
 
 }

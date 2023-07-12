@@ -1,13 +1,20 @@
-﻿using PropertyChanged;
+﻿
+using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace TocTocToc.Models.View;
 
-[AddINotifyPropertyChangedInterface]
-public class CountryViewModel
+public partial class CountryViewModel : ObservableObject
 {
-    public int Id { get; set; }
-    public string Country { get; set; }
-    public string IsoAlpha2 { get; set; }
-    public int PhoneCode { get; set; }
+    [ObservableProperty]
+    private int _id;
+    
+    [ObservableProperty]
+    private string _country;
+
+    [ObservableProperty]
+    private string _isoAlpha2;
+
+    [ObservableProperty]
+    private int _phoneCode;
 
 }

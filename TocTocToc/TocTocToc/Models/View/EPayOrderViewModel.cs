@@ -1,60 +1,79 @@
-﻿using PropertyChanged;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System;
+using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace TocTocToc.Models.View;
 
-[AddINotifyPropertyChangedInterface]
-public class EPayOrderViewModel
+public partial class EPayOrderViewModel : ObservableObject
 {
     public EPayOrderViewModel()
     {
-        OrderLines = new List<EPayOrderLinesViewModel>();
-        BillingAddress = new EPayAddressViewModel();
-        ShippingAddress = new EPayAddressViewModel();
+        _orderLines = new List<EPayOrderLinesViewModel>();
+        _billingAddress = new EPayAddressViewModel();
+        _shippingAddress = new EPayAddressViewModel();
     }
 
     // Order
-    public int Id { get; set; }
+    [ObservableProperty]
+    private int _id;
 
-    public string OrderId { get; set; }
+    [ObservableProperty]
+    private string _orderId;
 
-    public int IdUsers { get; set; }
+    [ObservableProperty]
+    private int _idUsers;
 
-    public int IdBillAddress { get; set; }
+    [ObservableProperty]
+    private int _idBillAddress;
 
-    public int IdShipAddress { get; set; }
+    [ObservableProperty]
+    private int _idShipAddress;
 
-    public string Reference { get; set; }
+    [ObservableProperty]
+    private string _reference;
 
-    public string OrderState { get; set; }
+    [ObservableProperty]
+    private string _orderState;
 
-    public string InvoiceNum { get; set; }
+    [ObservableProperty]
+    private string _invoiceNum;
 
-    public float AmountTotalHt { get; set; }
+    [ObservableProperty]
+    private float _amountTotalHt;
 
-    public float AmountTotalTtc { get; set; }
+    [ObservableProperty]
+    private float _amountTotalTtc;
 
-    public float AmountTotalTva { get; set; }
+    [ObservableProperty]
+    private float _amountTotalTva;
 
-    public float PortPriceTtc { get; set; }
+    [ObservableProperty]
+    private float _portPriceTtc;
 
-    public float AmountToPay { get; set; }
+    [ObservableProperty]
+    private float _amountToPay;
 
-    public DateTime DateInvoice { get; set; }
+    [ObservableProperty]
+    private DateTime _dateInvoice;
 
-    public DateTime DateSendOrder { get; set; }
+    [ObservableProperty]
+    private DateTime _dateSendOrder;
 
-    public DateTime DateSendInvoice { get; set; }
+    [ObservableProperty]
+    private DateTime _dateSendInvoice;
 
     // Order lines
-    public List<EPayOrderLinesViewModel> OrderLines { get; set; }
+    [ObservableProperty]
+    private List<EPayOrderLinesViewModel> _orderLines;
 
     // Billing address
-    public EPayAddressViewModel BillingAddress { get; set; }
+    [ObservableProperty]
+    private EPayAddressViewModel _billingAddress;
 
     // Delivery address
-    public EPayAddressViewModel ShippingAddress { get; set; }
+    [ObservableProperty]
+    private EPayAddressViewModel _shippingAddress;
 
-    public bool IsShippingAsBilling { get; set; } = false;
+    [ObservableProperty]
+    private bool _isShippingAsBilling = false;
 }

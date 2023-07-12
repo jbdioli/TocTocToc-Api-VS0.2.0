@@ -1,10 +1,13 @@
-﻿using PropertyChanged;
+﻿
+using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace TocTocToc.Models.View;
 
-[AddINotifyPropertyChangedInterface]
-public class InterestViewModel
+public partial class InterestViewModel : ObservableObject
 {
-    public int Id { get; set; }
-    public string Interest { get; set; }
+    [ObservableProperty]
+    private int _id;
+    
+    [ObservableProperty]
+    private string _interest;
 }

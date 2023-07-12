@@ -1,19 +1,25 @@
-﻿using PropertyChanged;
+﻿
+using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace TocTocToc.Models.View;
 
-[AddINotifyPropertyChangedInterface]
-public class AgeViewModel
+public partial class AgeViewModel : ObservableObject
 {
-    public string AgeMaxi { get; set; }
+    [ObservableProperty]
+    private string _ageMaxi;
 
-    public string AgeMini { get; set; }
+    [ObservableProperty]
+    private string _ageMini;
 
-    public bool IsAllAge { get; set; } = false;
+    [ObservableProperty]
+    private bool _isAllAge = false;
 
-    public bool IsAgeMini { get; set; } = false;
+    [ObservableProperty]
+    private bool _isAgeMini = false;
 
-    public bool IsAgeMaxi { get; set; } = false;
+    [ObservableProperty]
+    private bool _isAgeMaxi = false;
 
-    public bool IsAgeValid { get; set; } = false;
+    [ObservableProperty]
+    private bool _isAgeValid = false;
 }

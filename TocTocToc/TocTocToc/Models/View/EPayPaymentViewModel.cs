@@ -1,33 +1,37 @@
-﻿using PropertyChanged;
+﻿
+using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace TocTocToc.Models.View
 {
-    [AddINotifyPropertyChangedInterface]
-    public class EPayPaymentViewModel
+    public partial class EPayPaymentViewModel : ObservableObject
     {
 
-        public EPayPaymentViewModel()
-        {
+        [ObservableProperty]
+        private string _cardNo;
 
-        }
+        [ObservableProperty]
+        private string _expMonth;
 
-        public string CardNo { get; set; }
+        [ObservableProperty]
+        private string _expYear;
 
-        public string ExpMonth { get; set; }
+        [ObservableProperty]
+        private string _cardCvv;
 
-        public string ExpYear { get; set; }
+        [ObservableProperty]
+        private string _description;
 
-        public string CardCvv { get; set; }
+        [ObservableProperty]
+        [NotifyPropertyChangedFor(nameof(CurrencyValue))]
+        private string _amount;
 
-        public string Description { get; set; }
+        [ObservableProperty]
+        private string _currency;
 
-        public string Amount { get; set; }
+        [ObservableProperty]
+        private bool _isPayed = false;
 
-        public string Currency { get; set; }
-
-        public bool IsPayed { get; set; } = false;
-
-        public double CurrencyValue => !string.IsNullOrEmpty(Amount) ? double.Parse(Amount) : 0;
+        public double CurrencyValue => !string.IsNullOrEmpty(_amount) ? double.Parse(_amount) : 0;
 
 
     }

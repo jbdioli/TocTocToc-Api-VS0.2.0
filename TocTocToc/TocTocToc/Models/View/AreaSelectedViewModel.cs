@@ -1,20 +1,36 @@
-﻿using PropertyChanged;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace TocTocToc.Models.View;
 
-[AddINotifyPropertyChangedInterface]
-public class AreaSelectedViewModel
+public partial class AreaSelectedViewModel : ObservableObject
 {
-    public CountryViewModel CountrySelected { get; set; } = new();
-    public List<StateViewModel> StatesSelected { get; set; } = new();
-    public List<CountyViewModel> CountiesSelected { get; set; } = new();
-    public List<CityViewModel> CitiesSelected { get; set; } = new();
-    public bool IsAllCountry { get; set; } = true;
-    public bool IsAllState { get; set; } = true;
-    public bool IsAllCounty { get; set; } = true;
-    public bool IsAllCity { get; set; } = true;
-    public double Km { get; set; } = new();
+    [ObservableProperty]
+    private CountryViewModel _countrySelected = new();
+
+    [ObservableProperty]
+    private List<StateViewModel> _statesSelected = new();
+
+    [ObservableProperty]
+    private List<CountyViewModel> _countiesSelected = new();
+
+    [ObservableProperty]
+    private List<CityViewModel> _citiesSelected = new();
+
+    [ObservableProperty]
+    private bool _isAllCountry = true;
+
+    [ObservableProperty]
+    private bool _isAllState = true;
+
+    [ObservableProperty]
+    private bool _isAllCounty = true;
+
+    [ObservableProperty]
+    private bool _isAllCity = true;
+
+    [ObservableProperty]
+    private double _km = new();
 
 
 }

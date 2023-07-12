@@ -1,65 +1,90 @@
 ﻿using System.Collections.Generic;
-using PropertyChanged;
+using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace TocTocToc.Models.View
 {
-    [AddINotifyPropertyChangedInterface]
-    public class UserViewModel : LanguageViewModel
+    public partial class UserViewModel : LanguageViewModel
     {
 
         public UserViewModel()
         {
-            Addresses = new List<AddressViewModel>();
+            _addresses = new List<AddressViewModel>();
         }
 
-        public string UserId { get; set; }
+        [ObservableProperty]
+        private string _userId;
 
-        public string Firstname { get; set; }
+        [ObservableProperty]
+        [NotifyPropertyChangedFor(nameof(Name))]
+        private string _firstname;
 
-        public string Lastname { get; set; }
+        [ObservableProperty]
+        [NotifyPropertyChangedFor(nameof(Name))]
+        private string _lastname;
 
-        public string Pseudo { get; set; }
+        [ObservableProperty]
+        private string _pseudo;
 
-        public string Email { get; set; }
+        [ObservableProperty]
+        private string _email;
 
-        public string PhoneNumber { get; set; }
+        [ObservableProperty]
+        private string _phoneNumber;
 
-        public string Birthday { get; set; }
+        [ObservableProperty]
+        private string _birthday;
 
-        public string Company { get; set; }
+        [ObservableProperty]
+        private string _company;
 
-        public int IdGenders { get; set; }
+        [ObservableProperty]
+        private int _idGenders;
 
-        public string Gender { get; set; }
+        [ObservableProperty]
+        private string _gender;
 
-        public string Languages { get; set; }
+        [ObservableProperty]
+        private string _languages;
 
-        public int IdMaritalStatus { get; set; }
+        [ObservableProperty]
+        private int _idMaritalStatus;
 
-        public string MaritalStatus { get; set; }
+        [ObservableProperty]
+        private string _maritalStatus;
 
-        public string Path { get; set; }
+        [ObservableProperty]
+        private string _path;
 
-        public string Photo { get; set; }
+        [ObservableProperty]
+        private string _photo;
 
-        public string Job { get; set; }
+        [ObservableProperty]
+        private string _job;
 
-        public string Interests { get; set; }
+        [ObservableProperty]
+        private string _interests;
 
-        public bool IsFloor { get; set; }
+        [ObservableProperty]
+        private bool _isFloor;
 
-        public bool IsAge { get; set; }
+        [ObservableProperty]
+        private bool _isAge;
 
-        public bool IsStatus { get; set; }
+        [ObservableProperty]
+        private bool _isStatus;
 
-        public bool IsJob { get; set; }
+        [ObservableProperty]
+        private bool _isJob;
 
-        public bool IsApartmentNumber { get; set; }
+        [ObservableProperty]
+        private bool _isApartmentNumber;
 
-        public List<AddressViewModel> Addresses { get; set; }
+        [ObservableProperty]
+        private List<AddressViewModel> _addresses;
 
-        public string FullPathPhoto { get; set; }
+        [ObservableProperty]
+        private string _fullPathPhoto;
 
-        public string Name => $"{Firstname} {Lastname}";
+        public string Name => $"{_firstname} {_lastname}";
     }
 }

@@ -1,74 +1,105 @@
 ﻿using System;
 using System.Collections.Generic;
-using PropertyChanged;
+using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace TocTocToc.Models.View
 {
-    [AddINotifyPropertyChangedInterface]
-    public class AdvertisingViewModel
+    public partial class AdvertisingViewModel : ObservableObject
     {
-        public bool IsDownloadingData { get; set; }
+        [ObservableProperty]
+        private bool _isDownloadingData;
 
-        public string AdvertisingId { get; set; }
+        [ObservableProperty]
+        private string _advertisingId;
+        
+        [ObservableProperty]
+        private string _image;           // needed
 
-        public string Image { get; set; }           // needed
+        [ObservableProperty]
+        private string _path;            // needed
 
-        public string Path { get; set; }            // needed
+        [ObservableProperty]
+        private string _name;            // needed
 
-        public string Name { get; set; }            // needed
+        [ObservableProperty]
+        private string _info;
 
-        public string Info { get; set; }
+        [ObservableProperty]
+        private AreaSelectedViewModel _area;
 
-        public AreaSelectedViewModel Area { get; set; }
+        [ObservableProperty]
+        private int _idGenders;
 
-        public int IdGenders { get; set; }
+        [ObservableProperty]
+        private string _gender;          // needed
 
-        public string Gender { get; set; }          // needed
+        [ObservableProperty]
+        private bool _isAllAge;          // needed
 
-        public bool IsAllAge { get; set; }          // needed
+        [ObservableProperty]
+        private string _ageMini;         // needed
 
-        public string AgeMini { get; set; }         // needed
+        [ObservableProperty]
+        private string _ageMaxi;         // needed
 
-        public string AgeMaxi { get; set; }         // needed
+        [ObservableProperty]
+        private string _interests;       // needed
 
-        public string Interests { get; set; }       // needed
+        [ObservableProperty]
+        private List<InterestViewModel> _interestsDetails;
 
-        public List<InterestViewModel> InterestsDetails { get; set; }
+        [ObservableProperty]
+        private DateTime _date;
 
-        public DateTime Date { get; set; }
+        [ObservableProperty]
+        private bool _isPause;           // needed
 
-        public bool IsPause { get; set; }           // needed
+        [ObservableProperty]
+        private string _duration;
 
-        public string Duration { get; set; }
+        [ObservableProperty]
+        private string _budget;         // needed
 
-        public string Budget { get; set; }          // needed
+        [ObservableProperty]
+        private DateTime _startDate;
 
-        public DateTime StartDate { get; set; }
+        [ObservableProperty]
+        private bool _isPayed;
 
-        public bool IsPayed { get; set; }
+        [ObservableProperty]
+        private string _fullPathImage;
 
-        public string FullPathImage { get; set; }
+        [ObservableProperty]
+        private bool _isAgeValid = false;
 
-        public bool IsAgeValid { get; set; } = false;
+        [ObservableProperty]
+        private bool _isGender = false;
 
-        public bool IsGender { get; set; } = false;
+        [ObservableProperty]
+        private bool _isName = false;
 
-        public bool IsName { get; set; } = false;
+        [ObservableProperty]
+        private bool _isDuration = false;
 
-        public bool IsDuration { get; set; } = false;
+        [ObservableProperty]
+        private bool _isBudget = false;
 
-        public bool IsBudget { get; set; } = false;
+        [ObservableProperty]
+        private bool _isArea = false;
 
-        public bool IsArea { get; set; } = false;
+        [ObservableProperty]
+        private bool _isInterest = false;
 
-        public bool IsInterest { get; set; } = false;
+        [ObservableProperty]
+        private bool _isImage = false;
 
-        public bool IsImage { get; set; } = false;
+        [ObservableProperty]
+        private bool _isArticleValid = false;
 
-        public bool IsArticleValid { get; set; } = false;
+        [ObservableProperty]
+        private bool _isEditMode = false;
 
-        public bool IsEditMode { get; set; } = false;
-
-        public bool IsSaved { get; set; } = false;
+        [ObservableProperty]
+        private bool _isSaved = false;
     }
 }

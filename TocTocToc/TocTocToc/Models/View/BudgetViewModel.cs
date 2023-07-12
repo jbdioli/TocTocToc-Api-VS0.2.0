@@ -1,26 +1,34 @@
 ﻿using System;
-using PropertyChanged;
+using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace TocTocToc.Models.View;
 
-[AddINotifyPropertyChangedInterface]
-public class BudgetViewModel
+public partial class BudgetViewModel : ObservableObject
 {
-    public string Budget { get; set; }
+    [ObservableProperty]
+    private string _budget;
 
-    public DateTime StartDate { get; set; }
+    [ObservableProperty]
+    private DateTime _startDate;
 
-    public string Duration { get; set; }
+    [ObservableProperty]
+    private string _duration;
 
-    public DateTime EndDate { get; set; }
+    [ObservableProperty]
+    private DateTime _endDate;
 
-    public int BudgetMini { get; set; } = 1;
+    [ObservableProperty]
+    private int _budgetMini = 1;
 
-    public int BudgetMaxi { get; set; } = 500;
+    [ObservableProperty]
+    private int _budgetMaxi = 500;
 
-    public bool IsWrongTime { get; set; } = false;
+    [ObservableProperty]
+    private bool _isWrongTime = false;
 
-    public bool IsBudgetEntry { get; set; } = false;
+    [ObservableProperty]
+    private bool _isBudgetEntry = false;
 
-    public bool IsDurationMissing { get; set; } = false;
+    [ObservableProperty]
+    private bool _isDurationMissing = false;
 }

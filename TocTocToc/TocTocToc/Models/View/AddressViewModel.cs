@@ -1,69 +1,103 @@
-﻿using PropertyChanged;
+﻿
+using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace TocTocToc.Models.View
 {
-    [AddINotifyPropertyChangedInterface]
-    public class AddressViewModel : LanguageViewModel
+    public partial class AddressViewModel : LanguageViewModel
     {
+        [ObservableProperty] 
+        private string _addressId;
 
-        public string AddressId { get; set; }
+        [ObservableProperty]
+        private string _title;
 
-        public string Title { get; set; }
+        [ObservableProperty]
+        private int _idHousingTypes;
 
-        public int IdHousingTypes { get; set; }
+        [ObservableProperty]
+        private string _type;
 
-        public string Type { get; set; }
+        [ObservableProperty]
+        [NotifyPropertyChangedFor(nameof(FullStreetAddress))]
+        [NotifyPropertyChangedFor(nameof(FullStreetAddressWithCity))]
+        private string _address;
 
-        public string Address { get; set; }
+        [ObservableProperty]
+        private string _address1;
 
-        public string Address1 { get; set; }
+        [ObservableProperty]
+        private string _address2;
 
-        public string Address2 { get; set; }
+        [ObservableProperty]
+        [NotifyPropertyChangedFor(nameof(FullStreetAddress))]
+        [NotifyPropertyChangedFor(nameof(FullStreetAddressWithCity))]
+        private string _streetNumber;
 
-        public string StreetNumber { get; set; }
+        [ObservableProperty]
+        private string _residenceName;
 
-        public string ResidenceName { get; set; }
+        [ObservableProperty]
+        private string _buildingNumber;
 
-        public string BuildingNumber { get; set; }
+        [ObservableProperty]
+        private string _buildingName;
 
-        public string BuildingName { get; set; }
+        [ObservableProperty]
+        private string _buildingEntrance;
 
-        public string BuildingEntrance { get; set; }
+        [ObservableProperty]
+        private string _floor = null;
 
-        public string Floor { get; set; } = null;
+        [ObservableProperty]
+        [NotifyPropertyChangedFor(nameof(FullPostCode))]
+        private string _zipcode;
 
-        public string Zipcode { get; set; }
+        [ObservableProperty]
+        private int _idCountries;    
 
-        public int IdCountries { get; set; }
+        [ObservableProperty]
+        [NotifyPropertyChangedFor(nameof(FullPostCode))]
+        private string _country;
 
-        public string Country { get; set; }
+        [ObservableProperty]
+        private int _idStates;
 
-        public int IdStates { get; set; }
+        [ObservableProperty]
+        private string _state;
 
-        public string State { get; set; }
+        [ObservableProperty]
+        private int _idCounties;
 
-        public int IdCounties { get; set; }
+        [ObservableProperty]
+        private string _county;
 
-        public string County { get; set; }
+        [ObservableProperty]
+        private int _idCities;
 
-        public int IdCities { get; set; }
+        [ObservableProperty]
+        [NotifyPropertyChangedFor(nameof(FullStreetAddressWithCity))]
+        [NotifyPropertyChangedFor(nameof(FullPostCode))]
+        private string _city;
 
-        public string City { get; set; }
+        [ObservableProperty]
+        private double _lon;
 
-        public double Lon { get; set; }
+        [ObservableProperty]
+        private double _lat;
 
-        public double Lat { get; set; }
+        [ObservableProperty]
+        private float _distanceWanted;
 
-        public float DistanceWanted { get; set; }
+        [ObservableProperty]
+        private bool _isActive = false;
 
-        public bool IsActive { get; set; } = false;
+        [ObservableProperty]
+        private bool _isEditMode = false;
 
-        public bool IsEditMode { get; set; } = false;
+        public string FullStreetAddress => $"{_streetNumber} {_address}";
 
-        public string FullStreetAddress => $"{StreetNumber} {Address}";
+        public string FullStreetAddressWithCity => $"{_streetNumber} {_address} {_city}";
 
-        public string FullStreetAddressWithCity => $"{StreetNumber} {Address} {City}";
-
-        public string FullPostCode => $"{Zipcode} {City} - {Country}";
+        public string FullPostCode => $"{_zipcode} {_city} - {_country}";
     }
 }

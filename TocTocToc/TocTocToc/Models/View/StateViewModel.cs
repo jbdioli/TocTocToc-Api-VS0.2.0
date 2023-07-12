@@ -1,12 +1,17 @@
-﻿using PropertyChanged;
+﻿
+using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace TocTocToc.Models.View;
 
-[AddINotifyPropertyChangedInterface]
-public class StateViewModel
+public partial class StateViewModel : ObservableObject
 {
-    public int Id { get; set; }
-    public int IdCountries { get; set; }
-    public string State { get; set; }
+    [ObservableProperty]
+    private int _id;
+
+    [ObservableProperty]
+    private int _idCountries;
+
+    [ObservableProperty]
+    private string _state;
 
 }

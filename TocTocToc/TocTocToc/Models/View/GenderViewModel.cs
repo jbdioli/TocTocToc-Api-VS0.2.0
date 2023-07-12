@@ -1,22 +1,28 @@
-﻿using PropertyChanged;
+﻿
+using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace TocTocToc.Models.View
 {
 
-    [AddINotifyPropertyChangedInterface]
-    public class GenderViewModel
+    public partial class GenderViewModel : ObservableObject
     {
 
         public GenderViewModel()
         {
-            IsMaleValid = true;
-            IsFemaleValid = false;
+            _isMaleValid = true;
+            _isFemaleValid = false;
         }
 
-        public int Id { get; set; }
-        public string Gender { get; set; }
+        [ObservableProperty]
+        private int _id;
 
-        public bool IsMaleValid { get; set; }
-        public bool IsFemaleValid { get; set; }
+        [ObservableProperty]
+        private string _gender;
+
+        [ObservableProperty]
+        private bool _isMaleValid;
+
+        [ObservableProperty]
+        private bool _isFemaleValid;
     }
 }

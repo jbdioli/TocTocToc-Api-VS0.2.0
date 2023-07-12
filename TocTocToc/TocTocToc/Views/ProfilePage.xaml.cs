@@ -1,5 +1,4 @@
-﻿using PropertyChanged;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -179,7 +178,6 @@ namespace TocTocToc.Views
         }
 
 
-        [SuppressPropertyChangedWarnings]
         private void OnTextChanged(object sender, TextChangedEventArgs e)
         {
             if (!string.IsNullOrEmpty(_userViewModel.Lastname))

@@ -1,9 +1,10 @@
-﻿using PropertyChanged;
+﻿
+using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace TocTocToc.Models.View;
 
-[AddINotifyPropertyChangedInterface]
-public class ValueDetailsViewModel
+public partial class ValueDetailsViewModel : ObservableObject
 {
-    public string Text { get; set; }
+    [ObservableProperty]
+    private string _text;
 }

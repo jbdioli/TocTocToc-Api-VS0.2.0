@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
-using PropertyChanged;
 using TocTocToc.ENumerations;
 using TocTocToc.Models.Dto;
 using TocTocToc.Models.View;
@@ -260,7 +259,6 @@ namespace TocTocToc.Popup
         /*
          * State
          */
-        [SuppressPropertyChangedWarnings]
         private void OnStateTextChanged(object sender, TextChangedEventArgs e)
         {
             XNameStateReturnButton.IsVisible = !string.IsNullOrEmpty(e.NewTextValue);
@@ -331,7 +329,6 @@ namespace TocTocToc.Popup
         /*
          * County
          */
-        [SuppressPropertyChangedWarnings]
         private void OnCountyTextChanged(object sender, TextChangedEventArgs e)
         {
             XNameCountyReturnButton.IsVisible = !string.IsNullOrEmpty(e.NewTextValue);
@@ -400,7 +397,6 @@ namespace TocTocToc.Popup
         /*
          * City
          */
-        [SuppressPropertyChangedWarnings]
         private void OnCityTextChanged(object sender, TextChangedEventArgs e)
         {
             XNameCityReturnButton.IsVisible = !string.IsNullOrEmpty(e.NewTextValue);

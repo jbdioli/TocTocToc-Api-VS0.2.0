@@ -1,49 +1,65 @@
-﻿using PropertyChanged;
+﻿
+using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace TocTocToc.Models.View;
 
-[AddINotifyPropertyChangedInterface]
-public class EPayDetailsViewModel
+public partial class EPayDetailsViewModel : ObservableObject
 {
 
     public EPayDetailsViewModel()
     {
 
-        EPayPayment = new EPayPaymentViewModel();
-        EPayOrder = new EPayOrderViewModel();
+        _ePayPayment = new EPayPaymentViewModel();
+        _ePayOrder = new EPayOrderViewModel();
     }
 
     // Bank payment
-    public EPayPaymentViewModel EPayPayment { get; set; }
+    [ObservableProperty]
+    private EPayPaymentViewModel _ePayPayment;
 
     // Order
-    public EPayOrderViewModel EPayOrder { get; set; }
+    [ObservableProperty]
+    private EPayOrderViewModel _ePayOrder;
 
-    public bool IsCardNumber { get; set; } = false;
+    [ObservableProperty]
+    private bool _isCardNumber = false;
 
-    public bool IsExpMonth { get; set; } = false;
+    [ObservableProperty]
+    private bool _isExpMonth = false;
 
-    public bool IsExpYear { get; set; } = false;
+    [ObservableProperty]
+    private bool _isExpYear = false;
 
-    public bool IsCardCvv { get; set; } = false;
+    [ObservableProperty]
+    private bool _isCardCvv = false;
 
-    public bool IsFirstname { get; set; } = false;
+    [ObservableProperty]
+    private bool _isFirstname = false;
 
-    public bool IsLastname { get; set; } = false;
+    [ObservableProperty]
+    private bool _isLastname = false;
 
-    public bool IsEmail { get; set; } = false;
+    [ObservableProperty]
+    private bool _isEmail = false;
 
-    public bool IsPhoneNumber { get; set; } = false;
+    [ObservableProperty]
+    private bool _isPhoneNumber = false;
 
-    public bool IsAddress1 { get; set; } = false;
+    [ObservableProperty]
+    private bool _isAddress1 = false;
 
-    public bool IsZipcode { get; set; } = false;
+    [ObservableProperty]
+    private bool _isZipcode = false;
 
-    public bool IsState { get; set; } = false;
+    [ObservableProperty]
+    private bool _isState = false;
 
-    public bool IsCity { get; set; } = false;
+    [ObservableProperty]
+    private bool _isCity = false;
 
-    public bool IsCountry { get; set; } = false;
+    [ObservableProperty]
+    private bool _isCountry = false;
 
-    public bool IsEPayValid { get; set; } = false;
+    [ObservableProperty]
+    private bool _isEPayValid = false;
 }

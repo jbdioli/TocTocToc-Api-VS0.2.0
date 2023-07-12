@@ -18,6 +18,11 @@ namespace TocTocToc.Views
 
         }
 
+        protected override void OnAppearing()
+        {
+
+        }
+
         private void OnBlogPage(object sender, EventArgs e)
         {
             Navigation.PushAsync(new BlogPage());

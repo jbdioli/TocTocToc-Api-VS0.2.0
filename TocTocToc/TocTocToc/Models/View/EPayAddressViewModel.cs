@@ -1,38 +1,53 @@
-﻿using PropertyChanged;
+﻿
+using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace TocTocToc.Models.View;
 
-[AddINotifyPropertyChangedInterface]
-public class EPayAddressViewModel
+public partial class EPayAddressViewModel : ObservableObject
 {
-    public int Id { get; set; }
+    [ObservableProperty]
+    private int _id;
 
-    public string Firstname { get; set; }
+    [ObservableProperty]
+    private string _firstname;
 
-    public string Lastname { get; set; }
+    [ObservableProperty]
+    private string _lastname;
 
-    public string PhoneNumber { get; set; }
+    [ObservableProperty]
+    private string _phoneNumber;
 
-    public string Email { get; set; }
+    [ObservableProperty]
+    private string _email;
 
-    public string Company { get; set; }
+    [ObservableProperty]
+    private string _company;
 
-    public string Address1 { get; set; }
+    [ObservableProperty]
+    private string _address1;
 
-    public string Address2 { get; set; }
+    [ObservableProperty]
+    private string _address2;
 
-    public string Address3 { get; set; }
+    [ObservableProperty]
+    private string _address3;
 
-    public int IdCities { get; set; }
+    [ObservableProperty]
+    private int _idCities;
 
-    public string City { get; set; }
+    [ObservableProperty]
+    private string _city;
 
-    public string Zipcode { get; set; }
+    [ObservableProperty]
+    private string _zipcode;
 
-    public string State { get; set; }
+    [ObservableProperty]
+    private string _state;
 
-    public string Country { get; set; }
+    [ObservableProperty]
+    private string _country;
 
-    public int IdCountries { get; set; }
+    [ObservableProperty]
+    private int _idCountries;
 
 }
