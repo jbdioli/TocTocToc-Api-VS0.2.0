@@ -1,9 +1,10 @@
 ﻿
 using CommunityToolkit.Mvvm.ComponentModel;
+using TocTocToc.Models.View;
 
-namespace TocTocToc.Models.View;
+namespace TocTocToc.Models.Model;
 
-public partial class ItemViewModel : ObservableObject
+public partial class ItemModel : BaseViewModel
 {
     [ObservableProperty]
     private int _id;

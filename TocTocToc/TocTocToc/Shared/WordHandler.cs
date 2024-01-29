@@ -1,55 +1,63 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
+using TocTocToc.ENumerations;
 using TocTocToc.Models.Dto;
+using TocTocToc.Models.Model;
 
 namespace TocTocToc.Shared;
 
 public class WordHandler
 {
 
-    private readonly WordDtoModel _wordDto;
+    private readonly WordModel _word;
     private readonly WordDefinitionHandler _wordDefinitionHandler;
 
-    public WordHandler(WordDtoModel wordDto)
+    public WordHandler(WordModel word)
     {
-        _wordDto = wordDto;
-        _wordDefinitionHandler = new WordDefinitionHandler(_wordDto);
+        _word = word;
+        _wordDefinitionHandler = new WordDefinitionHandler(_word);
     }
 
 
-    public async Task CtrlWordValidity()
+    public async Task CheckWordValidity()
     {
-        var isDefinitionValid = await IsDefinitionValid();
-        if (!isDefinitionValid)
+        await CheckWordDefinition();
+        if (_word.IsInvalid)
         {
-            _wordDto.WordRequested = string.Empty;
-            _wordDto.Invalid = true;
             return;
         }
 
-        CapitalizeFirstLetter();
-        _wordDto.Invalid = false;
+        FormatWord();
+    }
+
+    public static bool IsCharAllowed(string text)
+    {
+        if (string.IsNullOrWhiteSpace(text)) return false;
+
+        //var textBuffer = text.Trim();
+        //var lastCharacter = textBuffer.Last();
+        //return char.IsLetter(lastCharacter);
+        //return !lastCharacter.All(c => (char.IsLetter(c) || c == (int)EDecimalCharacter.Space || c == (int)EDecimalCharacter.Hyphen || c == (int)EDecimalCharacter.Apostrophe));
+
+        var lastCharacter = text.Substring(text.Length - 1);
+        return lastCharacter.All(c => (char.IsLetter(c) || c == (int)EDecimalCharacter.Space || c == (int)EDecimalCharacter.Hyphen || c == (int)EDecimalCharacter.Apostrophe));
     }
 
 
-    private async Task<bool> IsDefinitionValid()
+    private async Task CheckWordDefinition()
     {
-        if (string.IsNullOrWhiteSpace(_wordDto.WordRequested))
+        if (string.IsNullOrWhiteSpace(_word.Word))
         {
-            throw new ArgumentNullException( nameof(_wordDto.WordRequested), "[ERROR] - In function IsDefinitionValid - Object WordHandler");
+            return;
         }
 
         await _wordDefinitionHandler.GetWordDefinition();
-        return !_wordDto.Invalid;
     }
 
 
     private void CapitalizeFirstLetter()
     {
-        //var word = string.IsNullOrWhiteSpace(_wordDto.Log) ? _wordDto.Dictionary.Word : _wordDto.WordRequested;
-
-        var word = string.IsNullOrEmpty(_wordDto.Dictionary.Word) ? _wordDto.WordRequested : _wordDto.Dictionary.Word;
+        var word = string.IsNullOrEmpty(_word.Dictionary.Word) ? _word.Word : _word.Dictionary.Word;
 
         if (string.IsNullOrWhiteSpace(word)) return;
 
@@ -60,27 +68,54 @@ public class WordHandler
             _ => char.ToUpper(word[0]) + word.Substring(1)
         };
 
-        _wordDto.WordRequested = word;
+        _word.Word = word;
     }
 
-    public void CleaningWord()
+    public void DeleteWord()
     {
-        if (string.IsNullOrWhiteSpace(_wordDto.WordRequested))
+        if (string.IsNullOrWhiteSpace(_word.Word))
         {
-            throw new ArgumentNullException(nameof(_wordDto.WordRequested), "[ERROR] - In function CleaningWord - Object WordHandler");
+            return;
         }
 
-        var textBuffer = _wordDto.WordRequested.Trim();
-        var lastCharacter = textBuffer.Last();
-        _wordDto.WordRequested = !char.IsLetter(lastCharacter) ? _wordDto.WordRequested.Remove(_wordDto.WordRequested.Length - 1, 1) : textBuffer;
+        _word.Word = string.Empty;
+        ClearWordDefinition();
     }
 
-    public void CleaningWordDefinition()
+
+    public void DeleteLastChar()
     {
-        _wordDto.Log = string.Empty;
-        _wordDto.Invalid = true;
-        _wordDto.Dictionary = new DictionaryDtoModel();
+        if (string.IsNullOrWhiteSpace(_word.Word))
+        {
+            return;
+        }
+
+        var textBuffer = _word.Word.Trim();
+        var lastCharacter = textBuffer.Last();
+        _word.Word = !char.IsLetter(lastCharacter) ? _word.Word.Remove(_word.Word.Length - 1, 1) : textBuffer;
+        ClearWordDefinition();
     }
 
+
+    public void FormatWord()
+    {
+        _word.Word = _word.Word.Trim();
+        CapitalizeFirstLetter();
+    }
+
+    public void Clear()
+    {
+        _word.Word = string.Empty;
+        ClearWordDefinition();
+    }
+
+    private void ClearWordDefinition()
+    {
+        _word.Log = string.Empty;
+        _word.IsInvalid = true;
+        _word.Dictionary = new DictionaryDtoModel();
+    }
+
+    
 
 }

@@ -1,9 +1,9 @@
-﻿
-using CommunityToolkit.Mvvm.ComponentModel;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using TocTocToc.Models.View;
 
-namespace TocTocToc.Models.View;
+namespace TocTocToc.Models.Model;
 
-public partial class CityViewModel : ObservableObject
+public partial class CityModel : BaseViewModel
 {
     [ObservableProperty]
     private int _id;

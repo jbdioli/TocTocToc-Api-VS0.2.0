@@ -2,22 +2,23 @@
 using System.Threading.Tasks;
 using TocTocToc.ENumerations;
 using TocTocToc.Models.Dto;
+using TocTocToc.Models.Model;
 using TocTocToc.Services;
 
 namespace TocTocToc.Shared;
 
 public class WordDefinitionHandler
 {
-    private readonly WordDtoModel _wordDto;
+    private readonly WordModel _word;
 
     private readonly DictionaryService _dictionaryService;
 
     private static readonly NotificationChannelHandler NotificationHandler = new(new DisplayNotification());
 
-    public WordDefinitionHandler(WordDtoModel wordDto)
+    public WordDefinitionHandler(WordModel word)
     {
-        _wordDto = wordDto;
-        _dictionaryService = new DictionaryService(_wordDto);
+        _word = word;
+        _dictionaryService = new DictionaryService(_word);
     }
 
 
@@ -27,28 +28,28 @@ public class WordDefinitionHandler
         var isForbiddenCharacters = IsForbiddenCharacters();
         if (isForbiddenCharacters)
         {
-            _wordDto.Invalid = true;
+            _word.IsInvalid = true;
             return;
         }
         else
         {
-            _wordDto.Invalid = false;
+            _word.IsInvalid = false;
         }
 
         var isDefinition = await IsWordInDictionary();
         if (!isDefinition)
         {
-            _wordDto.Invalid = true;
+            _word.IsInvalid = true;
             return;
         }
 
-        _wordDto.Invalid = false;
+        _word.IsInvalid = false;
     }
 
 
     private bool IsForbiddenCharacters()
     {
-        var word = _wordDto.WordRequested.Trim();
+        var word = _word.Word.Trim();
         if (string.IsNullOrWhiteSpace(word))
             return true;
 
@@ -66,7 +67,7 @@ public class WordDefinitionHandler
     {
         
         await _dictionaryService.FindWordDefinition();
-        var dictionary = _wordDto.Dictionary;
+        var dictionary = _word.Dictionary;
         if (dictionary != null && !string.IsNullOrWhiteSpace(dictionary.Word)) return true;
         NotificationHandler.SendNotification(ENotificationType.IncorrectWordDefinition, null);
         return false;

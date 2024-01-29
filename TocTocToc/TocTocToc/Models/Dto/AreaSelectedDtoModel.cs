@@ -19,16 +19,16 @@ public class AreaSelectedDtoModel
     public List<CityDtoModel> CitiesSelected { get; set; } = new();
 
     [JsonProperty("isAllCountry")]
-    public bool IsAllCountry { get; set; } = true;
+    public bool IsAllCountry { get; set; } = false;
 
     [JsonProperty("isAllState")]
-    public bool IsAllState { get; set; } = true;
+    public bool IsAllState { get; set; } = false;
 
     [JsonProperty("isAllCounty")]
-    public bool IsAllCounty { get; set; } = true;
+    public bool IsAllCounty { get; set; } = false;
 
     [JsonProperty("isAllCity")]
-    public bool IsAllCity { get; set; } = true;
+    public bool IsAllCity { get; set; } = false;
 
     [JsonProperty("Km")]
     public double Km { get; set; } = new();

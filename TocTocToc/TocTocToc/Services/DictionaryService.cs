@@ -2,17 +2,18 @@
 using System.Globalization;
 using System.Threading.Tasks;
 using TocTocToc.Models.Dto;
+using TocTocToc.Models.Model;
 using TocTocToc.Shared;
 
 namespace TocTocToc.Services;
 
 public class DictionaryService
 {
-    private readonly WordDtoModel _wordDto;
-    public DictionaryService(WordDtoModel wordDto)
+    private readonly WordModel _word;
+    public DictionaryService(WordModel word)
     {
-        _wordDto = wordDto;
-        _wordDto.Dictionary = new DictionaryDtoModel();
+        _word = word;
+        _word.Dictionary = new DictionaryDtoModel();
     }
 
 
@@ -26,21 +27,21 @@ public class DictionaryService
 
         if (language.ToLower() != "en")
         {
-            _wordDto.Log = "[WARNING] - no international language yet";
-            _wordDto.Dictionary.Word = _wordDto.WordRequested;
+            _word.Log = "[WARNING] - no international language yet";
+            _word.Dictionary.Word = _word.Word;
             return;
         }
            
 
-        var url = $"https://api.dictionaryapi.dev/api/v2/entries/{language}/" + _wordDto.WordRequested;
+        var url = $"https://api.dictionaryapi.dev/api/v2/entries/{language}/" + _word.Word;
 
         var dictionaries = await HttpMethods.HttpGetAsync<List<DictionaryDtoModel>>(url, null);
         if (dictionaries == null)
         {
-            _wordDto.Dictionary = new DictionaryDtoModel();
+            _word.Dictionary = new DictionaryDtoModel();
             return;
         }
-        _wordDto.Dictionary = dictionaries[0];
+        _word.Dictionary = dictionaries[0];
 
     }
 }

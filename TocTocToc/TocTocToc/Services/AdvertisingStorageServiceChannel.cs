@@ -10,15 +10,8 @@ namespace TocTocToc.Services;
 
 public class AdvertisingStorageServiceChannel : IStorageServiceChannel
 {
-    private readonly string _url;
-    private readonly string _userId;
-
-    public AdvertisingStorageServiceChannel()
-    {
-        _userId = LocalStorageService.GetUserId();
-        _url = WebConstants.Url;
-
-    }
+    private readonly string _url = WebConstants.Url;
+    private readonly string _userId = LocalStorageService.GetUserId();
 
     public async Task<T> GetDataAsync<T>()
     {

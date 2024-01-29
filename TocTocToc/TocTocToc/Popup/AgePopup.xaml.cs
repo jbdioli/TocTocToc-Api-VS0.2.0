@@ -1,4 +1,5 @@
 ﻿using System;
+using TocTocToc.Models.Model;
 using TocTocToc.Models.View;
 using TocTocToc.Shared;
 using Xamarin.Forms;
@@ -7,30 +8,31 @@ using Xamarin.Forms.Xaml;
 namespace TocTocToc.Popup
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
-    public partial class AgePopup : Xamarin.CommunityToolkit.UI.Views.Popup<AgeViewModel>
+    public partial class AgePopup : Xamarin.CommunityToolkit.UI.Views.Popup<AgeModel>
     {
 
-        private readonly AgeViewModel _ageViewModel = new();
+        private readonly AgeModel _ageModel = new();
 
-        public AgePopup(AgeViewModel age)
+        public AgePopup(AgeModel age)
         {
             InitializeComponent();
             XNameValidated.IsEnabled = false;
             XNameAgeAlert.IsVisible = false;
             if (age != null)
             {
-                _ageViewModel = age;
-                if (age.IsAllAge && !string.IsNullOrEmpty(age.AgeMini) && !String.IsNullOrEmpty(age.AgeMaxi))
+                _ageModel = age;
+                if (age.IsAllAge && !string.IsNullOrEmpty(age.AgeMini) && !string.IsNullOrEmpty(age.AgeMaxi))
                  XNameValidated.IsEnabled = true;
+                XNameIsAllAge.IsChecked = _ageModel.IsAllAge;
             }
-            BindingContext = _ageViewModel;
+            BindingContext = _ageModel;
         }
 
         private void OnIsAllAge(object sender, CheckedChangedEventArgs e)
         {
             if (sender is not CheckBox checkBox) return;
             var isChecked = checkBox.IsChecked;
-            _ageViewModel.IsAllAge = isChecked;
+            _ageModel.IsAllAge = isChecked;
 
             if (isChecked)
             {
@@ -47,7 +49,7 @@ namespace TocTocToc.Popup
 
             CheckValidation();
 
-            // _ageViewModel.IsAllAge = XNameIsAllAge.IsChecked;
+            // _ageModel.IsAllAge = XNameIsAllAge.IsChecked;
         }
 
 
@@ -55,7 +57,7 @@ namespace TocTocToc.Popup
 
         private void OnValidated(object sender, EventArgs e)
         {
-            Dismiss(_ageViewModel);
+            Dismiss(_ageModel);
         }
 
         private void OnAgeMini(object sender, TextChangedEventArgs e)
@@ -63,7 +65,7 @@ namespace TocTocToc.Popup
             var values = (Entry)sender;
             if (values == null) return;
             var age = values.Text;
-            _ageViewModel.IsAgeMini = !string.IsNullOrEmpty(age);
+            _ageModel.IsAgeMini = !string.IsNullOrEmpty(age);
             CheckValidation();
             
         }
@@ -73,19 +75,19 @@ namespace TocTocToc.Popup
             var values = (Entry)sender;
             if (values == null) return;
             var age = values.Text;
-            _ageViewModel.IsAgeMaxi = !string.IsNullOrEmpty(age);
+            _ageModel.IsAgeMaxi = !string.IsNullOrEmpty(age);
             CheckValidation();
         }
 
 
         private void CheckValidation()
         {
-            XNameValidated.IsEnabled = _ageViewModel.IsAllAge;
+            XNameValidated.IsEnabled = _ageModel.IsAllAge;
 
-            if (!_ageViewModel.IsAgeMini && !_ageViewModel.IsAgeMaxi) return;
-            XNameAgeAlert.IsVisible = NumberHandling.IsMiniGreaterThan(_ageViewModel.AgeMini, _ageViewModel.AgeMaxi);
+            if (!_ageModel.IsAgeMini && !_ageModel.IsAgeMaxi) return;
+            XNameAgeAlert.IsVisible = NumberHandling.IsMiniGreaterThan(_ageModel.AgeMini, _ageModel.AgeMaxi);
             XNameValidated.IsEnabled = !XNameAgeAlert.IsVisible;
-            _ageViewModel.IsAgeValid = XNameValidated.IsEnabled;
+            _ageModel.IsAgeValid = XNameValidated.IsEnabled;
 
         }
     }

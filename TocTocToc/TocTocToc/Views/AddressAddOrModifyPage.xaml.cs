@@ -6,7 +6,7 @@ using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 using TocTocToc.Shared;
 using TocTocToc.Models.Dto;
-using TocTocToc.Models.View;
+using TocTocToc.Models.Model;
 
 namespace TocTocToc.Views
 {
@@ -19,7 +19,7 @@ namespace TocTocToc.Views
         private readonly ItemRequestChannelHandler _itemRequestHousingTypeHandler = new(new HousingTypesItemRequest());
         //private readonly AddressStorageService _addressStorageService;
         private readonly HttpRequestChannelHandler _httpRequestChannelHandler = new(new AddressStorageServiceChannel());
-        private AddressViewModel _addressViewModel;
+        private AddressModel _addressModel;
         private readonly AddressDtoModel _addressDto = new();
 
         private List<ItemDtoModel> _housingTypesItem;
@@ -31,7 +31,7 @@ namespace TocTocToc.Views
         private bool _isCountry;
 
 
-        public AddressAddOrModifyPage(AddressViewModel address)
+        public AddressAddOrModifyPage(AddressModel address)
         {
             InitializeComponent();
 
@@ -62,7 +62,7 @@ namespace TocTocToc.Views
 
             InitPicker();
 
-            if (_addressViewModel.IsEditMode)
+            if (_addressModel.IsEditMode)
             {
                 _geolocationHandler.DisplayPositionWithPin();
                 PopulatePicker();
@@ -71,12 +71,12 @@ namespace TocTocToc.Views
             {
                 await _geolocationHandler.DisplayAndGetLocationDetailsAsync();
                 LocationDtoCopyAddressDto();
-                CopyModel.AddressCopyDtoToViewModel(_addressDto, _addressViewModel);
-                _addressViewModel.Floor = string.Empty;
+                CopyModel.AddressCopyDtoToModel(_addressDto, _addressModel);
+                _addressModel.Floor = string.Empty;
 
             }
 
-            BindingContext = _addressViewModel;
+            BindingContext = _addressModel;
         }
 
         private void LocationDtoCopyAddressDto()
@@ -108,20 +108,20 @@ namespace TocTocToc.Views
 
         }
 
-        private void ImportData(AddressViewModel address)
+        private void ImportData(AddressModel address)
         {
             var addressId = address.AddressId;
             if (!string.IsNullOrEmpty(addressId))
             {
-                _addressViewModel = address;
-                _addressViewModel.IsEditMode = true;
-                _locationDto.Lat = _addressViewModel.Lat;
-                _locationDto.Lon = _addressViewModel.Lon;
-                _locationDto.LocationName = _addressViewModel.Title;
+                _addressModel = address;
+                _addressModel.IsEditMode = true;
+                _locationDto.Lat = _addressModel.Lat;
+                _locationDto.Lon = _addressModel.Lon;
+                _locationDto.LocationName = _addressModel.Title;
             }
             else
             {
-                _addressViewModel = new AddressViewModel();
+                _addressModel = new AddressModel();
             }
             
         }
@@ -135,8 +135,8 @@ namespace TocTocToc.Views
         {
             var picker = (Picker)sender;
             var addressTypeDetails = (ItemDtoModel)picker.SelectedItem;
-            _addressViewModel.Type = addressTypeDetails.Item;
-            _addressViewModel.IdHousingTypes = addressTypeDetails.Id;
+            _addressModel.Type = addressTypeDetails.Item;
+            _addressModel.IdHousingTypes = addressTypeDetails.Id;
 
             ButtonApproval();
 
@@ -144,15 +144,15 @@ namespace TocTocToc.Views
 
         private void ButtonApproval()
         {
-            if (!string.IsNullOrEmpty(_addressViewModel.Title))
+            if (!string.IsNullOrEmpty(_addressModel.Title))
                 _isAddressNamed = true;
-            if (!string.IsNullOrEmpty(_addressViewModel.Type))
+            if (!string.IsNullOrEmpty(_addressModel.Type))
                 _isHousingType = true;
-            if (!string.IsNullOrEmpty(_addressViewModel.Address))
+            if (!string.IsNullOrEmpty(_addressModel.Address))
                 _isAddress1 = true;
-            if (!string.IsNullOrEmpty(_addressViewModel.City))
+            if (!string.IsNullOrEmpty(_addressModel.City))
                 _isCity = true;
-            if (!string.IsNullOrEmpty(_addressViewModel.Country))
+            if (!string.IsNullOrEmpty(_addressModel.Country))
                 _isCountry = true;
 
             if (_isAddressNamed && _isHousingType && _isAddress1 && _isCity && _isCountry)
@@ -163,13 +163,13 @@ namespace TocTocToc.Views
         {
             
             LocalStorageService.SaveIsAddresses(true);
-            _addressViewModel.IsActive = true;
-            _addressViewModel.DistanceWanted = 0;
+            _addressModel.IsActive = true;
+            _addressModel.DistanceWanted = 0;
 
-            CopyModel.AddressCopyViewModelToDto(_addressViewModel, _addressDto);
-            if (_addressViewModel.IsEditMode)
+            CopyModel.AddressCopyModelToDto(_addressModel, _addressDto);
+            if (_addressModel.IsEditMode)
             {
-                _addressDto.AddressId = _addressViewModel.AddressId;
+                _addressDto.AddressId = _addressModel.AddressId;
                 await _httpRequestChannelHandler.UpdateHttpAsync<AddressDtoModel, List<AddressDtoModel>>(_addressDto);
             }
             else
@@ -189,7 +189,7 @@ namespace TocTocToc.Views
         private void PopulatePicker()
         {
             XNameHousingTypePicker.SelectedItem = ((List<ItemDtoModel>)XNameHousingTypePicker.ItemsSource)
-                .FirstOrDefault(element => element.Id == _addressViewModel.IdHousingTypes);
+                .FirstOrDefault(element => element.Id == _addressModel.IdHousingTypes);
         }
 
 

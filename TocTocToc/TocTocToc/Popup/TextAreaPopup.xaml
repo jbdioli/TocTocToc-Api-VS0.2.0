@@ -3,9 +3,10 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:xct="clr-namespace:Xamarin.CommunityToolkit.UI.Views;assembly=Xamarin.CommunityToolkit"
              xmlns:viewModels="clr-namespace:TocTocToc.Models.View;assembly=TocTocToc"
+             xmlns:model="clr-namespace:TocTocToc.Models.Model;assembly=TocTocToc"
              Size="340,300"
              x:Class="TocTocToc.Popup.TextAreaPopup"
-             x:TypeArguments="viewModels:ValueDetailsViewModel">
+             x:TypeArguments="model:ValueDetailsModel">
     <AbsoluteLayout>
         <Editor AbsoluteLayout.LayoutBounds="0, 0, 1, 1" AbsoluteLayout.LayoutFlags="All"
                PlaceholderColor="Black" Placeholder="Info ..." BackgroundColor="White"

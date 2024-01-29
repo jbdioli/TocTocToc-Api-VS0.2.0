@@ -26,7 +26,7 @@ namespace TocTocToc.Services
 
             var genders = await HttpMethods.HttpGetAsync<List<GenderDtoModel>>(url, token);
 
-            genders ??= new List<GenderDtoModel>();
+            genders ??= [];
 
             return genders;
         }
@@ -41,7 +41,7 @@ namespace TocTocToc.Services
 
             var maritalStatus = await HttpMethods.HttpGetAsync<List<MaritalStatusDtoModel>>(url, token);
 
-            maritalStatus ??= new List<MaritalStatusDtoModel>();
+            maritalStatus ??= [];
 
             return maritalStatus;
         }
@@ -56,7 +56,7 @@ namespace TocTocToc.Services
 
             var housingTypes = await HttpMethods.HttpGetAsync<List<HousingTypeDtoModel>>(url, token);
 
-            housingTypes ??= new List<HousingTypeDtoModel>();
+            housingTypes ??= [];
 
             return housingTypes;
         }
@@ -71,7 +71,7 @@ namespace TocTocToc.Services
 
             var interests = await HttpMethods.HttpGetAsync<List<InterestDtoModel>>(url, token);
 
-            interests ??= new List<InterestDtoModel>();
+            interests ??= [];
 
             return interests;
         }
@@ -85,7 +85,7 @@ namespace TocTocToc.Services
 
             var countries = await HttpMethods.HttpGetAsync<List<CountryDtoModel>>(url, token);
 
-            countries ??= new List<CountryDtoModel>();
+            countries ??= [];
 
             return countries;
         }
@@ -98,7 +98,7 @@ namespace TocTocToc.Services
 
             var states = await HttpMethods.HttpGetAsync<List<StateDtoModel>>(url, token);
 
-            states ??= new List<StateDtoModel>();
+            states ??= [];
 
             return states;
         }
@@ -111,7 +111,7 @@ namespace TocTocToc.Services
 
             var counties = await HttpMethods.HttpGetAsync<List<CountyDtoModel>>(url, token);
 
-            counties ??= new List<CountyDtoModel>();
+            counties ??= [];
 
             return counties;
         }
@@ -124,7 +124,7 @@ namespace TocTocToc.Services
 
             var cities= await HttpMethods.HttpGetAsync<List<CityDtoModel>>(url, token);
 
-            cities ??= new List<CityDtoModel>();
+            cities ??= [];
 
             return cities;
         }
@@ -142,7 +142,7 @@ namespace TocTocToc.Services
 
             var statesUpdated = await HttpMethods.HttpPostAsync<List<StateDtoModel>, List<StateDtoModel>>(url, token, states, false);
 
-            statesUpdated ??= new List<StateDtoModel>();
+            statesUpdated ??= [];
 
             return statesUpdated;
         }
@@ -155,7 +155,7 @@ namespace TocTocToc.Services
 
             var countiesUpdated = await HttpMethods.HttpPostAsync<List<CountyDtoModel>, List<CountyDtoModel>>(url, token, counties, false);
 
-            countiesUpdated ??= new List<CountyDtoModel>();
+            countiesUpdated ??= [];
 
             return countiesUpdated;
         }
@@ -168,7 +168,7 @@ namespace TocTocToc.Services
 
             var citiesUpdated = await HttpMethods.HttpPostAsync<List<CityDtoModel>, List<CityDtoModel>>(url, token, cities, false);
 
-            citiesUpdated ??= new List<CityDtoModel>();
+            citiesUpdated ??= [];
 
             return citiesUpdated;
         }
@@ -182,7 +182,7 @@ namespace TocTocToc.Services
 
             var interestsUpdated = await HttpMethods.HttpPostAsync<List<InterestDtoModel>, List<InterestDtoModel>>(url, token, interests, false);
 
-            interestsUpdated ??= new List<InterestDtoModel>();
+            interestsUpdated ??= [];
 
             return interestsUpdated;
         }

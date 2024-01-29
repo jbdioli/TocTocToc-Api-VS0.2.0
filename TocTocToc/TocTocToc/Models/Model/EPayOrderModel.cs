@@ -1,16 +1,17 @@
-﻿using System.Collections.Generic;
-using System;
+﻿using System;
+using System.Collections.Generic;
 using CommunityToolkit.Mvvm.ComponentModel;
+using TocTocToc.Models.View;
 
-namespace TocTocToc.Models.View;
+namespace TocTocToc.Models.Model;
 
-public partial class EPayOrderViewModel : ObservableObject
+public partial class EPayOrderModel : BaseViewModel
 {
-    public EPayOrderViewModel()
+    public EPayOrderModel()
     {
-        _orderLines = new List<EPayOrderLinesViewModel>();
-        _billingAddress = new EPayAddressViewModel();
-        _shippingAddress = new EPayAddressViewModel();
+        _orderLines = new List<EPayOrderLinesModel>();
+        _billingAddress = new Model.EPayAddressModel();
+        _shippingAddress = new Model.EPayAddressModel();
     }
 
     // Order
@@ -64,15 +65,15 @@ public partial class EPayOrderViewModel : ObservableObject
 
     // Order lines
     [ObservableProperty]
-    private List<EPayOrderLinesViewModel> _orderLines;
+    private List<EPayOrderLinesModel> _orderLines;
 
     // Billing address
     [ObservableProperty]
-    private EPayAddressViewModel _billingAddress;
+    private Model.EPayAddressModel _billingAddress;
 
     // Delivery address
     [ObservableProperty]
-    private EPayAddressViewModel _shippingAddress;
+    private Model.EPayAddressModel _shippingAddress;
 
     [ObservableProperty]
     private bool _isShippingAsBilling = false;

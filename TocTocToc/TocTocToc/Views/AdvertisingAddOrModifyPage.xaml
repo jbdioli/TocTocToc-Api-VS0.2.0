@@ -2,12 +2,21 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:xct="http://xamarin.com/schemas/2020/toolkit"
-             xmlns:viewModels="clr-namespace:TocTocToc.Models.View;assembly=TocTocToc"
              x:Class="TocTocToc.Views.AdvertisingAddOrModifyPage"
-             x:DataType="viewModels:AdvertisingViewModel">
+             x:Name="ContentPage"
+             xmlns:viewModels="clr-namespace:TocTocToc.Models.View;assembly=TocTocToc"
+             xmlns:converters="clr-namespace:TocTocToc.Converters;assembly=TocTocToc">
+    <!--x:DataType="viewModels:AdvertisingViewModel">-->
     <ContentPage.BindingContext>
-        <viewModels:AdvertisingViewModel/>
+        <viewModels:AdvertisingAddOrModifyViewModel/>
     </ContentPage.BindingContext>
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <converters:IsEnabledConverter x:Key="IsEnabledConverter" />
+            <xct:TextCaseConverter x:Key="TextConverter"/>
+            <xct:ItemSelectedEventArgsConverter x:Key="ItemSelectedEventArgsConverter"/>
+        </ResourceDictionary>
+    </ContentPage.Resources>
     <ContentPage.ToolbarItems>
         <ToolbarItem Text="{xct:Translate LabelTitleAdvertisement}"
                      Order="Primary"
@@ -22,73 +31,115 @@
 
                     <!--Row 0-->
                     <Button Grid.Row="0" Grid.ColumnSpan="2"
-                            x:Name="XNameSaveMediaButton"
-                            Clicked="OnAddMedia" Text="{xct:Translate LabelAdvertisingAddMedia}" TextColor="White"
+                            IsVisible="{Binding !IsImage}"
+                            Command="{Binding AddMediaAsyncCommand}" Text="{xct:Translate LabelAdvertisingAddMedia}" TextColor="White"
                             BorderColor="{StaticResource ButtonBorderColor}" BorderWidth="1" CornerRadius="10" BackgroundColor="{StaticResource ButtonColorDetails}"/>
                     <Button Grid.Row="0" Grid.ColumnSpan="2"
-                            x:Name="XNameUpdateMediaButton"
-                            IsVisible="False"
-                            Clicked="OnUpdateMedia" Text="{xct:Translate LabelAdvertisingUpdateMedia}" TextColor="White"
+                            IsVisible="{Binding IsImage}"
+                            Command="{Binding UpdateMediaAsyncCommand}" Text="{xct:Translate LabelAdvertisingUpdateMedia}" TextColor="White"
                             BorderColor="{StaticResource ButtonBorderColor}" BorderWidth="1" CornerRadius="10" BackgroundColor="{StaticResource ButtonColorDetails}"/>
 
-                    <!--Row 1-->
+                    <!--Row 1 Title / Description -->
                     <Entry Grid.Row="1" Grid.Column="0"
-                           x:Name="XNameTitle"
+                           IsEnabled="{Binding IsIdPublic}"
                            Text="{Binding Name}" TextColor="Black"
-                           Placeholder="{xct:Translate LabelAdvertisingName}"
-                           Unfocused="OnNameUnfocused"/>
+                           Placeholder="{xct:Translate LabelAdvertisingName}">
+                        <Entry.Behaviors>
+                            <xct:EventToCommandBehavior 
+                                EventName="Unfocused"
+                                Command="{Binding ValidationEntriesAsyncCommand}"/>
+                        </Entry.Behaviors>
+                    </Entry>
+                        <!--x:Name="XNameDescriptionButton"-->
                     <Button Grid.Row="1" Grid.Column="1"
-                            x:Name="XNameDescription"
-                            Clicked="OnAddDescription" Text="{xct:Translate LabelDescription}" TextColor="White"
+                            Command="{Binding AddDescriptionAsyncCommand}"
+                            IsEnabled = "{Binding IsIdPublic}"
+                            Text="{xct:Translate LabelDescription}" TextColor="White"
                             BorderColor="{StaticResource ButtonBorderColor}" BorderWidth="1" CornerRadius="10" BackgroundColor="{StaticResource ButtonColorDetails}"/>
 
-                    <!--Row 2-->
+                    <!--Row 2 Area-->
                     <Button Grid.Row="2" Grid.ColumnSpan="2"
-                            x:Name="XNameArea"
-                            Clicked="OnAddAreaSelect" Text="{xct:Translate LabelArea}" TextColor="White"
+                            Command="{Binding AddAreaSelectAsyncCommand}"
+                            IsEnabled="{Binding IsIdPublic}"
+                            Text="{xct:Translate LabelArea}" TextColor="White"
                             BorderColor="{StaticResource ButtonBorderColor}" BorderWidth="1" CornerRadius="10" BackgroundColor="{StaticResource ButtonColorDetails}"/>
 
-                    <!--Row 3-->
+                    <!--Row 3 Gender / Age-->
                     <Picker Grid.Row="3" Grid.Column="0"
-                            x:Name="XNameGenderPicker"
+                            IsEnabled="{Binding IsIdPublic}"
                             FontSize="17" TextColor="Black"
                             Title="{xct:Translate LabelGender}"
+                            ItemsSource="{Binding GendersItem}"
                             ItemDisplayBinding="{Binding Item}"
-                            SelectedIndexChanged="OnGender"/>
+                            SelectedItem="{Binding SelectedItemGender}"/>
                     <Button Grid.Row="3" Grid.Column="1"
-                            x:Name="XNameAge"
-                            Clicked="OnAddAge" Text="{xct:Translate LabelAge}" TextColor="White"
-                            BorderColor="{StaticResource ButtonBorderColor}" BorderWidth="1" CornerRadius="10" BackgroundColor="{StaticResource ButtonColorDetails}"/>
+                            Command="{Binding AddAgeAsyncCommand}"
+                            Text="{xct:Translate LabelAge}" TextColor="White"
+                            BorderColor="{StaticResource ButtonBorderColor}" BorderWidth="1" CornerRadius="10" BackgroundColor="{StaticResource ButtonColorDetails}">
+                        <Button.IsEnabled>
+                            <MultiBinding Converter="{StaticResource IsEnabledConverter}">
+                                <Binding Path="IsIdPublic"/>
+                                <Binding Path="IsEnabledComponent"></Binding>
+                            </MultiBinding>
+                        </Button.IsEnabled>
 
-                    <!--Row 4 Interest see at the end of the grid-->
-                    <!--Text="{Binding Interests}"-->
+                    </Button>
+
+                    <!--Row 4 Interest -->
+                    <!--TextChanged="{Binding InterestText, Mode=TwoWay}" Unfocused="OnInterestUnfocused"-->
                     <Entry Grid.Row="4" Grid.ColumnSpan="2"
-                           x:Name="XNameInterestsSearch" Margin="0"
+                           IsEnabled="{Binding IsIdPublic}"
+                           Text="{Binding Interests}"
+                           Margin="0"
                            IsSpellCheckEnabled="True"
                            TextColor="Black"
-                           Placeholder="{xct:Translate LabelInterests}"
-                           TextChanged="OnInterestTextChanged" Unfocused="OnInterestUnfocused"/>
+                           Placeholder="{xct:Translate LabelInterests}">
+                        <Entry.Behaviors>
+                            <xct:EventToCommandBehavior
+                                EventName="TextChanged"
+                                Command="{Binding InterestTextChangedAsyncCommand}"/>
+                            <!--<xct:EventToCommandBehavior
+                                EventName="Completed"
+                                Command="{Binding InterestCompletedAsyncCommand}"/>-->
+                            <xct:EventToCommandBehavior 
+                                EventName="Unfocused"
+                                Command="{Binding InterestUnfocusedAsyncCommand}"/>
+                        </Entry.Behaviors>
+                    </Entry>
 
                     <!--Row 5 Budget-->
                     <Button Grid.Row="5" Grid.ColumnSpan="2"
-                            x:Name="XNameBudget"
-                            Clicked="OnBudget" Text="{xct:Translate LabelBudget}" TextColor="White"
-                            BorderColor="{StaticResource ButtonBorderColor}" BorderWidth="1" CornerRadius="10" BackgroundColor="{StaticResource ButtonColorDetails}"/>
+                            Command="{Binding BudgetAsyncCommand}"
+                            Text="{xct:Translate LabelBudget}" TextColor="White"
+                            BorderColor="{StaticResource ButtonBorderColor}" BorderWidth="1" CornerRadius="10" BackgroundColor="{StaticResource ButtonColorDetails}">
+                        <Button.IsEnabled>
+                            <MultiBinding Converter="{StaticResource IsEnabledConverter}">
+                                <Binding Path="IsIdPublic"/>
+                                <Binding Path="IsEnabledComponent"></Binding>
+                            </MultiBinding>
+                        </Button.IsEnabled>
+                    </Button>
 
                     <!--Row 6 Save / History-->
                     <Button Grid.Row="6" Grid.Column="0"
-                            x:Name="XNameSave"
-                            IsEnabled="False"
-                            Clicked="OnSave" Text="{xct:Translate LabelSave}" TextColor="White"
-                            BorderColor="{StaticResource ButtonBorderColor}" BorderWidth="1" CornerRadius="10" BackgroundColor="{StaticResource ButtonColorValidation}"/>
+                            Command="{Binding SaveAdvertisementAsyncCommand}"
+                            Text="{xct:Translate LabelSave}" TextColor="White"
+                            BorderColor="{StaticResource ButtonBorderColor}" BorderWidth="1" CornerRadius="10" BackgroundColor="{StaticResource ButtonColorValidation}">
+                        <Button.IsEnabled>
+                            <MultiBinding Converter="{StaticResource IsEnabledConverter}">
+                                <Binding Path="IsIdPublic"/>
+                                <Binding Path="IsEnabledComponent"></Binding>
+                            </MultiBinding>
+                        </Button.IsEnabled>
+                    </Button>
                     <Button Grid.Row="6" Grid.Column="1"
-                            x:Name="XNameHistory"
-                            Clicked="OnHistory" Text="{xct:Translate LabelHistory}" TextColor="White"
+                            Command="{Binding HistoryAsyncCommand}"
+                            IsEnabled="{Binding IsEnabledComponent}"
+                            Text="{xct:Translate LabelHistory}" TextColor="White"
                             BorderColor="{StaticResource ButtonBorderColor}" BorderWidth="1" CornerRadius="10" BackgroundColor="{StaticResource ButtonColorValidation}"/>
 
                     <!--Row 7-->
                     <Label Grid.Row="7" Grid.ColumnSpan="2"
-                           x:Name="XNamePreview"
                            VerticalTextAlignment="Center" HorizontalTextAlignment="Center"
                            TextColor="{StaticResource LabelColor}" Text="{xct:Translate LabelPreview}"/>
 
@@ -96,24 +147,33 @@
                     <Image Grid.Row="8" Grid.ColumnSpan="2"
                            HorizontalOptions="Center" Source="{Binding FullPathImage}">
                         <Image.GestureRecognizers>
-                            <TapGestureRecognizer Tapped="OnShowMediaDetails" NumberOfTapsRequired="1" />
-                            <TapGestureRecognizer Tapped="OnUpdateMedia" NumberOfTapsRequired="2" />
+                            <TapGestureRecognizer Command="{Binding ShowMediaDetailsAsyncCommand}" CommandParameter="{Binding .}" NumberOfTapsRequired="1" />
+                            <TapGestureRecognizer Command="{Binding UpdateMediaAsyncCommand}" NumberOfTapsRequired="2" />
                         </Image.GestureRecognizers>
                     </Image>
 
-                    <!--Row 4 Interest at the end of the grid to over layout all the element-->
-
+                    <!--Row 4 Interest at the end of the grid to over layout all the element  -->
                     <ListView Grid.Row="4" Grid.RowSpan="4" Grid.ColumnSpan="2"
                               Margin="10, 35, 10, 0"
-                              x:Name="XNameInterestSuggestionsView"
-                              IsVisible="False" CachingStrategy="RecycleElement" BackgroundColor="White"
-                              ItemTapped="OnInterestItemTapped">
+                              VerticalOptions="Start" HorizontalOptions="Fill" HeightRequest="120"
+                              CachingStrategy="RecycleElement" BackgroundColor="White"
+                              IsVisible="{Binding IsInterestSuggestions}"
+                              ItemsSource="{Binding InterestSuggestions}"
+                              SelectedItem="{Binding SelectedInterest, Mode=TwoWay}"
+                              IsRefreshing="{Binding IsInterestBusy, Mode=OneWay}">
+                        <ListView.Behaviors>
+                            <xct:EventToCommandBehavior
+                                EventName="ItemSelected"
+                                Command="{Binding InterestItemTappedAsyncCommand}"
+                                EventArgsConverter="{StaticResource ItemSelectedEventArgsConverter}">
+                            </xct:EventToCommandBehavior>
+                        </ListView.Behaviors>
                         <ListView.ItemTemplate>
                             <DataTemplate>
                                 <ViewCell>
                                     <Frame>
                                         <StackLayout BackgroundColor="White">
-                                            <Label Text="{Binding .}" FontSize="16" TextColor="#FF464859"/>
+                                            <Label Text="{Binding Item}" FontSize="16" TextColor="#FF464859"/>
                                         </StackLayout>
                                     </Frame>
                                 </ViewCell>
@@ -126,8 +186,9 @@
 
 
             <Button Grid.Row="1"
-                    x:Name="XNameValidationPay"
-                    Clicked="OnPay" TextColor="White" Text="{xct:Translate LabelValidationPay}"
+                    Command="{Binding PayAsyncCommand}"
+                    IsEnabled="{Binding IsPayingButton}"
+                    TextColor="White" Text="{xct:Translate LabelValidationPay}"
                     BorderColor="{StaticResource ButtonBorderColor}" BorderWidth="1" BackgroundColor="#61007D"/>
 
         </Grid>

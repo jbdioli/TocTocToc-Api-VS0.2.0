@@ -72,6 +72,11 @@ public class Message: IMessage
                 SetMessageType(_translate.GetString(nameof(EMessageType.Error)));
                 SetMessageValidation("OK");
                 break;
+            case ENotificationType.HttpError503:
+                SetMessage(_translate.GetString(nameof(ENotificationType.HttpError503)));
+                SetMessageType(_translate.GetString(nameof(EMessageType.Error)));
+                SetMessageValidation("OK");
+                break;
         }
     }
 

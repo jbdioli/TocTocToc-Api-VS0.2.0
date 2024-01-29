@@ -2,11 +2,13 @@
 <xct:Popup xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:xct="clr-namespace:Xamarin.CommunityToolkit.UI.Views;assembly=Xamarin.CommunityToolkit"
-             xmlns:budgetDtoModel="clr-namespace:TocTocToc.Models.Dto;assembly=TocTocToc"
              xmlns:converters="clr-namespace:TocTocToc.Converters;assembly=TocTocToc"
+             xmlns:viewModel="clr-namespace:TocTocToc.Models.Model;assembly=TocTocToc"
              Size="340,500"
-             x:Class="TocTocToc.Popup.BudgetPopup"
-             x:TypeArguments="budgetDtoModel:BudgetDtoModel">
+             x:Class="TocTocToc.Popup.BudgetPopup">
+    <xct:Popup.BindingContext>
+        <viewModel:BudgetModel/>
+    </xct:Popup.BindingContext>
     <xct:Popup.Resources>
         <ResourceDictionary>
             <converters:IsNotVisibleConverter x:Key="Invisible" />
@@ -61,6 +63,7 @@
                 <Slider RelativeLayout.HeightConstraint="{ConstraintExpression Type=RelativeToParent, Property=Height, Factor=0.08}"
                     RelativeLayout.YConstraint="{ConstraintExpression Type=RelativeToParent, Property=Height, Factor=0.08}"
                     x:Name="XNameSliderBudget"
+                    Value="{Binding Budget}"
                     Minimum="0" Maximum="500" MinimumTrackColor="Blue" MaximumTrackColor="Black"
                     ValueChanged="OnSliderBudget">
                     <RelativeLayout.WidthConstraint>
@@ -171,6 +174,7 @@
                 <TimePicker RelativeLayout.WidthConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=0.88}"
                         RelativeLayout.XConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=0.12}"
                         x:Name="XNameTimeStart"
+                        Time="{Binding StartTime}"
                         TextColor="Blue" FontSize="Body"
                         PropertyChanged="OnTimeStart">
                     <RelativeLayout.HeightConstraint>

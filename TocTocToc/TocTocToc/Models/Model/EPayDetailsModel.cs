@@ -1,25 +1,26 @@
 ﻿
 using CommunityToolkit.Mvvm.ComponentModel;
+using TocTocToc.Models.View;
 
-namespace TocTocToc.Models.View;
+namespace TocTocToc.Models.Model;
 
-public partial class EPayDetailsViewModel : ObservableObject
+public partial class EPayDetailsModel : BaseViewModel
 {
 
-    public EPayDetailsViewModel()
+    public EPayDetailsModel()
     {
 
-        _ePayPayment = new EPayPaymentViewModel();
-        _ePayOrder = new EPayOrderViewModel();
+        _ePayPayment = new Model.EPayPaymentModel();
+        _ePayOrder = new EPayOrderModel();
     }
 
     // Bank payment
     [ObservableProperty]
-    private EPayPaymentViewModel _ePayPayment;
+    private Model.EPayPaymentModel _ePayPayment;
 
     // Order
     [ObservableProperty]
-    private EPayOrderViewModel _ePayOrder;
+    private EPayOrderModel _ePayOrder;
 
     [ObservableProperty]
     private bool _isCardNumber = false;

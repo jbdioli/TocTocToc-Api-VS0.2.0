@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
 using TocTocToc.Models.Dto;
+using TocTocToc.Models.Model;
 using TocTocToc.Models.View;
 using TocTocToc.Popup;
 using TocTocToc.Shared;
@@ -13,7 +14,7 @@ namespace TocTocToc.Views
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class EPay : ContentPage
     {
-        private static readonly EPayDetailsViewModel EPayDetailsView = new();
+        private static readonly EPayDetailsModel E_PAY_DETAILS = new();
         private static StripePayment _stripePayment;
 
         public EPay(EPayDetailsDtoModel ePayDetailsDto)
@@ -22,9 +23,9 @@ namespace TocTocToc.Views
 
             InitEntries();
 
-            CopyModel.EPayDetailsCopyDtoToViewModel(ePayDetailsDto, EPayDetailsView);
+            CopyModel.EPayDetailsCopyDtoToModel(ePayDetailsDto, E_PAY_DETAILS);
 
-            BindingContext = EPayDetailsView;
+            BindingContext = E_PAY_DETAILS;
         }
 
         private void InitEntries()
@@ -37,9 +38,9 @@ namespace TocTocToc.Views
 
         private void OnCardNumber(object sender, PropertyChangedEventArgs e)
         {
-            if (EPayDetailsView == null) return;
+            if (E_PAY_DETAILS == null) return;
             
-            EPayDetailsView.IsEPayValid = IsValid(EPayDetailsView);
+            E_PAY_DETAILS.IsEPayValid = IsValid(E_PAY_DETAILS);
 
             if (XNameCardNumber.CursorPosition == 16)
                 XNameExpireMonth.CursorPosition = 1;
@@ -47,9 +48,9 @@ namespace TocTocToc.Views
 
         private void OnExpMonth(object sender, PropertyChangedEventArgs e)
         {
-            if (EPayDetailsView == null) return;
+            if (E_PAY_DETAILS == null) return;
 
-            EPayDetailsView.IsEPayValid = IsValid(EPayDetailsView);
+            E_PAY_DETAILS.IsEPayValid = IsValid(E_PAY_DETAILS);
 
             if (XNameExpireMonth.CursorPosition == 2)
                 XNameExpireYear.CursorPosition = 1;
@@ -57,9 +58,9 @@ namespace TocTocToc.Views
 
         private void OnExpYear(object sender, PropertyChangedEventArgs e)
         {
-            if (EPayDetailsView == null) return;
+            if (E_PAY_DETAILS == null) return;
 
-            EPayDetailsView.IsEPayValid = IsValid(EPayDetailsView);
+            E_PAY_DETAILS.IsEPayValid = IsValid(E_PAY_DETAILS);
 
 
 
@@ -69,78 +70,78 @@ namespace TocTocToc.Views
 
         private void OnCardCvv(object sender, PropertyChangedEventArgs e)
         {
-            if (EPayDetailsView == null) return;
+            if (E_PAY_DETAILS == null) return;
 
-            EPayDetailsView.IsEPayValid = IsValid(EPayDetailsView);
+            E_PAY_DETAILS.IsEPayValid = IsValid(E_PAY_DETAILS);
         }
 
         private void OnFirstname(object sender, PropertyChangedEventArgs e)
         {
-            if (EPayDetailsView == null) return;
+            if (E_PAY_DETAILS == null) return;
 
-            EPayDetailsView.IsEPayValid = IsValid(EPayDetailsView);
+            E_PAY_DETAILS.IsEPayValid = IsValid(E_PAY_DETAILS);
         }
 
         private void OnLastname(object sender, PropertyChangedEventArgs e)
         {
-            if (EPayDetailsView == null) return;
+            if (E_PAY_DETAILS == null) return;
 
-            EPayDetailsView.IsEPayValid = IsValid(EPayDetailsView);
+            E_PAY_DETAILS.IsEPayValid = IsValid(E_PAY_DETAILS);
         }
 
         private void OnEmail(object sender, PropertyChangedEventArgs e)
         {
             XNameEmail.Keyboard = Keyboard.Email;
 
-            if (EPayDetailsView == null) return;
+            if (E_PAY_DETAILS == null) return;
 
-            EPayDetailsView.IsEPayValid = IsValid(EPayDetailsView);
+            E_PAY_DETAILS.IsEPayValid = IsValid(E_PAY_DETAILS);
         }
 
         private void OnPhoneNumber(object sender, PropertyChangedEventArgs e)
         {
-            if (EPayDetailsView == null) return;
+            if (E_PAY_DETAILS == null) return;
 
-            EPayDetailsView.IsEPayValid = IsValid(EPayDetailsView);
+            E_PAY_DETAILS.IsEPayValid = IsValid(E_PAY_DETAILS);
         }
 
         private void OnAddress(object sender, PropertyChangedEventArgs e)
         {
-            if (EPayDetailsView == null) return;
+            if (E_PAY_DETAILS == null) return;
 
-            EPayDetailsView.IsEPayValid = IsValid(EPayDetailsView);
+            E_PAY_DETAILS.IsEPayValid = IsValid(E_PAY_DETAILS);
         }
 
         private void OnZipcode(object sender, PropertyChangedEventArgs e)
         {
-            if (EPayDetailsView == null) return;
+            if (E_PAY_DETAILS == null) return;
 
-            EPayDetailsView.IsEPayValid = IsValid(EPayDetailsView);
+            E_PAY_DETAILS.IsEPayValid = IsValid(E_PAY_DETAILS);
         }
 
         private void OnCity(object sender, PropertyChangedEventArgs e)
         {
-            if (EPayDetailsView == null) return;
+            if (E_PAY_DETAILS == null) return;
 
-            EPayDetailsView.IsEPayValid = IsValid(EPayDetailsView);
+            E_PAY_DETAILS.IsEPayValid = IsValid(E_PAY_DETAILS);
         }
 
         private void OnState(object sender, PropertyChangedEventArgs e)
         {
-            if (EPayDetailsView == null) return;
+            if (E_PAY_DETAILS == null) return;
 
-            EPayDetailsView.IsEPayValid = IsValid(EPayDetailsView);
+            E_PAY_DETAILS.IsEPayValid = IsValid(E_PAY_DETAILS);
         }
 
         private void OnCountry(object sender, PropertyChangedEventArgs e)
         {
-            if (EPayDetailsView == null) return;
+            if (E_PAY_DETAILS == null) return;
 
-            EPayDetailsView.IsEPayValid = IsValid(EPayDetailsView);
+            E_PAY_DETAILS.IsEPayValid = IsValid(E_PAY_DETAILS);
         }
 
 
-        private bool IsValid(EPayDetailsViewModel EPayDetails)
+        private bool IsValid(EPayDetailsModel EPayDetails)
         {
             if (EPayDetails == null) return false;
 
@@ -241,11 +242,11 @@ namespace TocTocToc.Views
 
         private async void OnPaying(object sender, EventArgs e)
         {
-            //EPayDetailsView.IsEPayValid = IsValid(EPayDetailsView);
+            //E_PAY_DETAILS.IsEPayValid = IsValid(E_PAY_DETAILS);
 
             var ePayDetails = new EPayDetailsDtoModel();
 
-            CopyModel.EPayDetailsCopyViewModelToDto(EPayDetailsView, ePayDetails);
+            CopyModel.EPayDetailsCopyModelToDto(E_PAY_DETAILS, ePayDetails);
             _stripePayment = new StripePayment(ePayDetails);
             var (ePayDetailsUpdated, error) = await _stripePayment.ProcessToPayment();
             if (ePayDetailsUpdated.EPayPayment.IsPayed)

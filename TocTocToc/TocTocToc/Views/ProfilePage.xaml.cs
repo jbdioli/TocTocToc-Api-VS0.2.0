@@ -4,6 +4,7 @@ using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using TocTocToc.Models.Dto;
+using TocTocToc.Models.Model;
 using TocTocToc.Models.View;
 using TocTocToc.Services;
 using TocTocToc.Shared;
@@ -26,7 +27,7 @@ namespace TocTocToc.Views
         private List<ItemDtoModel> _gendersItem;
         private List<ItemDtoModel> _maritalStatusItem;
         private UserDtoModel _userDto;
-        private UserViewModel _userViewModel;
+        private UserModel _userModel;
         private bool _isLastname;
         private bool _isFirstname;
         //private string _userId;
@@ -48,7 +49,7 @@ namespace TocTocToc.Views
             await GetUserProfile();
             SetupPicker();
             InitForm();
-            BindingContext = _userViewModel;
+            BindingContext = _userModel;
         }
 
         private async void InitValues()
@@ -56,7 +57,7 @@ namespace TocTocToc.Views
             //_userId = LocalStorageService.GetUserId();
 
             _userDto = new UserDtoModel();
-            _userViewModel = new UserViewModel();
+            _userModel = new UserModel();
 
             _gendersItem = await _itemRequestGenderHandler.GetItemsAsync(null);
             _maritalStatusItem = await _itemRequestMaritalStatusHandler.GetItemsAsync(null);
@@ -66,7 +67,7 @@ namespace TocTocToc.Views
         {
             //_userDto = await _userStorageService.GetUserDetailsAsync(_userId);
             _userDto = await _httpRequestChannelHandler.GetHttpAsync<UserDtoModel>();
-            CopyModel.UserCopyDtoToViewModel(_userDto, _userViewModel);
+            CopyModel.UserCopyDtoToModel(_userDto, _userModel);
         }
 
         private void InitForm()
@@ -75,15 +76,15 @@ namespace TocTocToc.Views
             _isLastname = false;
             XNameSaveButton.IsEnabled = false;
 
-            _userViewModel.FullPathPhoto = WebConstants.Url + _userViewModel.Path + _userViewModel.Photo;
+            _userModel.FullPathPhoto = WebConstants.Url + _userModel.Path + _userModel.Photo;
 
-            if (_userViewModel.IdGenders != 0)
-                XNameGenderPicker.SelectedItem = ((List<ItemDtoModel>)XNameGenderPicker.ItemsSource).FirstOrDefault(element => element.Id == _userViewModel.IdGenders);
+            if (_userModel.IdGenders != 0)
+                XNameGenderPicker.SelectedItem = ((List<ItemDtoModel>)XNameGenderPicker.ItemsSource).FirstOrDefault(element => element.Id == _userModel.IdGenders);
 
-            if( _userViewModel.IdMaritalStatus != 0)
-                XNameMaritalStatusPicker.SelectedItem = ((List<ItemDtoModel>)XNameMaritalStatusPicker.ItemsSource).FirstOrDefault(element => element.Id == _userViewModel.IdMaritalStatus);
+            if( _userModel.IdMaritalStatus != 0)
+                XNameMaritalStatusPicker.SelectedItem = ((List<ItemDtoModel>)XNameMaritalStatusPicker.ItemsSource).FirstOrDefault(element => element.Id == _userModel.IdMaritalStatus);
 
-            XNameOnDatePicker.Date = string.IsNullOrEmpty(_userViewModel.Birthday) ? DateTime.Now : ConvertStringDateToDate(_userViewModel.Birthday);
+            XNameOnDatePicker.Date = string.IsNullOrEmpty(_userModel.Birthday) ? DateTime.Now : ConvertStringDateToDate(_userModel.Birthday);
         }
 
         private static DateTime ConvertStringDateToDate(string date)
@@ -108,16 +109,16 @@ namespace TocTocToc.Views
         private async void OnSave(object sender, EventArgs e)
         {
             var data = new UserDtoModel();
-            _userViewModel.Birthday = GetBirthday();
+            _userModel.Birthday = GetBirthday();
 
-            CopyModel.UserCopyViewModelToDto(_userViewModel, data);
+            CopyModel.UserCopyModelToDto(_userModel, data);
 
             //var userDto = await _userStorageService.UpdateUserAsync(_userId, data);
             var userDto = await _httpRequestChannelHandler.UpdateHttpAsync<UserDtoModel, UserDtoModel>(data);
-            CopyModel.UserCopyDtoToViewModel(userDto, _userViewModel);
+            CopyModel.UserCopyDtoToModel(userDto, _userModel);
 
             InitForm();
-            BindingContext = _userViewModel;
+            BindingContext = _userModel;
 
         }
 
@@ -139,11 +140,11 @@ namespace TocTocToc.Views
             var path = file.FullPath;
             // var stream = await file.OpenReadAsync();
             // var photo = ImageSource.FromStream(() => stream);
-            _userViewModel.Photo = path;
-            _userViewModel.FullPathPhoto = path;
-            //await _userStorageService.PostPhotoAsync(_userId, _userViewModel.Photo);
-            await _httpRequestChannelHandler.SaveHttpMediaAsync<UserDtoModel>(_userViewModel.Photo);
-            BindingContext = _userViewModel;
+            _userModel.Photo = path;
+            _userModel.FullPathPhoto = path;
+            //await _userStorageService.PostPhotoAsync(_userId, _userModel.Photo);
+            await _httpRequestChannelHandler.SaveHttpMediaAsync<UserDtoModel>(_userModel.Photo);
+            BindingContext = _userModel;
         }
 
 
@@ -151,7 +152,7 @@ namespace TocTocToc.Views
         {
             var picker = (Picker)sender;
             var genderDetails = (ItemDtoModel)picker.SelectedItem;
-            _userViewModel.IdGenders = genderDetails.Id;
+            _userModel.IdGenders = genderDetails.Id;
 
         }
 
@@ -174,15 +175,15 @@ namespace TocTocToc.Views
         {
             var picker = (Picker)sender;
             var maritalStatusDetails = (ItemDtoModel)picker.SelectedItem;
-            _userViewModel.IdMaritalStatus = maritalStatusDetails.Id;
+            _userModel.IdMaritalStatus = maritalStatusDetails.Id;
         }
 
 
         private void OnTextChanged(object sender, TextChangedEventArgs e)
         {
-            if (!string.IsNullOrEmpty(_userViewModel.Lastname))
+            if (!string.IsNullOrEmpty(_userModel.Lastname))
                 _isLastname = true;
-            if (!string.IsNullOrEmpty(_userViewModel.Firstname))
+            if (!string.IsNullOrEmpty(_userModel.Firstname))
                 _isFirstname = true;
 
             var isAddresses = LocalStorageService.IsAddresses();

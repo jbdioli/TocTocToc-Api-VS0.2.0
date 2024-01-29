@@ -1,9 +1,10 @@
 ﻿using System;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using TocTocToc.Interfaces;
 using TocTocToc.Models.Dto;
-using TocTocToc.Models.View;
+using TocTocToc.Models.Model;
 using Xamarin.Forms;
 
 namespace TocTocToc.Shared;
@@ -12,92 +13,59 @@ public class TokenAutoCompleteEntry: IAutoCompeteEntry
 {
     private readonly WordHandler _wordHandler;
 
-    private readonly AutoCompleteEntryDtoModel _autoCompleteEntryDto;
-    private readonly WordDtoModel _wordDto = new();
-    private bool _isEditing = false;
+    private readonly AutoCompleteEntryModel _autoCompleteEntry;
+    private readonly WordModel _word = new();
+    public bool IsCompletedEntry { get; set; }
+    public bool IsEditing { get; set; } = false;
 
-    public TokenAutoCompleteEntry(AutoCompleteEntryDtoModel autoCompleteEntryDto)
+
+
+    public TokenAutoCompleteEntry(AutoCompleteEntryModel autoCompleteEntry)
     {
-        _autoCompleteEntryDto = autoCompleteEntryDto;
-        _wordHandler = new WordHandler(_wordDto);
-        InitData();
+        _autoCompleteEntry = autoCompleteEntry;
+        _wordHandler = new WordHandler(_word);
     }
 
-
-    private void InitData()
-    {
-        if (_autoCompleteEntryDto == null || _autoCompleteEntryDto != null && string.IsNullOrWhiteSpace(_autoCompleteEntryDto.Text)) return;
-        var index = new DisplayAutoCompleteHandler(_autoCompleteEntryDto).FindFocus();
-        if (index < (_autoCompleteEntryDto.XNameEntries.Count - 1))
-            _isEditing = true;
-    }
-
-
-    public void ItemTapped(object sender, ItemTappedEventArgs e)
-    {
-        if (_isEditing)
-        {
-            _isEditing = false;
-            return;
-        }
-
-        var itemView = e.Item as ItemViewModel;
-
-        _wordDto.WordRequested = itemView?.Item;
-        _wordDto.Invalid = false;
-
-        _autoCompleteEntryDto.EventOrder.TextChangedDisable = true;
-        _autoCompleteEntryDto.EventOrder.TextCompletedDisable = true;
-        _autoCompleteEntryDto.EventOrder.UnfocusedDisable = true;
-
-        _autoCompleteEntryDto.Text = itemView?.Item;
-        _autoCompleteEntryDto.XNameEntries[_autoCompleteEntryDto.IndexOfSelectedEntry].Text = string.Empty;
-
-        AddToken(itemView);
-
-        HideSuggestions();
-
-        ((ListView)sender).SelectedItem = null;
-    }
 
     public Task TextChanged(TextChangedEventArgs e)
     {
-        if (_isEditing)
+        if (IsEditing)
         {
-            _isEditing = false;
+            IsEditing = false;
             return Task.CompletedTask;
         }
 
-        if (_autoCompleteEntryDto.EventOrder.TextChangedDisable)
+        if (_autoCompleteEntry.EventOrder.TextChangedDisable)
         {
-            _autoCompleteEntryDto.EventOrder.TextChangedDisable = false;
+            _autoCompleteEntry.EventOrder.TextChangedDisable = false;
             return Task.CompletedTask;
         }
 
         ShowSuggestions();
 
-        _autoCompleteEntryDto.XNameSuggestionView.BeginRefresh();
 
         try
         {
-            _wordDto.WordRequested = e.NewTextValue;
+            _word.Word = e.NewTextValue;
 
-            if (string.IsNullOrWhiteSpace(_wordDto.WordRequested))
+            if (string.IsNullOrWhiteSpace(_word.Word))
             {
                 HideSuggestions();
-                _autoCompleteEntryDto.XNameSuggestionView.EndRefresh();
                 return Task.CompletedTask;
             }
 
-            _wordHandler.CleaningWordDefinition(); // Reset definition in case the word as been modified
-
-            var values = _autoCompleteEntryDto.Suggestions.Where(i => i.Item.ToLower().Contains(_wordDto.WordRequested.ToLower())).ToList();
+            var values = _autoCompleteEntry.ItemProposals.Where(i => i.Item.ToLower().Contains(_word.Word.ToLower())).ToList();
             if (!values.Any())
             {
                 HideSuggestions();
             }
             else
-                _autoCompleteEntryDto.XNameSuggestionView.ItemsSource = values;
+            {
+                foreach (var item in values)
+                {
+                    AddToItemFoundCollection(item);
+                }
+            }
 
         }
         catch (Exception)
@@ -105,29 +73,57 @@ public class TokenAutoCompleteEntry: IAutoCompeteEntry
             HideSuggestions();
         }
 
-        _autoCompleteEntryDto.XNameSuggestionView.EndRefresh();
         return Task.CompletedTask;
     }
 
-    public async Task TextCompleted(object sender)
+
+    public Task ItemTapped(ItemModel itemModel)
     {
-        if (_isEditing)
+        if (IsEditing)
         {
-            _isEditing = false;
+            IsEditing = false;
+            return Task.CompletedTask;
+        }
+
+        _word.Word = itemModel?.Item;
+        _word.IsInvalid = false;
+
+        _autoCompleteEntry.EventOrder.TextChangedDisable = true;
+        _autoCompleteEntry.EventOrder.TextCompletedDisable = true;
+        _autoCompleteEntry.EventOrder.UnfocusedDisable = true;
+
+        _autoCompleteEntry.Text = itemModel?.Item;
+
+        if (itemModel != null)
+        {
+            _autoCompleteEntry.EntryItems.Add(itemModel);
+        }
+
+        HideSuggestions();
+        return Task.CompletedTask;
+    }
+
+
+
+    public async Task TextCompleted()
+    {
+        if (IsEditing)
+        {
+            IsEditing = false;
             return;
         }
 
-        if (_autoCompleteEntryDto.EventOrder.TextCompletedDisable)
+        if (_autoCompleteEntry.EventOrder.TextCompletedDisable)
         {
-            _autoCompleteEntryDto.EventOrder.TextCompletedDisable = false;
+            _autoCompleteEntry.EventOrder.TextCompletedDisable = false;
             return;
         }
         else
         {
-            _autoCompleteEntryDto.EventOrder.UnfocusedDisable = true;
+            _autoCompleteEntry.EventOrder.UnfocusedDisable = true;
         }
 
-        if (string.IsNullOrWhiteSpace(_wordDto.WordRequested))
+        if (string.IsNullOrWhiteSpace(_word.Word))
             return;
 
         await HandleWordCompleted();
@@ -135,23 +131,24 @@ public class TokenAutoCompleteEntry: IAutoCompeteEntry
 
     }
 
+
     public async Task Unfocused()
     {
-        if (_isEditing)
+        if (IsEditing)
         {
-            _isEditing = false;
+            IsEditing = false;
             return;
         }
 
         await Task.Delay(200);
 
-        if (_autoCompleteEntryDto.EventOrder.UnfocusedDisable)
+        if (_autoCompleteEntry.EventOrder.UnfocusedDisable)
         {
-            _autoCompleteEntryDto.EventOrder.UnfocusedDisable = false;
+            _autoCompleteEntry.EventOrder.UnfocusedDisable = false;
             return;
         }
 
-        if (string.IsNullOrWhiteSpace(_wordDto.WordRequested))
+        if (string.IsNullOrWhiteSpace(_word.Word))
             return;
 
         await HandleWordCompleted();
@@ -165,76 +162,91 @@ public class TokenAutoCompleteEntry: IAutoCompeteEntry
 
     public void ShowSuggestions()
     {
-        new DisplayAutoCompleteHandler(_autoCompleteEntryDto).ShowSuggestions();
+        new DisplayAutoCompleteHandler(_autoCompleteEntry).ShowSuggestions();
     }
 
     public void HideSuggestions()
     {
-        new DisplayAutoCompleteHandler(_autoCompleteEntryDto).HideSuggestions();
+        new DisplayAutoCompleteHandler(_autoCompleteEntry).HideSuggestions();
+        _autoCompleteEntry.ItemSuggestions.Clear();
 
     }
 
 
     private async Task HandleWordCompleted()
     {
-        var indexSelectedEntry = _autoCompleteEntryDto.IndexOfSelectedEntry;
-
-        _wordHandler.CleaningWord();
+        _wordHandler.FormatWord();
         var isValidWord = await IsWordValid();
         if (!isValidWord)
         {
             DeleteWordFromEntry();
+            HideSuggestions();
             return;
         }
-        AddToElementToAdd(_wordDto.WordRequested);
-        AddToken(new ItemViewModel(){Id = 0, IdParents = 0, Item = _wordDto.WordRequested});
-        _autoCompleteEntryDto.XNameEntries[indexSelectedEntry].Text = string.Empty;
 
+        var itemModel = new ItemModel() { Id = 0, IdParents = 0, Item = _word.Word };
+        var itemDto = new ItemDtoModel() { Id = 0, IdParents = 0, Item = _word.Word };
+
+        AddToElementToDisplay(itemModel);
+        AddToNewElement(itemDto);
+
+        HideSuggestions();
     }
 
     private async Task<bool> IsWordValid()
     {
-        await _wordHandler.CtrlWordValidity();
-        return !_wordDto.Invalid;
+        await _wordHandler.CheckWordValidity();
+        return !_word.IsInvalid;
     }
 
     private void DeleteWordFromEntry()
     {
-        var activeEntry = _autoCompleteEntryDto.IndexOfSelectedEntry;
-        _autoCompleteEntryDto.XNameEntries[activeEntry].Text = string.Empty;
-    }
-
-    
-
-    private void AddToElementToAdd(string word)
-    {
-        if (string.IsNullOrWhiteSpace(word)) return;
-
-        var isElement = _autoCompleteEntryDto.NewElementsToAdd
-            .Select(el => el.Item.ToLower().Equals(word.ToLower())).LastOrDefault(el => el.Equals(true));
-        if (!isElement)
-            _autoCompleteEntryDto.NewElementsToAdd.Add(new ItemDtoModel() { Item = word });
-
+        //var activeEntry = _autoCompleteEntry.IndexOfSelectedEntry;
+        //_autoCompleteEntry.XNameEntries[activeEntry].Text = string.Empty;
     }
 
 
-    private void AddToken(ItemViewModel itemDto)
+    private void AddToItemFoundCollection(ItemModel item)
     {
-        if (_autoCompleteEntryDto.ElementsToDisplay == null) return;
-
-        var isExisting = _autoCompleteEntryDto.ElementsToDisplay
-            .Select(el => el.Item.ToLower().Equals(itemDto.Item.ToLower())).LastOrDefault(el => el.Equals(true));
+        var isExisting = _autoCompleteEntry.ItemSuggestions
+            .Select(el => el.Item.ToLower().Equals(item.Item.ToLower())).LastOrDefault(el => el.Equals(true));
         if (!isExisting)
-            _autoCompleteEntryDto.ElementsToDisplay.Add(new ItemViewModel() { Id = itemDto.Id, IdParents = itemDto.IdParents, Item = itemDto.Item});
-
-
-        //foreach (var token in _autoCompleteEntryDto.NewElementsToAdd)
-        //{
-        //    var isToken = _autoCompleteEntryDto.ElementsToDisplay
-        //        .Select(el => el.Item.ToLower().Equals(token.Word.ToLower())).LastOrDefault(el => el.Equals(true));
-        //    if (!isToken)
-        //        _autoCompleteEntryDto.ElementsToDisplay.Add(new ItemDtoModel() { Id = 0, IdParents = 0, Item = token.Word });
-
-        //}
+            _autoCompleteEntry.ItemSuggestions.Add(item);
     }
+
+
+    private void AddToNewElement(ItemDtoModel itemDto)
+    {
+        var newElement = CheckItemInDataBase(itemDto);
+
+        if (newElement == null) return;
+
+        var isExisting = _autoCompleteEntry.EntryItems
+            .Select(el => el.Item.ToLower().Equals(itemDto.Item.ToLower())).LastOrDefault(el => el.Equals(true));
+
+        if (!isExisting)
+            _autoCompleteEntry.EntryItems.Add(new ItemModel() { Item = itemDto.Item });
+
+    }
+
+
+    private void AddToElementToDisplay(ItemModel itemModel)
+    {
+        if (_autoCompleteEntry.EntryItems == null) return;
+
+        _autoCompleteEntry.EntryItems ??= [];
+
+        var isExisting = _autoCompleteEntry.EntryItems
+            .Select(el => el.Item.ToLower().Equals(itemModel.Item.ToLower())).LastOrDefault(el => el.Equals(true));
+        if (!isExisting)
+            _autoCompleteEntry.EntryItems.Add(new ItemModel() { Id = itemModel.Id, IdParents = itemModel.IdParents, Item = itemModel.Item });
+    }
+
+    private ItemDtoModel CheckItemInDataBase(ItemDtoModel itemDto)
+    {
+        var isExisting = _autoCompleteEntry.ItemProposals
+            .Select(el => el.Item.ToLower().Equals(itemDto.Item.ToLower())).LastOrDefault(el => el.Equals(true));
+        return !isExisting ? itemDto : null;
+    }
+
 }

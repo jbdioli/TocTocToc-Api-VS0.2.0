@@ -471,4 +471,7 @@
   <data name="LabelNotification" xml:space="preserve">
     <value>Notifications</value>
   </data>
+  <data name="HttpError503" xml:space="preserve">
+    <value>Service indisponible</value>
+  </data>
 </root>

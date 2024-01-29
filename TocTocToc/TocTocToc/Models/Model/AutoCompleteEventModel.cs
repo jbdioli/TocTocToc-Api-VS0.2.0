@@ -1,6 +1,6 @@
-﻿namespace TocTocToc.Models.Dto;
+﻿namespace TocTocToc.Models.Model;
 
-public class AutoCompleteEventDtoModel
+public class AutoCompleteEventModel
 {
     public bool ItemTappedDisable { get; set; } = false;
     public bool TextChangedDisable { get; set; } = false;

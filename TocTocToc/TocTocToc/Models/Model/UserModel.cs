@@ -1,14 +1,15 @@
 ﻿using System.Collections.Generic;
 using CommunityToolkit.Mvvm.ComponentModel;
+using TocTocToc.Models.View;
 
-namespace TocTocToc.Models.View
+namespace TocTocToc.Models.Model
 {
-    public partial class UserViewModel : LanguageViewModel
+    public partial class UserModel : LanguageViewModel
     {
 
-        public UserViewModel()
+        public UserModel()
         {
-            _addresses = new List<AddressViewModel>();
+            _addresses = new List<Model.AddressModel>();
         }
 
         [ObservableProperty]
@@ -80,7 +81,7 @@ namespace TocTocToc.Models.View
         private bool _isApartmentNumber;
 
         [ObservableProperty]
-        private List<AddressViewModel> _addresses;
+        private List<Model.AddressModel> _addresses;
 
         [ObservableProperty]
         private string _fullPathPhoto;

@@ -1,14 +1,15 @@
-﻿using TocTocToc.Models.View;
+﻿using TocTocToc.Models.Model;
+using TocTocToc.Models.View;
 using Xamarin.Forms.Xaml;
 
 namespace TocTocToc.Popup
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
-    public partial class TextAreaPopup : Xamarin.CommunityToolkit.UI.Views.Popup<ValueDetailsViewModel>
+    public partial class TextAreaPopup : Xamarin.CommunityToolkit.UI.Views.Popup<ValueDetailsModel>
     {
-        private readonly ValueDetailsViewModel _valueDetails = new();
+        private readonly ValueDetailsModel _valueDetails = new();
 
-        public TextAreaPopup(ValueDetailsViewModel valueDetails)
+        public TextAreaPopup(ValueDetailsModel valueDetails)
         {
             InitializeComponent();
 
@@ -18,7 +19,7 @@ namespace TocTocToc.Popup
             BindingContext = _valueDetails;
         }
 
-        protected override ValueDetailsViewModel GetLightDismissResult()
+        protected override ValueDetailsModel GetLightDismissResult()
         {
             return _valueDetails;
         }

@@ -14,4 +14,5 @@ public enum ENotificationType
     IsUpdatedMediaFalse = 10,
     IsPayedNeed = 11,
     IsAreaSelectedIncomplete = 12,
+    HttpError503 = 13
 }

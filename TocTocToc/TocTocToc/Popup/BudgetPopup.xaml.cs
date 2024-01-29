@@ -2,6 +2,7 @@
 using System.ComponentModel;
 using System.Globalization;
 using TocTocToc.Models.Dto;
+using TocTocToc.Models.Model;
 using TocTocToc.Models.View;
 using TocTocToc.Shared;
 using Xamarin.Forms;
@@ -10,10 +11,10 @@ using Xamarin.Forms.Xaml;
 namespace TocTocToc.Popup
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
-    public partial class BudgetPopup : Xamarin.CommunityToolkit.UI.Views.Popup<BudgetDtoModel>
+    public partial class BudgetPopup : Xamarin.CommunityToolkit.UI.Views.Popup
     {
         private static BudgetDtoModel _ePayBudgetDto = new();
-        private readonly BudgetViewModel _ePayBudgetView = new();
+        private readonly BudgetModel _ePayBudget = new();
         private DateTime _dateNow;
         private TimeSpan _timeNow;
         private DateTime _dateTimeRef;
@@ -23,36 +24,39 @@ namespace TocTocToc.Popup
         {
             InitializeComponent();
 
-            BindingContext = _ePayBudgetView;
-
             InitValues(ePayBudget);
         }
 
 
         private void InitValues(BudgetDtoModel ePayBudget)
         {
-
-            _dateNow = DateTime.Now;
-            _timeNow = _dateNow.TimeOfDay;
-            _dateTimeRef = new DateTime(_dateNow.Year, _dateNow.Month, _dateNow.Day, _dateNow.Hour, _dateNow.Minute, 0);
-
+            
             if (ePayBudget != null && ePayBudget.Budget != 0)
             {
                 _ePayBudgetDto = ePayBudget;
-                CopyModel.EPayBudgetDtoToView(_ePayBudgetDto, _ePayBudgetView);
+                _ePayBudgetDto.EndDate = _ePayBudgetDto.StartDate.AddDays(ePayBudget.Duration);
+                _dateNow = ePayBudget.StartDate;
+                CopyModel.EPayBudgetDtoToModel(_ePayBudgetDto, _ePayBudget);
+
             }
             else
             {
-                _ePayBudgetView.StartDate = _dateNow;
-                _ePayBudgetView.EndDate = _dateNow;
-                _ePayBudgetView.Duration = "1";
-                _ePayBudgetView.Budget = _ePayBudgetView.BudgetMini.ToString();
+                _dateNow = DateTime.Now;
+                _timeNow = _dateNow.TimeOfDay;
+                _ePayBudget.StartDate = _dateNow;
+                _ePayBudget.EndDate = _dateNow;
+                _ePayBudget.Duration = "1";
+                _ePayBudget.Budget = _ePayBudget.BudgetMini.ToString();
+                _ePayBudget.StartTime = _timeNow;
+                //XNameStartDate.MinimumDate = _dateNow;
+                //XNameEndDate.MinimumDate = _dateNow;
+                //XNameTimeStart.Time = _timeNow;
             }
 
-            XNameSliderBudget.Value = double.Parse(_ePayBudgetView.Budget);
-            XNameTimeStart.Time = _timeNow;
-            XNameStartDate.MinimumDate = _dateNow;
-            XNameEndDate.MinimumDate = _dateNow;
+            //XNameSliderBudget.Value = double.Parse(_ePayBudget.Budget);
+
+            _dateTimeRef = new DateTime(_dateNow.Year, _dateNow.Month, _dateNow.Day, _dateNow.Hour, _dateNow.Minute, 0);
+            BindingContext = _ePayBudget;
         }
 
 
@@ -61,11 +65,11 @@ namespace TocTocToc.Popup
         {
 
             var entry = (Entry)sender;
-            var budget = !string.IsNullOrEmpty(entry.Text) ? int.Parse(entry.Text) : _ePayBudgetView.BudgetMini;
-            if (string.IsNullOrEmpty(entry.Text)) _ePayBudgetView.Budget = _ePayBudgetView.BudgetMini.ToString();
-            if (budget > _ePayBudgetView.BudgetMaxi)
+            var budget = !string.IsNullOrEmpty(entry.Text) ? int.Parse(entry.Text) : _ePayBudget.BudgetMini;
+            if (string.IsNullOrEmpty(entry.Text)) _ePayBudget.Budget = _ePayBudget.BudgetMini.ToString();
+            if (budget > _ePayBudget.BudgetMaxi)
             {
-                _ePayBudgetView.Budget = _ePayBudgetView.BudgetMaxi.ToString();
+                _ePayBudget.Budget = _ePayBudget.BudgetMaxi.ToString();
             }
 
             XNameSliderBudget.Value = budget;
@@ -74,7 +78,7 @@ namespace TocTocToc.Popup
 
         private void OnIsBudgetEntry(object sender, EventArgs e)
         {
-            _ePayBudgetView.IsBudgetEntry = !_ePayBudgetView.IsBudgetEntry;
+            _ePayBudget.IsBudgetEntry = !_ePayBudget.IsBudgetEntry;
         }
 
 
@@ -84,33 +88,33 @@ namespace TocTocToc.Popup
             var budget = Math.Round(slider.Value);
             if (budget == 0) // To correct the error if slider.Minimum = 1;
             {
-                budget = _ePayBudgetView.BudgetMini;
-                XNameSliderBudget.Value = _ePayBudgetView.BudgetMini;
+                budget = _ePayBudget.BudgetMini;
+                XNameSliderBudget.Value = _ePayBudget.BudgetMini;
             }
-            _ePayBudgetView.Budget = budget.ToString(CultureInfo.InvariantCulture);
+            _ePayBudget.Budget = budget.ToString(CultureInfo.InvariantCulture);
         }
 
         private void OnPlusDay(object sender, EventArgs e)
         {
             var duration = 1;
-            if (!string.IsNullOrEmpty(_ePayBudgetView.Duration))
-                duration = int.Parse(_ePayBudgetView.Duration);
+            if (!string.IsNullOrEmpty(_ePayBudget.Duration))
+                duration = int.Parse(_ePayBudget.Duration);
             var day = duration;
             ++day;
-            _ePayBudgetView.Duration = day.ToString();
+            _ePayBudget.Duration = day.ToString();
         }
 
         private void OnMinusDay(object sender, EventArgs e)
         {
             var duration = 1;
-            if (!string.IsNullOrEmpty(_ePayBudgetView.Duration))
-                duration = int.Parse(_ePayBudgetView.Duration);
+            if (!string.IsNullOrEmpty(_ePayBudget.Duration))
+                duration = int.Parse(_ePayBudget.Duration);
             if (duration <= 0) return;
 
             var day = duration;
             if (day != 1)
                 --day;
-            _ePayBudgetView.Duration = day.ToString();
+            _ePayBudget.Duration = day.ToString();
         }
 
         private void OnStartDate(object sender, DateChangedEventArgs e)
@@ -118,9 +122,9 @@ namespace TocTocToc.Popup
             var datePicker = (DatePicker)sender;
             var startDate = datePicker.Date;
 
-            var duration = !string.IsNullOrEmpty(_ePayBudgetView.Duration) ? int.Parse(_ePayBudgetView.Duration) : 0;
+            var duration = !string.IsNullOrEmpty(_ePayBudget.Duration) ? int.Parse(_ePayBudget.Duration) : 0;
 
-            _ePayBudgetView.StartDate = new DateTime(startDate.Year, startDate.Month, startDate.Day, startDate.Hour, startDate.Minute, 0);
+            _ePayBudget.StartDate = new DateTime(startDate.Year, startDate.Month, startDate.Day, startDate.Hour, startDate.Minute, 0);
             var time = startDate.TimeOfDay;
 
             XNameEndDate.MinimumDate = startDate;
@@ -135,10 +139,10 @@ namespace TocTocToc.Popup
             var datePicker = (DatePicker)sender;
             var endDate = datePicker.Date;
 
-            var duration = RecalculateDurationFromDate(_ePayBudgetView.StartDate, endDate);
+            var duration = RecalculateDurationFromDate(_ePayBudget.StartDate, endDate);
 
-            _ePayBudgetView.EndDate = new DateTime(endDate.Year, endDate.Month, endDate.Day, endDate.Hour, endDate.Minute, 0);
-            _ePayBudgetView.Duration = duration.ToString();
+            _ePayBudget.EndDate = new DateTime(endDate.Year, endDate.Month, endDate.Day, endDate.Hour, endDate.Minute, 0);
+            _ePayBudget.Duration = duration.ToString();
 
         }
 
@@ -147,13 +151,13 @@ namespace TocTocToc.Popup
         {
             var timePicker = (TimePicker)sender;
             var time = timePicker.Time;
-            var startDate = _ePayBudgetView.StartDate.Date;
+            var startDate = _ePayBudget.StartDate.Date;
 
             var selectedDateTime = new DateTime(startDate.Year, startDate.Month, startDate.Day, time.Hours, time.Minutes, 0);
 
-            _ePayBudgetView.StartDate = selectedDateTime;
+            _ePayBudget.StartDate = selectedDateTime;
             if (selectedDateTime.Year == 1) return;
-            _ePayBudgetView.IsWrongTime = selectedDateTime < _dateTimeRef;
+            _ePayBudget.IsWrongTime = selectedDateTime < _dateTimeRef;
         }
 
 
@@ -163,10 +167,10 @@ namespace TocTocToc.Popup
             var duration = !string.IsNullOrEmpty(entry.Text) ? int.Parse(entry.Text) : 1;
             if (string.IsNullOrEmpty(entry.Text) || int.Parse(entry.Text) == 0)
             {
-                _ePayBudgetView.Duration = "1";
+                _ePayBudget.Duration = "1";
                 duration = 1;
             }
-            XNameEndDate.Date = RecalculateDateFromDuration(_ePayBudgetView.StartDate, duration);
+            XNameEndDate.Date = RecalculateDateFromDuration(_ePayBudget.StartDate, duration);
         }
 
 
@@ -188,9 +192,9 @@ namespace TocTocToc.Popup
         }
 
 
-        protected override BudgetDtoModel GetLightDismissResult()
+        protected override object GetLightDismissResult()
         {
-            CopyModel.EPayBudgetViewToDto(_ePayBudgetView, _ePayBudgetDto);
+            CopyModel.EPayBudgetModelToDto(_ePayBudget, _ePayBudgetDto);
             _ePayBudgetDto.IsEPayBudget = true;
             return _ePayBudgetDto;
         }

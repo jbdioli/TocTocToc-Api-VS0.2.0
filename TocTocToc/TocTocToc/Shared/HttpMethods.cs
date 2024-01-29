@@ -6,6 +6,7 @@ using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 using TocTocToc.ENumerations;
 using TocTocToc.Models.Dto;
 
@@ -239,16 +240,22 @@ namespace TocTocToc.Shared
 
         private static void InitHttps()
         {
-            _httpClient = new HttpClient();
-            _httpClient.Timeout = TimeSpan.FromSeconds(15);
-            _httpClient.MaxResponseContentBufferSize = 256000;
+            _httpClient = new HttpClient
+            {
+                BaseAddress = null,
+                MaxResponseContentBufferSize = 256000,
+                Timeout = TimeSpan.FromSeconds(15)
+            };
+            //_httpClient.Timeout = TimeSpan.FromSeconds(15);
+            //_httpClient.MaxResponseContentBufferSize = 256000;
             _httpClient.DefaultRequestHeaders.Add("Accept", "application/json");
         }
 
 
         private static StringContent JsonContent<T>(T data)
         {
-            var jsonData = JsonConvert.SerializeObject(data);
+            var jsonData = JsonConvert.SerializeObject(data,
+                new IsoDateTimeConverter() { DateTimeFormat = "yyyy-MM-ddThh:mm:ss.ssss zzz" });
 
             return new StringContent(jsonData, Encoding.UTF8, "application/json");
         }
@@ -300,9 +307,12 @@ namespace TocTocToc.Shared
                 case 500:
                     NOTIFICATION_CHANNEL_HANDLER.SendNotification(ENotificationType.HttpError500, null);
                     break;
+                case 503:
+                    NOTIFICATION_CHANNEL_HANDLER.SendNotification(ENotificationType.HttpError503, null);
+                    break;
             }
 
-            return null;
+            return Task.CompletedTask;
 
         }
 

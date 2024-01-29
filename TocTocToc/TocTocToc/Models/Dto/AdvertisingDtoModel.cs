@@ -46,7 +46,7 @@ namespace TocTocToc.Models.Dto
         public int AgeMaxi { get; set; }
 
         [JsonProperty("date")]
-        public DateTime Date { get; set; }
+        public DateTime Date { get; set; } = DateTime.Now;
 
         [JsonProperty("isPause")]
         public bool IsPause { get; set; }
@@ -55,7 +55,7 @@ namespace TocTocToc.Models.Dto
         public int Duration { get; set; }
 
         [JsonProperty("startDate")]
-        public DateTime StartDate { get; set; }
+        public DateTime StartDate { get; set; } = DateTime.Now;
 
         [JsonProperty("budget")]
         public int Budget { get; set; }

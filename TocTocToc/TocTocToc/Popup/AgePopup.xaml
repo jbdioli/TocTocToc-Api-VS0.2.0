@@ -2,15 +2,18 @@
 <xct:Popup xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:xct="clr-namespace:Xamarin.CommunityToolkit.UI.Views;assembly=Xamarin.CommunityToolkit"
-             xmlns:ageViewModel="clr-namespace:TocTocToc.Models.View;assembly=TocTocToc"
+             xmlns:viewModel="clr-namespace:TocTocToc.Models.View;assembly=TocTocToc"
              xmlns:converters="clr-namespace:TocTocToc.Converters;assembly=TocTocToc"
+             xmlns:model="clr-namespace:TocTocToc.Models.Model;assembly=TocTocToc"
              Size="340, 180"
              VerticalOptions="CenterAndExpand"
              HorizontalOptions="CenterAndExpand"
              IsLightDismissEnabled="False"
              x:Class="TocTocToc.Popup.AgePopup"
-             x:TypeArguments="ageViewModel:AgeViewModel">
-
+             x:TypeArguments="model:AgeModel">
+    <ContentPage.BindingContext>
+        <model:AgeModel/>
+    </ContentPage.BindingContext>
     <xct:Popup.Resources>
         <ResourceDictionary>
             <converters:IsConverter x:Key="IsValue" />

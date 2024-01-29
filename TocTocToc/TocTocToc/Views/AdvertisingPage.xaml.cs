@@ -4,7 +4,7 @@ using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using TocTocToc.ENumerations;
 using TocTocToc.Models.Dto;
-using TocTocToc.Models.View;
+using TocTocToc.Models.Model;
 using TocTocToc.Services;
 using TocTocToc.Shared;
 using Xamarin.Forms;
@@ -22,9 +22,9 @@ namespace TocTocToc.Views
         private readonly HttpRequestChannelHandler _httpUserRequestChannelHandler = new(new UserStorageServiceChannel());
 
         private List<AdvertisingDtoModel> _adsDto = new ();
-        private List<AdvertisingViewModel> _adsViewModel = new ();
+        private List<AdvertisingModel> _adsModel = new ();
         
-        public ObservableCollection<AdvertisingViewModel> AdsCollection { get; set; }
+        public ObservableCollection<AdvertisingModel> AdsCollection { get; set; }
 
         private readonly ActivityIndicator _activityIndicator = new();
         private readonly SettingHandler _settingHandler = new();
@@ -51,7 +51,7 @@ namespace TocTocToc.Views
 
             if (string.IsNullOrEmpty(_userId) && !_isInit)
             {
-                Init();
+                await Init();
             }
             if (!_isInit) return;
             await _httpAdvertisingRequestChannelHandler.GenericHttpRequestAsync<List<AdvertisingDtoModel>, List<AdvertisingDtoModel>>(EAdvertisingHttpRequest.AdsGetRequest, null);
@@ -59,7 +59,7 @@ namespace TocTocToc.Views
             XNameActivityIndicator.IsRunning = false;
         }
 
-        private async void Init()
+        private async Task Init()
         {
             var bearer = await _auth.GetBearerAsync();
             Console.WriteLine("[ Bearer ] " + bearer);
@@ -142,16 +142,16 @@ namespace TocTocToc.Views
 
         private void CopyAdvertisingToCollection()
         {
-            _adsViewModel = new List<AdvertisingViewModel>();
+            _adsModel = new List<AdvertisingModel>();
 
             foreach (var ad in _adsDto)
             {
-                var adViewModel = new AdvertisingViewModel();
-                CopyModel.AdvertisingCopyDtoToViewModel(ad, adViewModel);
-                _adsViewModel.Add(adViewModel);
+                var adModel = new AdvertisingModel();
+                CopyModel.AdvertisingCopyDtoToModel(ad, adModel);
+                _adsModel.Add(adModel);
             }
 
-            AdsCollection = new ObservableCollection<AdvertisingViewModel>(_adsViewModel);
+            AdsCollection = new ObservableCollection<AdvertisingModel>(_adsModel);
         }
 
 

@@ -1,9 +1,10 @@
 ﻿
 using CommunityToolkit.Mvvm.ComponentModel;
+using TocTocToc.Models.View;
 
-namespace TocTocToc.Models.View
+namespace TocTocToc.Models.Model
 {
-    public partial class AddressViewModel : LanguageViewModel
+    public partial class AddressModel : LanguageViewModel
     {
         [ObservableProperty] 
         private string _addressId;

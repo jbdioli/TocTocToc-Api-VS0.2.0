@@ -1,15 +1,19 @@
 ﻿using System;
 using CommunityToolkit.Mvvm.ComponentModel;
+using TocTocToc.Models.View;
 
-namespace TocTocToc.Models.View;
+namespace TocTocToc.Models.Model;
 
-public partial class BudgetViewModel : ObservableObject
+public partial class BudgetModel : BaseViewModel
 {
     [ObservableProperty]
     private string _budget;
 
     [ObservableProperty]
     private DateTime _startDate;
+
+    [ObservableProperty]
+    private TimeSpan _startTime;
 
     [ObservableProperty]
     private string _duration;

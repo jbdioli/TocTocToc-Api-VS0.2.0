@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 using TocTocToc.Interfaces;
+using TocTocToc.Models.Model;
 using Xamarin.Forms;
 
 namespace TocTocToc.Shared;
@@ -8,31 +9,31 @@ public class AutoCompleteEntryHandler: IAutoCompleteEntryHandler
 {
     private readonly IAutoCompeteEntry _autoCompeteEntry;
 
+    protected AutoCompleteEntryHandler()
+    {
+
+    }
 
     public AutoCompleteEntryHandler(IAutoCompeteEntry autoCompeteEntry)
     {
         _autoCompeteEntry = autoCompeteEntry;
     }
 
-    protected AutoCompleteEntryHandler()
-    {
 
+    public async Task TextChanged(TextChangedEventArgs e)
+    {
+        await _autoCompeteEntry.TextChanged(e);
+    }
+
+    public async Task ItemTapped(ItemModel itemModel)
+    {
+        await _autoCompeteEntry.ItemTapped(itemModel);
     }
 
 
-    public void TextChanged(TextChangedEventArgs e)
+    public async Task TextCompleted()
     {
-        _autoCompeteEntry.TextChanged(e);
-    }
-
-    public void ItemTapped(object sender, ItemTappedEventArgs e)
-    {
-        _autoCompeteEntry.ItemTapped(sender, e);
-    }
-
-    public async Task TextCompleted(object sender)
-    {
-        await _autoCompeteEntry.TextCompleted(sender);
+        await _autoCompeteEntry.TextCompleted();
     }
 
     public async Task Unfocused()

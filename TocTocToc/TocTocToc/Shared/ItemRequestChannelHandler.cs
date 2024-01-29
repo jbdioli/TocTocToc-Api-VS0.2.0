@@ -1,15 +1,16 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Threading.Tasks;
 using TocTocToc.Interfaces;
 using TocTocToc.Models.Dto;
-using TocTocToc.Models.View;
+using TocTocToc.Models.Model;
 
 namespace TocTocToc.Shared;
 
 public class ItemRequestChannelHandler: IItemRequestChannelHandler
 {
-    private List<ItemDtoModel> _itemsDto = new();
+    private List<ItemDtoModel> _itemsDto = [];
 
     private readonly IItemRequestChannel _itemRequestChannel;
 
@@ -30,15 +31,25 @@ public class ItemRequestChannelHandler: IItemRequestChannelHandler
         return _itemsDto;
     }
 
-    public ObservableCollection<ItemViewModel> ConverterToObservableCollection()
+    public ObservableCollection<ItemModel> ConverterToObservableCollection()
     {
-        var itemsCollection = new ObservableCollection<ItemViewModel>();
+        var itemsCollection = new ObservableCollection<ItemModel>();
         foreach (var itemDto in _itemsDto)
         {
-            itemsCollection.Add(new ItemViewModel(){Id = itemDto.Id, Item = itemDto.Item});
+            itemsCollection.Add(new ItemModel(){Id = itemDto.Id, Item = itemDto.Item});
         }
 
         return itemsCollection;
     }
 
+    public List<ItemModel> ConverterToModels()
+    {
+        var itemsModel = new List<ItemModel>();
+        
+        if (_itemsDto == null) return itemsModel;
+
+        itemsModel.AddRange(_itemsDto.Select(itemDto => new ItemModel() { Id = itemDto.Id, Item = itemDto.Item, IdParents = itemDto.IdParents }));
+
+        return itemsModel;
+    }
 }

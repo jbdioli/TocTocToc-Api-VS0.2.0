@@ -4,5 +4,7 @@ public interface IDisplayAutoCompleteHandler
 {
     void ShowSuggestions();
     void HideSuggestions();
-    int FindFocus();
+    //public void HideElement();
+    //public void DisplayElement();
+    //int FindFocus();
 }

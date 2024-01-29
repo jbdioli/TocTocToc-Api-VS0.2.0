@@ -11,12 +11,12 @@ public class InterestsItemRequest: IItemRequestChannel, ICopyItemsDtoHandler
 {
 
     private readonly ItemsStorageService _itemsStorageService = new();
-    private List<ItemDtoModel> _itemsDto = new();
-    private List<InterestDtoModel> _interestsDto = new();
+    private List<ItemDtoModel> _itemsDto = [];
+    private List<InterestDtoModel> _interestsDto = [];
 
     public async Task<List<ItemDtoModel>> GetItemsAsync(ItemRequestDtoModel itemRequestDto)
     {
-        _interestsDto = new List<InterestDtoModel>();
+        _interestsDto = [];
 
         _interestsDto = await _itemsStorageService.GetInterestsAsync();
         CopyToItems();
@@ -26,11 +26,13 @@ public class InterestsItemRequest: IItemRequestChannel, ICopyItemsDtoHandler
     public async Task<List<ItemDtoModel>> SaveItemsAsync(List<ItemDtoModel> itemsDto)
     {
         var interests = CopyFromItems(itemsDto) as List<InterestDtoModel>;
-        var responseInterests = await _itemsStorageService.SaveInterestsAsync(interests);
-        if (responseInterests == null) return new List<ItemDtoModel>();
+        if (interests is { Count: 0 }) return [];
 
-        _itemsDto = new List<ItemDtoModel>();
-        _interestsDto = new List<InterestDtoModel>();
+        var responseInterests = await _itemsStorageService.SaveInterestsAsync(interests);
+        if (responseInterests == null) return [];
+
+        _itemsDto = [];
+        _interestsDto = [];
         _interestsDto = responseInterests;
         CopyToItems();
 
@@ -39,7 +41,7 @@ public class InterestsItemRequest: IItemRequestChannel, ICopyItemsDtoHandler
 
     public void CopyToItems()
     {
-        _itemsDto = new List<ItemDtoModel>();
+        _itemsDto = [];
 
         foreach (var itemDto in _interestsDto.Select(interest => new ItemDtoModel
                  {

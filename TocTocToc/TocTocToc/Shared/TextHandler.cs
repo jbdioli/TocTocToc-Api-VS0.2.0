@@ -1,62 +1,110 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
-using TocTocToc.Models.Dto;
+using TocTocToc.Models.Model;
 
 namespace TocTocToc.Shared;
 
 public class TextHandler
 {
-    private readonly TextDtoModel _textDto;
+    private readonly TextModel _textModel;
+    private readonly WordHandler _wordHandler;
+    private readonly WordModel _wordModel = new();
 
-    public TextHandler(TextDtoModel textDto)
+    public TextHandler(TextModel textModel)
     {
-        _textDto = textDto;
+        _wordHandler = new WordHandler(_wordModel);
+        _textModel = textModel;
+        if (_textModel.SeparatorList.Count == 0 ) _textModel.SeparatorList = [";", ","];
     }
 
-    public void AddWordsToTextRequested()
+    
+    public void AddWordsToText()
     {
-        var wordsDto = _textDto.Words;
+        if (_textModel == null) return;
+        if (_textModel.SeparatorList.Count == 0) return;
 
-        if (wordsDto == null)
-            throw new ArgumentNullException(nameof(wordsDto), "[ERROR] - In AddWordsToTextRequested -  Words object is empty or null");
+        if (_textModel.Words.Count == 0)
+        {
+            _textModel.IsInvalid = true;
+            return;
+        }
 
-        var words = wordsDto.Select(word => word.WordRequested).ToList();
+        var separator = _textModel.SeparatorList[0];
+
+        var words = _textModel.Words.Select(word => word.Word).ToList();
 
         if (words.Count == 0)
         {
-            _textDto.TextRequested = string.Empty;
-            _textDto.Invalid = true;
+            _textModel.IsInvalid = true;
+            _textModel.Text = string.Empty;
             return;
         }
 
-        _textDto.TextRequested = string.Join("; ", words) + "; ";
-
-        _textDto.Invalid = wordsDto.Select(el => el.Invalid.Equals(true)).LastOrDefault(el => el.Equals(true));
+        _textModel.Text = string.Join(separator + " ", words) + separator + " ";
+        CheckTextValidity();
     }
 
-    public void AddWordsToWordsDto(List<WordDtoModel> words)
+
+    public async Task AddWordsFromTextTask()
     {
+        if (string.IsNullOrWhiteSpace(_textModel.Text)) return;
+
+        var words = await CheckWordsValidityTask();
+        
+        if (words == null) return;
+        
+        _textModel.IsInvalid = CheckTextValidity();
+
         foreach (var word in words)
         {
-            var isExisting = _textDto.Words.Select(el => el.WordRequested.Equals(word.WordRequested)).LastOrDefault(el => el.Equals(true));
+            var isExisting = _textModel.Words.Select(el => el.Word.Equals(word.Word)).LastOrDefault(el => el.Equals(true));
             if (!isExisting)
-                _textDto.Words.Add(word);
+                _textModel.Words.Add(word);
         }
     }
 
 
-
-    public void DeleteWordsFromTextRequested(string previousText)
+    private async Task<List<WordModel>> CheckWordsValidityTask()
     {
-        var currentText = _textDto.TextRequested;
+        if (_textModel.Words == null) return null;
+        if (string.IsNullOrWhiteSpace(_textModel.Text)) return null;
 
-        if (string.IsNullOrEmpty(currentText))
+        var wordsVerified = new List<WordModel>();
+        var words = FindWordsInText(_textModel.Text);
+
+        foreach (var word in words)
         {
-            _textDto.Words.Clear();
+            _wordHandler.Clear();
+            _wordModel.Word = word.Word;
+            if (word.IsInvalid)
+            {
+                await _wordHandler.CheckWordValidity();
+            }
+
+            wordsVerified.Add(new WordModel()
+                {
+                    IsInvalid = _wordModel.IsInvalid,
+                    Word = _wordModel.Word,
+                    Dictionary = _wordModel.Dictionary,
+                    Log = _wordModel.Log
+                }
+            );
+        }
+
+        return wordsVerified;
+    }
+
+
+    public void DeleteWordsFromText(string previousText)
+    {
+        if (string.IsNullOrWhiteSpace(_textModel.Text))
+        {
             return;
         }
+        
+        var currentText = _textModel.Text;
 
         if (currentText.Length >= previousText.Length) return;
 
@@ -66,37 +114,41 @@ public class TextHandler
             lastChar = currentText[currentText.Length - 2];
         }
 
-        var isEndingChar = _textDto.SeparatorList.Select(el => el.Equals(lastChar.ToString())).LastOrDefault(el => el.Equals(true));
+        var isEndingChar = _textModel.SeparatorList.Select(el => el.Equals(lastChar.ToString())).LastOrDefault(el => el.Equals(true));
         if (!isEndingChar) return;
             
         currentText = currentText.Trim();
         currentText = currentText.Substring(0, currentText.Length - 1);
-        _textDto.TextRequested = currentText;
+        _textModel.Text = currentText;
 
-        var words = FindWordsInText();
-        if (words.Count >= _textDto.Words.Count) return;
+        var words = FindWordsInText(currentText);
+        if (words.Count >= _textModel.Words.Count) return;
 
-        var wordsToKeep = _textDto.Words.Where(elA => words.Exists(elB =>elB.WordRequested.ToLower().Equals(elA.WordRequested.ToLower()))).ToList();
-        _textDto.Words.Clear();
-        _textDto.Words = wordsToKeep;
+        var wordsToKeep = _textModel.Words.Where(elA => words.Exists(elB =>elB.Word.ToLower().Equals(elA.Word.ToLower()))).ToList();
+        _textModel.Words.Clear();
+        _textModel.Words = wordsToKeep;
 
     }
 
 
-
-
-    public async Task GetWordsFromTextRequested()
+    public void DeleteLastChar()
     {
-        var words = FindWordsInText();
-        AddWordsToWordsDto(words);
-        await CheckWordsValidity();
-        
+        if (string.IsNullOrWhiteSpace(_textModel.Text))
+        {
+            return;
+        }
+
+        var textBuffer = _textModel.Text.Trim();
+        var lastCharacter = textBuffer.Last();
+        _textModel.Text = !char.IsLetter(lastCharacter) ? _textModel.Text.Remove(_textModel.Text.Length - 1, 1) : textBuffer;
     }
 
 
-    public string GetLastWord()
+
+    public string GetCurrentWord( string text)
     {
-        var text = _textDto.TextRequested;
+        if (string.IsNullOrEmpty(text)) return string.Empty;
+
         var separatorIndexes = FindSeparatorIndexes(text);
 
         if (separatorIndexes.Count == 0) return text;
@@ -107,27 +159,46 @@ public class TextHandler
         return word;
     }
 
-
-    public void CleaningTextDefinition()
+    public void Clear()
     {
-        if (!string.IsNullOrEmpty(_textDto.TextRequested)) return;
-        
-        _textDto.Invalid = true;
-        _textDto.Words.Clear();
+        _textModel.Text = string.Empty;
+        _textModel.Words.Clear();
+        _textModel.IsInvalid = true;
     }
 
 
-    private List<WordDtoModel> FindWordsInText()
+    public (bool isEndingChar, bool isWrongChar) TextRecognition(string text)
     {
-        if (string.IsNullOrWhiteSpace(_textDto.TextRequested))
-            throw new ArgumentNullException("", "[ERROR] - In FindWordsInText - TextRequested is empty or null");
+        var isWrongChar = false;
 
-        var text = _textDto.TextRequested;
+        var lastCharacter = text.Substring(text.Length - 1);
+        
+        var isEndingChar = _textModel.SeparatorList.Contains(lastCharacter);
+
+        if (!isEndingChar)
+        {
+            isWrongChar = !WordHandler.IsCharAllowed(text);
+        }
+
+        return (isEndingChar, isWrongChar);
+    }
+
+
+    private bool CheckTextValidity()
+    {
+        return _textModel.Words.Select(el => el.IsInvalid.Equals(true)).LastOrDefault(el => el.Equals(true));
+    }
+
+
+    private List<WordModel> FindWordsInText(string text)
+    {
+        if (string.IsNullOrWhiteSpace(text)) return null;
+
         string word;
         var previousIndex = 0;
 
         var separatorIndexes = FindSeparatorIndexes(text);
-        var wordsBuffer = new List<WordDtoModel>();
+        var words = new List<WordModel>();
         
         foreach (var index in separatorIndexes)
         {
@@ -135,26 +206,22 @@ public class TextHandler
             word = text.Substring(previousIndex, length);
             previousIndex = index + 1;
             word = word.Trim(); // Clean from space character
-            wordsBuffer.Add(new WordDtoModel() { WordRequested = word });
+            words.Add(new WordModel() { Word = word });
         }
 
-        if (_textDto.TextRequested.Length <= previousIndex) return wordsBuffer;
+        if (text.Length <= previousIndex) return words;
         
-        word = _textDto.TextRequested.Substring(previousIndex);
+        word = text.Substring(previousIndex);
         word = word.Trim();
-        wordsBuffer.Add(new WordDtoModel() { WordRequested = word });
-        return wordsBuffer;
+        words.Add(new WordModel() { Word = word });
+        return words;
     }
 
 
 
     private List<int> FindSeparatorIndexes(string text)
     {
-
-        if (!_textDto.SeparatorList.Any())
-            throw new ArgumentNullException("", "[ERROR] - In FindSeparatorIndexes - SeparatorList is empty or null");
-
-        var separatorList = _textDto.SeparatorList;
+        var separatorList = _textModel.SeparatorList;
 
         var indexes = new List<int>();
 
@@ -168,34 +235,11 @@ public class TextHandler
         return indexes;
     }
 
-    private async Task CheckWordsValidity()
-    {
-        foreach (var word in _textDto.Words)
-        {
-            if (string.IsNullOrEmpty(word.WordRequested)) continue;
-            
-            var wordHandler = new WordHandler(word);
-            wordHandler.CleaningWord();
-            if (word.Invalid)
-                await wordHandler.CtrlWordValidity();
-        }
-
-        DeleteInvalidWords();
-    }
-
-    private void DeleteInvalidWords()
-    {
-        var deleteIndexes = (from result in _textDto.Words.Select((value, index) => new { index, value })
-            let value = result.value
-            let index = result.index
-            where value.Invalid == true
-            select index).ToList();
-
-        foreach (var index in deleteIndexes)
-        { 
-            _textDto.Words.RemoveAt(index);
-        }
-    }
-
-
 }
+
+
+//if (wordsModel == null) return;
+//throw new ArgumentNullException(nameof(wordsModel), "[ERROR] - In AddWordsToText -  Words object is empty or null");
+
+//if (!_textModel.SeparatorList.Any())
+//    throw new ArgumentNullException("", "[ERROR] - In FindSeparatorIndexes - SeparatorList is empty or null");

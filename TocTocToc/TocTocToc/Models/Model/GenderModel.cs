@@ -1,13 +1,14 @@
 ﻿
 using CommunityToolkit.Mvvm.ComponentModel;
+using TocTocToc.Models.View;
 
-namespace TocTocToc.Models.View
+namespace TocTocToc.Models.Model
 {
 
-    public partial class GenderViewModel : ObservableObject
+    public partial class GenderModel : BaseViewModel
     {
 
-        public GenderViewModel()
+        public GenderModel()
         {
             _isMaleValid = true;
             _isFemaleValid = false;

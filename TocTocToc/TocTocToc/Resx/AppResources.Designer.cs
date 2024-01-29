@@ -169,6 +169,15 @@ namespace TocTocToc.Resx {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Service Unavailable..
+        /// </summary>
+        internal static string HttpError503 {
+            get {
+                return ResourceManager.GetString("HttpError503", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Please insert the words separated by &apos;,&apos; or &apos;;&apos;.
         /// </summary>
         internal static string IncorrectSeparatorCharacter {

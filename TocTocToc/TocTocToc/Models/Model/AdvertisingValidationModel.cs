@@ -1,7 +1,10 @@
-﻿namespace TocTocToc.Models.Model;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
 
-public class AdvertisingValidationModel
+namespace TocTocToc.Models.Model;
+
+public partial class AdvertisingValidationModel : ObservableObject
 {
-    public bool IsInterest { get; set; }
+    [ObservableProperty]
+    private bool _isInterest;
 
 }

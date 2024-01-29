@@ -3,7 +3,13 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:xct="http://xamarin.com/schemas/2020/toolkit"
              xmlns:converters="clr-namespace:TocTocToc.Converters;assembly=TocTocToc"
-             x:Class="TocTocToc.Views.AdvertisingHistoryPage">
+             xmlns:viewModel="clr-namespace:TocTocToc.Models.View;assembly=TocTocToc"
+             x:Class="TocTocToc.Views.AdvertisingHistoryPage"
+             x:Name="XNameContentAdvertisingHistoryPage">
+    <!--x:DataType="viewModel:AdvertisingHistoryViewModel">-->
+    <ContentPage.BindingContext>
+        <viewModel:AdvertisingHistoryViewModel/>
+    </ContentPage.BindingContext>
     <ContentPage.Resources>
         <ResourceDictionary>
             <converters:IsChangeColorConverter x:Key="ColorSwitch" />
@@ -16,11 +22,11 @@
     </ContentPage.ToolbarItems>
     <ContentPage.Content>
         <Grid RowDefinitions="*" ColumnDefinitions="*"
-                  Margin="10" 
-                  BackgroundColor="Transparent">
-            <ActivityIndicator Grid.RowSpan="1" x:Name="XNameActivityIndicator"  Margin="150"  Color="White"/>
-            <ScrollView Grid.Row="0">
-                <CollectionView ItemsSource="{Binding ObserverAdvertisingViewModels}" BackgroundColor="Transparent">
+              Margin="10" 
+              BackgroundColor="Transparent">
+            <ActivityIndicator Grid.RowSpan="1" IsVisible="{Binding IsBusy}" IsRunning="{Binding IsBusy}"  Margin="150"  Color="White"/>
+
+            <CollectionView ItemsSource="{Binding ObserverAdvertisingViewModels}" BackgroundColor="Transparent">
                     <CollectionView.ItemTemplate>
                         <DataTemplate>
                             <SwipeView>
@@ -31,9 +37,15 @@
                                 </SwipeView.BackgroundColor>
                                 <SwipeView.RightItems>
                                     <SwipeItems Mode="Reveal">
-                                        <SwipeItem BackgroundColor="Red" IconImageSource="delete_outline_white.png" Invoked="OnInvokedDeleted"/>
-                                        <SwipeItem BackgroundColor="#61007D" IconImageSource="pause_white.png" Invoked="OnInvokedPaused"/>
-                                        <SwipeItem BackgroundColor="#C96EE3" IconImageSource="edit_white.png" Invoked="OnInvokedEdited"/>
+                                        <SwipeItem BackgroundColor="Red" IconImageSource="delete_outline_white.png"
+                                                   Command="{Binding Source={x:Reference XNameContentAdvertisingHistoryPage},  Path=BindingContext.DeletedAsyncCommand}"
+                                                   CommandParameter="{Binding .}"/>
+                                        <SwipeItem BackgroundColor="#61007D" IconImageSource="pause_white.png"
+                                                   Command="{Binding Source={x:Reference XNameContentAdvertisingHistoryPage},  Path=BindingContext.PausedAsyncCommand}"
+                                                   CommandParameter="{Binding .}"/>
+                                        <SwipeItem BackgroundColor="#C96EE3" IconImageSource="edit_white.png"
+                                                   Command="{Binding Source={x:Reference XNameContentAdvertisingHistoryPage},  Path=BindingContext.EditedAsyncCommand}"
+                                                   CommandParameter="{Binding .}"/>
                                     </SwipeItems>
                                 </SwipeView.RightItems>
 
@@ -67,7 +79,6 @@
                         </DataTemplate>
                     </CollectionView.ItemTemplate>
                 </CollectionView>
-            </ScrollView>
         </Grid>
     </ContentPage.Content>
 </ContentPage>

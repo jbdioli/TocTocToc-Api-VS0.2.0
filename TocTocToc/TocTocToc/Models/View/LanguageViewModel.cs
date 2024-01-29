@@ -9,11 +9,10 @@ using Xamarin.CommunityToolkit.Helpers;
 using Xamarin.CommunityToolkit.ObjectModel;
 using Xamarin.Essentials;
 using Xamarin.Forms;
-using ObservableObject = CommunityToolkit.Mvvm.ComponentModel.ObservableObject;
 
 namespace TocTocToc.Models.View
 {
-    public class LanguageViewModel : ObservableObject
+    public class LanguageViewModel : BaseViewModel
     {
         List<(Func<string> name, string value)> LanguageMapping { get; } = new()
         {

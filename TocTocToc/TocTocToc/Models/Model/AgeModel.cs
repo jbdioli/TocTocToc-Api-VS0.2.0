@@ -1,9 +1,10 @@
 ﻿
 using CommunityToolkit.Mvvm.ComponentModel;
+using TocTocToc.Models.View;
 
-namespace TocTocToc.Models.View;
+namespace TocTocToc.Models.Model;
 
-public partial class AgeViewModel : ObservableObject
+public partial class AgeModel : BaseViewModel
 {
     [ObservableProperty]
     private string _ageMaxi;
