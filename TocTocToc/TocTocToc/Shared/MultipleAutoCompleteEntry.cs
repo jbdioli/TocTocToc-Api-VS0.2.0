@@ -77,8 +77,8 @@ public class MultipleAutoCompleteEntry: IAutoCompeteEntry
             var previousText = e.OldTextValue;
 
 
-            //if (!string.IsNullOrWhiteSpace(previousText))
-            //    _textHandler.DeleteWordsFromText(previousText);
+            if (!string.IsNullOrWhiteSpace(previousText))
+                _textHandler.DeleteWordsFromText(previousText);
 
 
             if (string.IsNullOrWhiteSpace(_text.Text))

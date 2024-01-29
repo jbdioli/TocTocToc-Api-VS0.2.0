@@ -108,25 +108,26 @@ public class TextHandler
 
         if (currentText.Length >= previousText.Length) return;
 
-        var lastChar = currentText[currentText.Length - 1];
-        if (string.IsNullOrEmpty(lastChar.ToString()))
-        {
-            lastChar = currentText[currentText.Length - 2];
-        }
+        
+        //var lastChar = currentText[currentText.Length - 1];
+        //if (string.IsNullOrEmpty(lastChar.ToString()))
+        //{
+        //    lastChar = currentText[currentText.Length - 2];
+        //}
 
-        var isEndingChar = _textModel.SeparatorList.Select(el => el.Equals(lastChar.ToString())).LastOrDefault(el => el.Equals(true));
-        if (!isEndingChar) return;
+        //var isEndingChar = _textModel.SeparatorList.Select(el => el.Equals(lastChar.ToString())).LastOrDefault(el => el.Equals(true));
+        //if (!isEndingChar) return;
             
-        currentText = currentText.Trim();
-        currentText = currentText.Substring(0, currentText.Length - 1);
-        _textModel.Text = currentText;
+        //currentText = currentText.Trim();
+        //currentText = currentText.Substring(0, currentText.Length - 1);
+        //_textModel.Text = currentText;
 
         var words = FindWordsInText(currentText);
-        if (words.Count >= _textModel.Words.Count) return;
+        //if (words.Count >= _textModel.Words.Count) return;
 
         var wordsToKeep = _textModel.Words.Where(elA => words.Exists(elB =>elB.Word.ToLower().Equals(elA.Word.ToLower()))).ToList();
         _textModel.Words.Clear();
-        _textModel.Words = wordsToKeep;
+        _textModel.Words.AddRange(wordsToKeep);
 
     }
 
