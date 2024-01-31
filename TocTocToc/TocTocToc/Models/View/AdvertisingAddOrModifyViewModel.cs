@@ -341,6 +341,7 @@ public partial class AdvertisingAddOrModifyViewModel : AdvertisingModel
         ValidationButtons();
     }
 
+
     private async Task SaveNewInterestItems()
     {
         var itemsDto = _autoCompleteInterestEntry.EntryItems.Select(itemModel => new ItemDtoModel() { Id = itemModel.Id, IdParents = itemModel.IdParents, Item = itemModel.Item }).ToList();

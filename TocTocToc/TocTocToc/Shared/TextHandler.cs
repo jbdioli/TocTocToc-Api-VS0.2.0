@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
+using TocTocToc.Models.Dto;
 using TocTocToc.Models.Model;
 
 namespace TocTocToc.Shared;
@@ -31,7 +31,7 @@ public class TextHandler
             return;
         }
 
-        var separator = _textModel.SeparatorList[0];
+        
 
         var words = _textModel.Words.Select(word => word.Word).ToList();
 
@@ -42,7 +42,9 @@ public class TextHandler
             return;
         }
 
-        _textModel.Text = string.Join(separator + " ", words) + separator + " ";
+        var text = FormatTextFromWords(words);
+        _textModel.Text = text;
+
         CheckTextValidity();
     }
 
@@ -51,7 +53,7 @@ public class TextHandler
     {
         if (string.IsNullOrWhiteSpace(_textModel.Text)) return;
 
-        var words = await CheckWordsValidityTask();
+        var words = await CheckWordsValidityFromTextTask();
         
         if (words == null) return;
         
@@ -66,7 +68,69 @@ public class TextHandler
     }
 
 
-    private async Task<List<WordModel>> CheckWordsValidityTask()
+
+    public async Task<List<WordModel>> EditTextHandler(string newTextValue, string previousText)
+    {
+        var words = new List<WordModel>();
+
+        var oldWords = FindWordsInText(previousText);
+        var newWords = FindWordsInText(newTextValue);
+
+        if (oldWords.Count != newWords.Count) return words;
+
+        //var wordsEdited = oldWords.Where(oldEl => !newWords.Any(newEl => newEl.Word.ToLower().Equals(oldEl.Word.ToLower()))).ToList();
+        var wordsEdited = newWords.Where(newEl => !oldWords.Any(oldEl => oldEl.Word.ToLower().Equals(newEl.Word.ToLower()))).ToList();
+
+        words = _textModel.Words;
+
+        //var indexWordEdited = words.FindIndex(el => wordsEdited.Any(word => word.Word.ToLower().Equals(el.Word.ToLower())));
+        var indexWordEdited = words.FindIndex(el => !newWords.Any(word => word.Word.ToLower().Equals(el.Word.ToLower())));
+
+        words[indexWordEdited].IsInvalid = true;
+        words[indexWordEdited].Word = wordsEdited[0].Word;
+
+        _wordModel.Word = words[indexWordEdited].Word;
+        _wordModel.Dictionary = new DictionaryDtoModel();
+        _wordModel.IsInvalid = true;
+        await _wordHandler.CheckWordValidity();
+
+        words[indexWordEdited].IsInvalid = _wordModel.IsInvalid;
+
+        return words;
+    }
+
+
+
+    public async Task<List<WordModel>> CheckWordsValidityTask(List<WordModel> words)
+    {
+        if (words == null) return [];
+
+        var wordsVerified = new List<WordModel>();
+
+        foreach (var word in words)
+        {
+            _wordHandler.Clear();
+            _wordModel.Word = word.Word;
+            if (word.IsInvalid)
+            {
+                await _wordHandler.CheckWordValidity();
+            }
+
+            wordsVerified.Add(new WordModel()
+                {
+                    IsInvalid = _wordModel.IsInvalid,
+                    Word = _wordModel.Word,
+                    Dictionary = _wordModel.Dictionary,
+                    Log = _wordModel.Log
+                }
+            );
+        }
+
+        return wordsVerified;
+    }
+
+
+    private async Task<List<WordModel>> CheckWordsValidityFromTextTask()
     {
         if (_textModel.Words == null) return null;
         if (string.IsNullOrWhiteSpace(_textModel.Text)) return null;
@@ -108,22 +172,7 @@ public class TextHandler
 
         if (currentText.Length >= previousText.Length) return;
 
-        
-        //var lastChar = currentText[currentText.Length - 1];
-        //if (string.IsNullOrEmpty(lastChar.ToString()))
-        //{
-        //    lastChar = currentText[currentText.Length - 2];
-        //}
-
-        //var isEndingChar = _textModel.SeparatorList.Select(el => el.Equals(lastChar.ToString())).LastOrDefault(el => el.Equals(true));
-        //if (!isEndingChar) return;
-            
-        //currentText = currentText.Trim();
-        //currentText = currentText.Substring(0, currentText.Length - 1);
-        //_textModel.Text = currentText;
-
         var words = FindWordsInText(currentText);
-        //if (words.Count >= _textModel.Words.Count) return;
 
         var wordsToKeep = _textModel.Words.Where(elA => words.Exists(elB =>elB.Word.ToLower().Equals(elA.Word.ToLower()))).ToList();
         _textModel.Words.Clear();
@@ -160,6 +209,7 @@ public class TextHandler
         return word;
     }
 
+
     public void Clear()
     {
         _textModel.Text = string.Empty;
@@ -185,13 +235,7 @@ public class TextHandler
     }
 
 
-    private bool CheckTextValidity()
-    {
-        return _textModel.Words.Select(el => el.IsInvalid.Equals(true)).LastOrDefault(el => el.Equals(true));
-    }
-
-
-    private List<WordModel> FindWordsInText(string text)
+    public List<WordModel> FindWordsInText(string text)
     {
         if (string.IsNullOrWhiteSpace(text)) return null;
 
@@ -219,6 +263,30 @@ public class TextHandler
     }
 
 
+    public string FormatText(string text)
+    {
+        var wordsModel = FindWordsInText(text);
+        var words = wordsModel.Select(el => el.Word).ToList();
+        var textFormatted = FormatTextFromWords(words);
+        return textFormatted;
+    }
+
+
+    private string FormatTextFromWords(List<string> words)
+    {
+        if (_textModel.SeparatorList.Count == 0) return string.Empty;
+
+        var separator = _textModel.SeparatorList[0];
+        return string.Join(separator + " ", words) + separator + " ";
+    }
+
+
+    private bool CheckTextValidity()
+    {
+        return _textModel.Words.Select(el => el.IsInvalid.Equals(true)).LastOrDefault(el => el.Equals(true));
+    }
+
+
 
     private List<int> FindSeparatorIndexes(string text)
     {
@@ -242,5 +310,17 @@ public class TextHandler
 //if (wordsModel == null) return;
 //throw new ArgumentNullException(nameof(wordsModel), "[ERROR] - In AddWordsToText -  Words object is empty or null");
 
-//if (!_textModel.SeparatorList.Any())
-//    throw new ArgumentNullException("", "[ERROR] - In FindSeparatorIndexes - SeparatorList is empty or null");
+//var lastChar = currentText[currentText.Length - 1];
+//if (string.IsNullOrEmpty(lastChar.ToString()))
+//{
+//    lastChar = currentText[currentText.Length - 2];
+//}
+
+//var isEndingChar = _textModel.SeparatorList.Select(el => el.Equals(lastChar.ToString())).LastOrDefault(el => el.Equals(true));
+//if (!isEndingChar) return;
+
+//currentText = currentText.Trim();
+//currentText = currentText.Substring(0, currentText.Length - 1);
+//_textModel.Text = currentText;
+
+

@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using TocTocToc.ENumerations;
@@ -74,12 +76,7 @@ public class MultipleAutoCompleteEntry: IAutoCompeteEntry
         {
             _text.Text = e.NewTextValue;
 
-            var previousText = e.OldTextValue;
-
-
-            if (!string.IsNullOrWhiteSpace(previousText))
-                _textHandler.DeleteWordsFromText(previousText);
-
+            await TextChangedHandler(e);
 
             if (string.IsNullOrWhiteSpace(_text.Text))
             {
@@ -157,7 +154,6 @@ public class MultipleAutoCompleteEntry: IAutoCompeteEntry
         }
 
         await HandleTextCompleted();
-
         HideSuggestions();
     }
 
@@ -176,6 +172,7 @@ public class MultipleAutoCompleteEntry: IAutoCompeteEntry
         }
 
         await HandleTextCompleted();
+        ResetEntryEvents();
         HideSuggestions();
     }
 
@@ -202,7 +199,7 @@ public class MultipleAutoCompleteEntry: IAutoCompeteEntry
 
         if (_text.IsInvalid)
         {
-            DeleteWordFromEntry();
+            DeleteInvalidWords();
             HideSuggestions();
             return;
         }
@@ -224,7 +221,7 @@ public class MultipleAutoCompleteEntry: IAutoCompeteEntry
         return _textHandler.GetCurrentWord(_text.Text);
     }
 
-    private void DeleteWordFromEntry()
+    private void DeleteInvalidWords()
     {
         _autoCompleteEntry.EntryItems.Clear();
 
@@ -235,6 +232,63 @@ public class MultipleAutoCompleteEntry: IAutoCompeteEntry
         }
 
         _textHandler.AddWordsToText();
+
+    }
+
+
+    private async Task TextChangedHandler(TextChangedEventArgs e)
+    {
+        var previousText = e.OldTextValue;
+        var newTextValue = e.NewTextValue;
+
+        if (string.IsNullOrWhiteSpace(previousText) && string.IsNullOrEmpty(newTextValue))
+        {
+            _autoCompleteEntry.EntryItems.Clear();
+            return;
+        }
+        if (string.IsNullOrEmpty(previousText)) return;
+
+        var compareText = string.Compare(previousText.Trim(), newTextValue.Trim(), StringComparison.Ordinal);
+        if (compareText == 0) return;
+
+        if (_autoCompleteEntry.EntryItems.Count == 0) return;
+
+
+
+        var items = new List<ItemModel>();
+
+        var words= await _textHandler.EditTextHandler(newTextValue, previousText);
+        if (words.Count == 0)
+        {
+            items = DeleteWordsHandler(previousText);
+        }
+        else
+        {
+            foreach (var wordModel in words)
+            {
+                var item = new ItemModel()
+                {
+                    Item = wordModel.Word,
+                    Id = 0,
+                    IdParents = 0
+                };
+                item = CheckItemInDataBase(item);
+                items.Add(item);
+            }
+        }
+
+        _autoCompleteEntry.EntryItems.Clear();
+        _autoCompleteEntry.EntryItems = new ObservableCollection<ItemModel>(items);
+
+    }
+
+
+    private List<ItemModel> DeleteWordsHandler(string previousText)
+    {
+        _textHandler.DeleteWordsFromText(previousText);
+        var items = _autoCompleteEntry.EntryItems.Where((item) => _text.Words.Exists(word => word.Word.Equals(item.Item))).ToList();
+
+        return items;
 
     }
 
@@ -257,6 +311,7 @@ public class MultipleAutoCompleteEntry: IAutoCompeteEntry
         }
     }
 
+
     private void AddItemToItemSuggestions(ItemModel item)
     {
         var isExisting = _autoCompleteEntry.ItemSuggestions
@@ -264,21 +319,6 @@ public class MultipleAutoCompleteEntry: IAutoCompeteEntry
         if (!isExisting)
             _autoCompleteEntry.ItemSuggestions.Add(item);
     }
-
-
-    //private void AddToNewItemsToSave(ItemDtoModel itemDto)
-    //{
-    //    var newElement = CheckItemInDataBase(itemDto);
-
-    //    if (newElement == null) return;
-
-    //    var isExisting = _autoCompleteEntry.DataBaseItems
-    //        .Select(el => el.Item.ToLower().Equals(itemDto.Item.ToLower())).LastOrDefault(el => el.Equals(true));
-        
-    //    if (!isExisting)
-    //     _autoCompleteEntry.DataBaseItems.Add(new ItemDtoModel() { Item = itemDto.Item});
-        
-    //}
 
 
     private void AddToEntryItems(ItemModel itemSubmitted)
