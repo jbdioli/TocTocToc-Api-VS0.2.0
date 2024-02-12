@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Globalization;
 using TocTocToc.Models.Dto;
 using TocTocToc.Models.Model;
@@ -692,5 +693,23 @@ public static class CopyModel
         itemModel.Item = itemDto.Item;
         itemModel.Id = itemDto.Id;
         itemModel.IdParents = itemDto.IdParents;
+    }
+
+    public static void WordModelsToItems(List<WordModel> words, ObservableCollection<ItemModel> items)
+    {
+        if (words == null) return;
+        if (items == null) return;  
+
+        foreach (var word in words)
+        {
+            items.Add(new ItemModel(){Id = 0, IdParents = 0, Item = word.Word});
+        }
+    }
+
+    public static void WordModelToItem(WordModel word, ItemModel item)
+    {
+        item.Id = 0;
+        item.IdParents = 0;
+        item.Item = word.Word;
     }
 }

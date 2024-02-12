@@ -31,9 +31,14 @@ public class Message: IMessage
                 SetMessage(_translate.GetString(nameof(ENotificationType.IncorrectWordSpelling)));
                 SetMessageType(_translate.GetString(nameof(EMessageType.Error)));
                 SetMessageValidation("OK");
-                break;
+                break; 
             case ENotificationType.IncorrectValidWord:
                 SetMessage(_translate.GetString(nameof(ENotificationType.IncorrectValidWord)));
+                SetMessageType(_translate.GetString(nameof(EMessageType.Error)));
+                SetMessageValidation("OK");
+                break;
+            case ENotificationType.IncorrectChar:
+                SetMessage(_translate.GetString(nameof(ENotificationType.IncorrectChar)));
                 SetMessageType(_translate.GetString(nameof(EMessageType.Error)));
                 SetMessageValidation("OK");
                 break;

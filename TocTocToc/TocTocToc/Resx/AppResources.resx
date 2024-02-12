@@ -474,4 +474,7 @@
   <data name="HttpError503" xml:space="preserve">
     <value>Service Unavailable.</value>
   </data>
+  <data name="IncorrectChar" xml:space="preserve">
+    <value>Please write a valid character</value>
+  </data>
 </root>

@@ -195,7 +195,7 @@ public class TokenAutoCompleteEntry: IAutoCompeteEntry
 
     private async Task<bool> IsWordValid()
     {
-        await _wordHandler.CheckWordValidity();
+        await _wordHandler.CheckWordValidityTask();
         return !_word.IsInvalid;
     }
 

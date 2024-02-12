@@ -1,7 +1,6 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
 using TocTocToc.ENumerations;
-using TocTocToc.Models.Dto;
 using TocTocToc.Models.Model;
 using TocTocToc.Services;
 

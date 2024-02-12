@@ -178,6 +178,15 @@ namespace TocTocToc.Resx {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Please write a valid character.
+        /// </summary>
+        internal static string IncorrectChar {
+            get {
+                return ResourceManager.GetString("IncorrectChar", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Please insert the words separated by &apos;,&apos; or &apos;;&apos;.
         /// </summary>
         internal static string IncorrectSeparatorCharacter {

@@ -6,13 +6,14 @@ public enum ENotificationType
     IncorrectWordDefinition = 2, // The definition of the word is incorrect
     IncorrectSeparatorCharacter = 3, //"Please insert the words separated by ',' or ';' "
     IncorrectValidWord = 4, //"Please write a valid word"
-    IsActiveAddress =  5,
-    IsDeleteActiveAddressInvalid = 6,
-    IsEmptyAddressInvalid = 7,
-    IsOneAddressNeeded = 8,
-    HttpError500 = 9,
-    IsUpdatedMediaFalse = 10,
-    IsPayedNeed = 11,
-    IsAreaSelectedIncomplete = 12,
-    HttpError503 = 13
+    IncorrectChar = 5, //"Please write a valid character"
+    IsActiveAddress = 6,
+    IsDeleteActiveAddressInvalid = 7,
+    IsEmptyAddressInvalid = 8,
+    IsOneAddressNeeded = 9,
+    HttpError500 = 10,
+    IsUpdatedMediaFalse = 11,
+    IsPayedNeed = 12,
+    IsAreaSelectedIncomplete = 13,
+    HttpError503 = 14
 }

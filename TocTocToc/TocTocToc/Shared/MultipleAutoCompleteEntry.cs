@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using TocTocToc.ENumerations;
@@ -21,7 +20,8 @@ public class MultipleAutoCompleteEntry: IAutoCompeteEntry
 
     private static readonly NotificationChannelHandler NOTIFICATION_HANDLER = new(new DisplayNotification());
 
-    public bool IsEndingChar = false;
+    private bool _isEndingChar = false;
+    private ErrorModel _error = new();
     public bool IsCompletedEntry { get; set; } = false;
     public bool IsEditing { get; set; } = false;
 
@@ -77,29 +77,7 @@ public class MultipleAutoCompleteEntry: IAutoCompeteEntry
             _text.Text = e.NewTextValue;
 
             await TextChangedHandler(e);
-
-            if (string.IsNullOrWhiteSpace(_text.Text))
-            {
-                _textHandler.Clear();
-                HideSuggestions();
-                return;
-            }
-
-            // Text recognition
-            (IsEndingChar, var isWrongChar) = _textHandler.TextRecognition(_text.Text);
-            if (IsEndingChar)
-            {
-                await HandleTextCompleted();
-                return;
-            }
-
-            if (isWrongChar)
-            {
-                _textHandler.DeleteLastChar();
-                NOTIFICATION_HANDLER.SendNotification(ENotificationType.IncorrectValidWord, null);
-            }
-
-            // Handles suggestions to be display in the suggestion view
+            
             HandelSuggestionsView();
         }
         catch (Exception)
@@ -189,17 +167,75 @@ public class MultipleAutoCompleteEntry: IAutoCompeteEntry
         _autoCompleteEntry.ItemSuggestions.Clear();
     }
 
+
+    private async Task TextChangedHandler(TextChangedEventArgs e)
+    {
+        var previousText = e.OldTextValue;
+        var newTextValue = e.NewTextValue;
+
+        if (string.IsNullOrWhiteSpace(previousText) && string.IsNullOrEmpty(newTextValue))
+        {
+            _autoCompleteEntry.EntryItems.Clear();
+            _isEndingChar = false;
+            return;
+        }
+
+        //if (!string.IsNullOrEmpty(previousText))
+        //{
+        //    var compareText = string.Compare(previousText.Trim(), newTextValue.Trim(), StringComparison.Ordinal);
+        //    if (compareText == 0)
+        //    {
+        //        _isEndingChar = false;
+        //        return;
+        //    }
+        //}
+
+        //(var isEdited, _error) = _textHandler.EditTextHandler(newTextValue, previousText);
+        //if (!isEdited)
+        //{
+        //    var isDeleted = _textHandler.DeleteWordsFromText();
+        //    if (isDeleted)
+        //    {
+        //        _autoCompleteEntry.EntryItems.Clear();
+        //        CopyModel.WordModelsToItems(_text.Words, _autoCompleteEntry.EntryItems);
+        //    }
+        //}
+
+        //HandelError(_error);
+
+
+        // Text recognition
+        (_isEndingChar, _error) = _textHandler.TextRecognition(_text.Text);
+        if (_isEndingChar)
+        {
+            HideSuggestions();
+            return;
+        }
+
+        HandelError(_error);
+
+        _textHandler.RefreshTextHandler();
+    }
+
+
     // to see with HandleTextCompleted(TextModel text)
     private async Task HandleTextCompleted()
     {
         _autoCompleteEntry.EventOrder.TextCompletedDisable = true;
         _autoCompleteEntry.EventOrder.TextChangedDisable = true;
 
-        await _textHandler.AddWordsFromTextTask();
+        if (_text.Words is { Count: > 0 })
+        {
+            await _textHandler.CheckWordsValidityTask();
+        }
+        else
+        {
+            await _textHandler.AddWordsFromTextTask();
+        }
 
         if (_text.IsInvalid)
         {
-            DeleteInvalidWords();
+            DeleteInvalidItems();
             HideSuggestions();
             return;
         }
@@ -221,71 +257,76 @@ public class MultipleAutoCompleteEntry: IAutoCompeteEntry
         return _textHandler.GetCurrentWord(_text.Text);
     }
 
-    private void DeleteInvalidWords()
+    private void DeleteInvalidItems()
     {
         _autoCompleteEntry.EntryItems.Clear();
 
-        foreach (var word in _text.Words.TakeWhile(v => v.IsInvalid) )
+        if (_text.Words == null) return;
+
+        foreach (var word in _text.Words.TakeWhile(el => !el.IsInvalid) )
         {
             var item = new ItemModel(){Id = 0, IdParents = 0, Item = word.Word};
             AddToEntryItems(item);
         }
 
-        _textHandler.AddWordsToText();
+        AddItemsToText();
 
     }
 
-
-    private async Task TextChangedHandler(TextChangedEventArgs e)
+    private void AddItemsToText()
     {
-        var previousText = e.OldTextValue;
-        var newTextValue = e.NewTextValue;
+        if (_text.SeparatorList.Count == 0) return;
+        var separator = _text.SeparatorList[0];
 
-        if (string.IsNullOrWhiteSpace(previousText) && string.IsNullOrEmpty(newTextValue))
+        var items = _autoCompleteEntry.EntryItems.Select(item => item.Item).ToList();
+        if (items.Count == 0)
         {
-            _autoCompleteEntry.EntryItems.Clear();
-            return;
-        }
-        if (string.IsNullOrEmpty(previousText)) return;
-
-        var compareText = string.Compare(previousText.Trim(), newTextValue.Trim(), StringComparison.Ordinal);
-        if (compareText == 0) return;
-
-        if (_autoCompleteEntry.EntryItems.Count == 0) return;
-
-
-
-        var items = new List<ItemModel>();
-
-        var words= await _textHandler.EditTextHandler(newTextValue, previousText);
-        if (words.Count == 0)
-        {
-            items = DeleteWordsHandler(previousText);
+            _autoCompleteEntry.Text = string.Empty;
         }
         else
         {
-            foreach (var wordModel in words)
-            {
-                var item = new ItemModel()
-                {
-                    Item = wordModel.Word,
-                    Id = 0,
-                    IdParents = 0
-                };
-                item = CheckItemInDataBase(item);
-                items.Add(item);
-            }
+            _autoCompleteEntry.Text = string.Join(separator + " ", items) + separator + " ";
         }
-
-        _autoCompleteEntry.EntryItems.Clear();
-        _autoCompleteEntry.EntryItems = new ObservableCollection<ItemModel>(items);
-
     }
 
 
-    private List<ItemModel> DeleteWordsHandler(string previousText)
+    
+
+    private void HandelError(ErrorModel error)
     {
-        _textHandler.DeleteWordsFromText(previousText);
+        if (error != null && (error.IsWrongChar || error.IsWrongWord))
+        {
+            _autoCompleteEntry.EventOrder.TextChangedDisable = true;
+            if (error.IsWrongChar)
+            {
+                _textHandler.DeleteWrongChar();
+                _autoCompleteEntry.Text = _text.Text;
+                NOTIFICATION_HANDLER.SendNotification(ENotificationType.IncorrectChar, null);
+            }
+
+            if (error.IsWrongWord)
+            {
+                _autoCompleteEntry.EntryItems.Clear();
+                _textHandler.DeleteWrongWords();
+                foreach (var word in _text.Words)
+                {
+                    if (word.IsInvalid) continue;
+                    var item = new ItemModel();
+                    CopyModel.WordModelToItem(word, item);
+                    AddToEntryItems(item);
+                }
+                NOTIFICATION_HANDLER.SendNotification(ENotificationType.IncorrectValidWord, null);
+            }
+
+            _autoCompleteEntry.Error = error;
+                
+        }
+    }
+
+
+    private List<ItemModel> DeleteWordsHandler()
+    {
+        _textHandler.DeleteWordsFromText();
         var items = _autoCompleteEntry.EntryItems.Where((item) => _text.Words.Exists(word => word.Word.Equals(item.Item))).ToList();
 
         return items;

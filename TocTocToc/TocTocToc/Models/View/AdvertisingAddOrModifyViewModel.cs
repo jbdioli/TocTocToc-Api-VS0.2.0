@@ -47,6 +47,7 @@ public partial class AdvertisingAddOrModifyViewModel : AdvertisingModel
     public AsyncCommand InterestUnfocusedAsyncCommand { get; }
     public AsyncCommand<object> InterestItemTappedAsyncCommand { get; }
     public AsyncCommand InterestCompletedAsyncCommand { get; }
+    public AsyncCommand<object> InterestCursorPositionAsyncCommand { get; }
     public AsyncCommand BudgetAsyncCommand { get; }
     public AsyncCommand SaveAdvertisementAsyncCommand { get; }
     public AsyncCommand HistoryAsyncCommand { get; }
@@ -61,6 +62,11 @@ public partial class AdvertisingAddOrModifyViewModel : AdvertisingModel
     private readonly EPayDetailsDtoModel _ePayDetails = new();
 
     public ObservableCollection<ItemModel> InterestSuggestions { get; set; } = [];
+
+
+    [ObservableProperty] 
+    private int _interestCursorPosition;
+
 
     [ObservableProperty]
     private bool _isAgeValid = false;
@@ -112,6 +118,7 @@ public partial class AdvertisingAddOrModifyViewModel : AdvertisingModel
         InterestUnfocusedAsyncCommand = new AsyncCommand(InterestUnfocusedTask);
         InterestItemTappedAsyncCommand = new AsyncCommand<object>(InterestItemTappedTask);
         InterestCompletedAsyncCommand = new AsyncCommand(InterestCompletedTask);
+        InterestCursorPositionAsyncCommand = new AsyncCommand<object>(InterestCursorPositionTask);
         BudgetAsyncCommand = new AsyncCommand(BudgetAsync);
         SaveAdvertisementAsyncCommand = new AsyncCommand(SaveAdvertisementAsync);
         HistoryAsyncCommand = new AsyncCommand(HistoryAsync);
@@ -292,6 +299,11 @@ public partial class AdvertisingAddOrModifyViewModel : AdvertisingModel
         IsInterestBusy = true;
 
         await _autoCompleteInterestEntryHandler.TextChanged(e);
+        if (_autoCompleteInterestEntry.Error != null)
+        {
+            if (_autoCompleteInterestEntry.Error.IsWrongChar) Interests = _autoCompleteInterestEntry.Text;
+        }
+
         IsInterestSuggestions = _autoCompleteInterestEntry.IsSuggestionView;
         IsEnabledComponent = !_autoCompleteInterestEntry.IsSuggestionView;
         InterestSuggestions.Clear();
@@ -328,11 +340,18 @@ public partial class AdvertisingAddOrModifyViewModel : AdvertisingModel
         IsInterestSuggestions = _autoCompleteInterestEntry.IsSuggestionView;
     }
 
+    private Task InterestCursorPositionTask(object arg)
+    {
+        return Task.CompletedTask;
+    }
+
 
     private async Task InterestUnfocusedTask()
     {
         await _autoCompleteInterestEntryHandler.Unfocused();
         IsInterestSuggestions = _autoCompleteInterestEntry.IsSuggestionView;
+        InterestSuggestions.Clear();
+        Interests = _autoCompleteInterestEntry.Text;
 
         SetInterestDetails();
 

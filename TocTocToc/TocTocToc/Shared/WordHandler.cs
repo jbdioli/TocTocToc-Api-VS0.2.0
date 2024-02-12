@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using TocTocToc.ENumerations;
 using TocTocToc.Models.Dto;
@@ -19,7 +20,7 @@ public class WordHandler
     }
 
 
-    public async Task CheckWordValidity()
+    public async Task CheckWordValidityTask()
     {
         await CheckWordDefinition();
         if (_word.IsInvalid)
@@ -30,17 +31,26 @@ public class WordHandler
         FormatWord();
     }
 
-    public static bool IsCharAllowed(string text)
+    public static bool IsCharAllowed(string text, List<string> extraCharacterAllowed)
     {
-        if (string.IsNullOrWhiteSpace(text)) return false;
+        if (string.IsNullOrEmpty(text)) return false;
 
-        //var textBuffer = text.Trim();
-        //var lastCharacter = textBuffer.Last();
-        //return char.IsLetter(lastCharacter);
-        //return !lastCharacter.All(c => (char.IsLetter(c) || c == (int)EDecimalCharacter.Space || c == (int)EDecimalCharacter.Hyphen || c == (int)EDecimalCharacter.Apostrophe));
+        var isValid = false;
 
-        var lastCharacter = text.Substring(text.Length - 1);
-        return lastCharacter.All(c => (char.IsLetter(c) || c == (int)EDecimalCharacter.Space || c == (int)EDecimalCharacter.Hyphen || c == (int)EDecimalCharacter.Apostrophe));
+        foreach (var character in text.Select(charFromText => charFromText.ToString()))
+        {
+            if (extraCharacterAllowed is { Count: > 0 })
+            {
+                isValid = extraCharacterAllowed.Contains(character);
+                if (isValid) return true;
+            }
+            
+            isValid = character.All(c => (char.IsLetter(c) || c == (int)EDecimalCharacter.Space || c == (int)EDecimalCharacter.Hyphen || c == (int)EDecimalCharacter.Apostrophe));
+            
+            if (!isValid) return false;
+        }
+
+        return isValid;
     }
 
 
@@ -83,17 +93,38 @@ public class WordHandler
     }
 
 
-    public void DeleteLastChar()
+    //public void DeleteLastChar()
+    //{
+    //    if (string.IsNullOrWhiteSpace(_word.Word))
+    //    {
+    //        return;
+    //    }
+
+    //    var textBuffer = _word.Word.Trim();
+    //    var lastCharacter = textBuffer.Last();
+    //    _word.Word = !char.IsLetter(lastCharacter) ? _word.Word.Remove(_word.Word.Length - 1, 1) : textBuffer;
+    //    ClearWordDefinition();
+    //}
+
+
+    public void DeleteWrongChar()
     {
         if (string.IsNullOrWhiteSpace(_word.Word))
         {
             return;
         }
 
-        var textBuffer = _word.Word.Trim();
-        var lastCharacter = textBuffer.Last();
-        _word.Word = !char.IsLetter(lastCharacter) ? _word.Word.Remove(_word.Word.Length - 1, 1) : textBuffer;
-        ClearWordDefinition();
+        var newWord = string.Empty;
+
+        foreach (var charFromText in _word.Word.Select((value, index) => (value, index)))
+        {
+            var isValidChar = IsCharAllowed(charFromText.value.ToString(), null);
+            if (isValidChar) continue;
+
+            newWord = _word.Word.Remove(charFromText.index, 1);
+        }
+
+        _word.Word = newWord;
     }
 
 

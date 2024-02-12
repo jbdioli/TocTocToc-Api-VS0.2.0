@@ -9,12 +9,9 @@ namespace TocTocToc.Shared;
 public class TextHandler
 {
     private readonly TextModel _textModel;
-    private readonly WordHandler _wordHandler;
-    private readonly WordModel _wordModel = new();
 
     public TextHandler(TextModel textModel)
     {
-        _wordHandler = new WordHandler(_wordModel);
         _textModel = textModel;
         if (_textModel.SeparatorList.Count == 0 ) _textModel.SeparatorList = [";", ","];
     }
@@ -69,69 +66,83 @@ public class TextHandler
 
 
 
-    public async Task<List<WordModel>> EditTextHandler(string newTextValue, string previousText)
+    public (bool isEdited, ErrorModel error) EditTextHandler(string newTextValue, string previousText)
     {
-        var words = new List<WordModel>();
+        if (_textModel.Words == null || _textModel.Words.Count == 0) return (false, new ErrorModel());
 
         var oldWords = FindWordsInText(previousText);
         var newWords = FindWordsInText(newTextValue);
 
-        if (oldWords.Count != newWords.Count) return words;
+        if (oldWords.Count != newWords.Count) return (false, null);
 
-        //var wordsEdited = oldWords.Where(oldEl => !newWords.Any(newEl => newEl.Word.ToLower().Equals(oldEl.Word.ToLower()))).ToList();
         var wordsEdited = newWords.Where(newEl => !oldWords.Any(oldEl => oldEl.Word.ToLower().Equals(newEl.Word.ToLower()))).ToList();
 
-        words = _textModel.Words;
-
-        //var indexWordEdited = words.FindIndex(el => wordsEdited.Any(word => word.Word.ToLower().Equals(el.Word.ToLower())));
-        var indexWordEdited = words.FindIndex(el => !newWords.Any(word => word.Word.ToLower().Equals(el.Word.ToLower())));
-
-        words[indexWordEdited].IsInvalid = true;
-        words[indexWordEdited].Word = wordsEdited[0].Word;
-
-        _wordModel.Word = words[indexWordEdited].Word;
-        _wordModel.Dictionary = new DictionaryDtoModel();
-        _wordModel.IsInvalid = true;
-        await _wordHandler.CheckWordValidity();
-
-        words[indexWordEdited].IsInvalid = _wordModel.IsInvalid;
-
-        return words;
-    }
-
-
-
-    public async Task<List<WordModel>> CheckWordsValidityTask(List<WordModel> words)
-    {
-        if (words == null) return [];
-
-        var wordsVerified = new List<WordModel>();
-
-        foreach (var word in words)
+        foreach (var word in wordsEdited)
         {
-            _wordHandler.Clear();
-            _wordModel.Word = word.Word;
-            if (word.IsInvalid)
-            {
-                await _wordHandler.CheckWordValidity();
-            }
-
-            wordsVerified.Add(new WordModel()
-                {
-                    IsInvalid = _wordModel.IsInvalid,
-                    Word = _wordModel.Word,
-                    Dictionary = _wordModel.Dictionary,
-                    Log = _wordModel.Log
-                }
-            );
+            var isAllowed = WordHandler.IsCharAllowed(word.Word, null);
+            if (isAllowed) continue;
+            var error = new ErrorModel { IsWrongChar = true, IsWrongWord = false };
+            return (false, error);
         }
 
-        return wordsVerified;
+        var indexWordEdited = _textModel.Words.FindIndex(el => !newWords.Any(word => word.Word.ToLower().Equals(el.Word.ToLower())));
+
+        _textModel.IsInvalid = true;
+        _textModel.Words[indexWordEdited].IsInvalid = true;
+        _textModel.Words[indexWordEdited].Word = wordsEdited[0].Word;
+        return (true, null);
     }
+
+
+    public void RefreshTextHandler()
+    {
+        var currentText = _textModel.Text;
+        var words = FindWordsInText(currentText);
+        var oldWords = _textModel.Words;
+
+        var wordsEdited = words.Where(newEl => !oldWords.Any(oldEl => oldEl.Word.ToLower().Equals(newEl.Word.ToLower()))).ToList();
+
+        var indexWordEdited = _textModel.Words.FindIndex(el => !words.Any(word => word.Word.ToLower().Equals(el.Word.ToLower())));
+
+        _textModel.IsInvalid = true;
+        _textModel.Words[indexWordEdited].IsInvalid = true;
+        _textModel.Words[indexWordEdited].Word = wordsEdited[0].Word;
+
+    }
+
+
+    public async Task CheckWordsValidityTask()
+    {
+        var wordModel = new WordModel();
+        var wordHandler = new WordHandler(wordModel);
+
+        var words = _textModel.Words;
+
+        if (words == null || words.Count == 0) return;
+
+        foreach (var word in words.Select((value, index) => (value, index)))
+        {
+            wordHandler.Clear();
+            wordModel.Word = word.value.Word;
+            if (!word.value.IsInvalid) continue;
+
+            await wordHandler.CheckWordValidityTask();
+            words[word.index].IsInvalid = wordModel.IsInvalid;
+            words[word.index].Word = wordModel.Word;
+            words[word.index].Dictionary = wordModel.Dictionary;
+            words[word.index].Log = wordModel.Log;
+        }
+
+    }
+
+
 
 
     private async Task<List<WordModel>> CheckWordsValidityFromTextTask()
     {
+        var wordModel = new WordModel();
+        var wordHandler = new WordHandler(wordModel);
+
         if (_textModel.Words == null) return null;
         if (string.IsNullOrWhiteSpace(_textModel.Text)) return null;
 
@@ -140,19 +151,19 @@ public class TextHandler
 
         foreach (var word in words)
         {
-            _wordHandler.Clear();
-            _wordModel.Word = word.Word;
+            wordHandler.Clear();
+            wordModel.Word = word.Word;
             if (word.IsInvalid)
             {
-                await _wordHandler.CheckWordValidity();
+                await wordHandler.CheckWordValidityTask();
             }
 
             wordsVerified.Add(new WordModel()
                 {
-                    IsInvalid = _wordModel.IsInvalid,
-                    Word = _wordModel.Word,
-                    Dictionary = _wordModel.Dictionary,
-                    Log = _wordModel.Log
+                    IsInvalid = wordModel.IsInvalid,
+                    Word = wordModel.Word,
+                    Dictionary = wordModel.Dictionary,
+                    Log = wordModel.Log
                 }
             );
         }
@@ -161,38 +172,102 @@ public class TextHandler
     }
 
 
-    public void DeleteWordsFromText(string previousText)
+    public bool DeleteWordsFromText()
     {
         if (string.IsNullOrWhiteSpace(_textModel.Text))
         {
-            return;
+            return false;
         }
         
         var currentText = _textModel.Text;
 
-        if (currentText.Length >= previousText.Length) return;
+        if (string.IsNullOrWhiteSpace(currentText)) return false;
 
         var words = FindWordsInText(currentText);
 
-        var wordsToKeep = _textModel.Words.Where(elA => words.Exists(elB =>elB.Word.ToLower().Equals(elA.Word.ToLower()))).ToList();
+        var wordsKept = _textModel.Words.Where(elA => words.Exists(elB =>elB.Word.ToLower().Equals(elA.Word.ToLower()))).ToList();
         _textModel.Words.Clear();
-        _textModel.Words.AddRange(wordsToKeep);
+        _textModel.Words.AddRange(wordsKept);
+        return true;
 
     }
 
 
-    public void DeleteLastChar()
+    public void DeleteWrongChar()
     {
         if (string.IsNullOrWhiteSpace(_textModel.Text))
         {
             return;
         }
 
-        var textBuffer = _textModel.Text.Trim();
-        var lastCharacter = textBuffer.Last();
-        _textModel.Text = !char.IsLetter(lastCharacter) ? _textModel.Text.Remove(_textModel.Text.Length - 1, 1) : textBuffer;
+        var newText = string.Empty;
+
+        foreach (var charFromText in _textModel.Text.Select((value, index) => (value, index)))
+        {
+            var isValidChar = IsCharAllowed(charFromText.value.ToString(), null);
+            if (isValidChar) continue;
+
+            newText = _textModel.Text.Remove(charFromText.index, 1);
+        }
+
+        _textModel.Text = newText;
+
     }
 
+
+    public void DeleteWrongWords()
+    {
+        var indexes = Enumerable.Range(0, _textModel.Words.Count).Where(i => _textModel.Words[i].IsInvalid == true).ToList();
+        foreach (var index in indexes)
+        {
+            _textModel.Words.RemoveAt(index);
+        }
+    }
+
+
+    private bool IsCharAllowed(string text, List<string> extraCharacterAllowed)
+    {
+        if (string.IsNullOrEmpty(text)) return false;
+
+        var isValid = false;
+        var separators = _textModel.SeparatorList;
+        var extraCharacters = new List<string>();
+
+        if (extraCharacterAllowed is { Count: > 0 })
+        {
+            extraCharacters.AddRange(separators);
+            extraCharacters.AddRange(extraCharacterAllowed);
+        }
+        else
+        {
+            extraCharacters.AddRange(separators);
+        }
+
+        var words = FindWordsInText(text);
+
+
+        foreach (var word in words)
+        {
+            if (text.Length == 1 && string.IsNullOrEmpty(word.Word))
+            {
+                isValid = WordHandler.IsCharAllowed(text, extraCharacters);
+                return isValid;
+            }
+
+            isValid = WordHandler.IsCharAllowed(word.Word, extraCharacters);
+            if (!isValid) return false;
+        }
+
+
+        //foreach (var character in text.Select(charFromText => charFromText.ToString()))
+        //{
+        //    isValid = character.All(c => (char.IsLetter(c) || c == (int)EDecimalCharacter.Space || c == (int)EDecimalCharacter.Hyphen || c == (int)EDecimalCharacter.Apostrophe));
+        //    if (isValid) continue;
+        //    isValid = separators.Contains(character);
+        //}
+
+        return isValid;
+    }
 
 
     public string GetCurrentWord( string text)
@@ -218,33 +293,46 @@ public class TextHandler
     }
 
 
-    public (bool isEndingChar, bool isWrongChar) TextRecognition(string text)
+    public (bool isEndingChar, ErrorModel error) TextRecognition(string text)
     {
-        var isWrongChar = false;
+        var error = new ErrorModel();
 
+        text = text.Trim();
         var lastCharacter = text.Substring(text.Length - 1);
-        
+
         var isEndingChar = _textModel.SeparatorList.Contains(lastCharacter);
 
         if (!isEndingChar)
         {
-            isWrongChar = !WordHandler.IsCharAllowed(text);
+            error.IsWrongChar = !IsCharAllowed(text, null);
+        }
+        else
+        {
+            error = null;
         }
 
-        return (isEndingChar, isWrongChar);
+        return (isEndingChar, error);
     }
 
 
     public List<WordModel> FindWordsInText(string text)
     {
-        if (string.IsNullOrWhiteSpace(text)) return null;
+        if (string.IsNullOrEmpty(text)) return null;
 
         string word;
         var previousIndex = 0;
 
         var separatorIndexes = FindSeparatorIndexes(text);
         var words = new List<WordModel>();
+
+        if (text.Equals(" "))
+        {
+            words.Add(new WordModel(){Dictionary = new DictionaryDtoModel(), IsInvalid = true, Word = text});
+            return words;
+        }
         
+        text = text.Trim();
+
         foreach (var index in separatorIndexes)
         {
             var length = index - previousIndex;
@@ -265,6 +353,8 @@ public class TextHandler
 
     public string FormatText(string text)
     {
+        if (string.IsNullOrWhiteSpace(text)) return string.Empty;
+        
         var wordsModel = FindWordsInText(text);
         var words = wordsModel.Select(el => el.Word).ToList();
         var textFormatted = FormatTextFromWords(words);
@@ -304,6 +394,7 @@ public class TextHandler
         return indexes;
     }
 
+
 }
 
 
@@ -324,3 +415,14 @@ public class TextHandler
 //_textModel.Text = currentText;
 
 
+//public void DeleteLastChar()
+//{
+//    if (string.IsNullOrWhiteSpace(_textModel.Text))
+//    {
+//        return;
+//    }
+
+//    var textBuffer = _textModel.Text.Trim();
+//    var lastCharacter = textBuffer.Last();
+//    _textModel.Text = !char.IsLetter(lastCharacter) ? _textModel.Text.Remove(_textModel.Text.Length - 1, 1) : textBuffer;
+//}

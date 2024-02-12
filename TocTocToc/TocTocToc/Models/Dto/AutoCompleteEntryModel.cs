@@ -13,4 +13,5 @@ public class AutoCompleteEntryModel
 
     public AutoCompleteEventModel EventOrder { get; set; } = new();
     public bool IsSuggestionView { get; set; }
+    public ErrorModel Error { get; set; }
 }

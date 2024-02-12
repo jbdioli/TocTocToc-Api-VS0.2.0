@@ -90,6 +90,7 @@
                     <Entry Grid.Row="4" Grid.ColumnSpan="2"
                            IsEnabled="{Binding IsIdPublic}"
                            Text="{Binding Interests}"
+                           CursorPosition="{Binding InterestCursorPosition, Mode=TwoWay}"
                            Margin="0"
                            IsSpellCheckEnabled="True"
                            TextColor="Black"
