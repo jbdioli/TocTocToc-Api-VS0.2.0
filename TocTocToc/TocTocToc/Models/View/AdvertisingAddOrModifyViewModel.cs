@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -47,7 +48,6 @@ public partial class AdvertisingAddOrModifyViewModel : AdvertisingModel
     public AsyncCommand InterestUnfocusedAsyncCommand { get; }
     public AsyncCommand<object> InterestItemTappedAsyncCommand { get; }
     public AsyncCommand InterestCompletedAsyncCommand { get; }
-    public AsyncCommand<object> InterestCursorPositionAsyncCommand { get; }
     public AsyncCommand BudgetAsyncCommand { get; }
     public AsyncCommand SaveAdvertisementAsyncCommand { get; }
     public AsyncCommand HistoryAsyncCommand { get; }
@@ -66,6 +66,9 @@ public partial class AdvertisingAddOrModifyViewModel : AdvertisingModel
 
     [ObservableProperty] 
     private int _interestCursorPosition;
+
+    [ObservableProperty]
+    private int _nameCursorPosition;
 
 
     [ObservableProperty]
@@ -102,9 +105,17 @@ public partial class AdvertisingAddOrModifyViewModel : AdvertisingModel
     private bool _isInterestBusy = false;
     private bool _isInterestTapedItemBusy = false;
 
+    private readonly Task[] _tasksRunning;
+
 
     public AdvertisingAddOrModifyViewModel()
     {
+        _tasksRunning =
+        [
+            Task.Run(() => { Thread.CurrentThread.Name = "InterestItemTappedTask"; }),
+            Task.Run(() => { Thread.CurrentThread.Name = "InterestCompletedTask"; })
+        ];
+
         Init = new AsyncCommand(InitAsync);
         Init.Execute(null);
         ClearRxNet = new AsyncCommand(ClearRxNetAsync);
@@ -118,7 +129,6 @@ public partial class AdvertisingAddOrModifyViewModel : AdvertisingModel
         InterestUnfocusedAsyncCommand = new AsyncCommand(InterestUnfocusedTask);
         InterestItemTappedAsyncCommand = new AsyncCommand<object>(InterestItemTappedTask);
         InterestCompletedAsyncCommand = new AsyncCommand(InterestCompletedTask);
-        InterestCursorPositionAsyncCommand = new AsyncCommand<object>(InterestCursorPositionTask);
         BudgetAsyncCommand = new AsyncCommand(BudgetAsync);
         SaveAdvertisementAsyncCommand = new AsyncCommand(SaveAdvertisementAsync);
         HistoryAsyncCommand = new AsyncCommand(HistoryAsync);
@@ -128,6 +138,7 @@ public partial class AdvertisingAddOrModifyViewModel : AdvertisingModel
 
         _geolocationHandler = new GeolocationHandler(_locationDto);
         _autoCompleteInterestEntryHandler = new AutoCompleteEntryHandler(new MultipleAutoCompleteEntry(_autoCompleteInterestEntry));
+
     }
 
 
@@ -209,6 +220,11 @@ public partial class AdvertisingAddOrModifyViewModel : AdvertisingModel
     }
 
 
+    /*
+     * Description
+     */
+
+
     private async Task AddDescriptionAsync()
     {
         var valueDetails = new ValueDetailsModel
@@ -221,6 +237,11 @@ public partial class AdvertisingAddOrModifyViewModel : AdvertisingModel
         await Application.Current.MainPage.Navigation.ShowPopupAsync(descriptionPopup);
         Info = valueDetails.Text;
     }
+
+
+    /*
+     * Area
+     */
 
 
     private async Task AddAreaSelectAsync()
@@ -245,6 +266,10 @@ public partial class AdvertisingAddOrModifyViewModel : AdvertisingModel
         await ValidationEntryAsync();
         ValidationButtons();
     }
+
+    /*
+     * Gender
+     */
 
 
     private async Task GenderAsync()
@@ -297,15 +322,16 @@ public partial class AdvertisingAddOrModifyViewModel : AdvertisingModel
         if (arg is not TextChangedEventArgs e) return;
 
         IsInterestBusy = true;
-
-        await _autoCompleteInterestEntryHandler.TextChanged(e);
+        var entryCursorPosition = InterestCursorPosition;
+        await _autoCompleteInterestEntryHandler.TextChanged(e, entryCursorPosition);
         if (_autoCompleteInterestEntry.Error != null)
         {
             if (_autoCompleteInterestEntry.Error.IsWrongChar) Interests = _autoCompleteInterestEntry.Text;
         }
 
         IsInterestSuggestions = _autoCompleteInterestEntry.IsSuggestionView;
-        IsEnabledComponent = !_autoCompleteInterestEntry.IsSuggestionView;
+        IsEnabledComponent = !_autoCompleteInterestEntry.IsSuggestionView;   // disable component to display suggestionView
+        InterestSuggestions.Clear();
         InterestSuggestions.Clear();
         if (IsInterestSuggestions)
         {
@@ -314,7 +340,7 @@ public partial class AdvertisingAddOrModifyViewModel : AdvertisingModel
                 InterestSuggestions.Add(interest);
             }
         }
-        
+
         IsInterestBusy = false;
     }
 
@@ -340,16 +366,15 @@ public partial class AdvertisingAddOrModifyViewModel : AdvertisingModel
         IsInterestSuggestions = _autoCompleteInterestEntry.IsSuggestionView;
     }
 
-    private Task InterestCursorPositionTask(object arg)
-    {
-        return Task.CompletedTask;
-    }
-
-
+    
     private async Task InterestUnfocusedTask()
     {
+
+        await AutoCompleteEventModel.CheckEventOrder(_tasksRunning);
+
         await _autoCompleteInterestEntryHandler.Unfocused();
         IsInterestSuggestions = _autoCompleteInterestEntry.IsSuggestionView;
+        IsEnabledComponent = !_autoCompleteInterestEntry.IsSuggestionView;   // disable component to display suggestionView
         InterestSuggestions.Clear();
         Interests = _autoCompleteInterestEntry.Text;
 
@@ -357,6 +382,7 @@ public partial class AdvertisingAddOrModifyViewModel : AdvertisingModel
 
         await SaveNewInterestItems();
 
+        await ValidationEntryAsync();
         ValidationButtons();
     }
 
@@ -418,14 +444,26 @@ public partial class AdvertisingAddOrModifyViewModel : AdvertisingModel
     }
 
 
+    /*
+     * Historic Page
+     */
+
+
     private static async Task HistoryAsync()
     {
         await Application.Current.MainPage.Navigation.PushAsync(new AdvertisingHistoryPage());
     }
 
 
+    /*
+     * Payment Page
+     */
+
+
     private async Task PayAsync()
     {
+        //_ePayDetails.EPayOrder.Amount = Budget;
+        _ePayDetails.EPayPayment.Amount = int.Parse(Budget);
         var ePayPage = new EPay(_ePayDetails);
         await Application.Current.MainPage.Navigation.PushAsync(ePayPage);
     }

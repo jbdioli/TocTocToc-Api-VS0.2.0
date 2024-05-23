@@ -6,7 +6,7 @@
              x:Name="ContentPage"
              xmlns:viewModels="clr-namespace:TocTocToc.Models.View;assembly=TocTocToc"
              xmlns:converters="clr-namespace:TocTocToc.Converters;assembly=TocTocToc">
-    <!--x:DataType="viewModels:AdvertisingViewModel">-->
+    <!--x:DataType="viewModels:AdvertisingAddOrModifyViewModel">-->
     <ContentPage.BindingContext>
         <viewModels:AdvertisingAddOrModifyViewModel/>
     </ContentPage.BindingContext>
@@ -39,10 +39,11 @@
                             Command="{Binding UpdateMediaAsyncCommand}" Text="{xct:Translate LabelAdvertisingUpdateMedia}" TextColor="White"
                             BorderColor="{StaticResource ButtonBorderColor}" BorderWidth="1" CornerRadius="10" BackgroundColor="{StaticResource ButtonColorDetails}"/>
 
-                    <!--Row 1 Title / Description -->
+                    <!--Row 1 Title / Description--> 
                     <Entry Grid.Row="1" Grid.Column="0"
                            IsEnabled="{Binding IsIdPublic}"
                            Text="{Binding Name}" TextColor="Black"
+                           CursorPosition="{Binding NameCursorPosition, Mode=TwoWay}"
                            Placeholder="{xct:Translate LabelAdvertisingName}">
                         <Entry.Behaviors>
                             <xct:EventToCommandBehavior 
@@ -87,6 +88,7 @@
 
                     <!--Row 4 Interest -->
                     <!--TextChanged="{Binding InterestText, Mode=TwoWay}" Unfocused="OnInterestUnfocused"-->
+                    <!--SelectionLength="{Binding InterestCursorPosition, Mode=TwoWay}"-->
                     <Entry Grid.Row="4" Grid.ColumnSpan="2"
                            IsEnabled="{Binding IsIdPublic}"
                            Text="{Binding Interests}"
@@ -99,9 +101,6 @@
                             <xct:EventToCommandBehavior
                                 EventName="TextChanged"
                                 Command="{Binding InterestTextChangedAsyncCommand}"/>
-                            <!--<xct:EventToCommandBehavior
-                                EventName="Completed"
-                                Command="{Binding InterestCompletedAsyncCommand}"/>-->
                             <xct:EventToCommandBehavior 
                                 EventName="Unfocused"
                                 Command="{Binding InterestUnfocusedAsyncCommand}"/>
@@ -153,7 +152,7 @@
                         </Image.GestureRecognizers>
                     </Image>
 
-                    <!--Row 4 Interest at the end of the grid to over layout all the element  -->
+                    <!--Row 4 Interest at the end of the grid to over layout all the element-->  
                     <ListView Grid.Row="4" Grid.RowSpan="4" Grid.ColumnSpan="2"
                               Margin="10, 35, 10, 0"
                               VerticalOptions="Start" HorizontalOptions="Fill" HeightRequest="120"

@@ -6,7 +6,7 @@ namespace TocTocToc.Interfaces;
 
 public interface IAutoCompleteEntryHandler
 {
-    public Task TextChanged(TextChangedEventArgs e);
+    public Task TextChanged(TextChangedEventArgs e, int cursorPosition);
     public Task ItemTapped(ItemModel itemModel);
     public Task TextCompleted();
     public Task Unfocused();

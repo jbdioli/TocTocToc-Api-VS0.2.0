@@ -14,7 +14,7 @@ public interface IAutoCompeteEntry
     //public Task TextChanged(TextChangedEventArgs e);
     //public Task TextCompleted(object sender);
     public Task ItemTapped(ItemModel itemModel);
-    public Task TextChanged(TextChangedEventArgs e);
+    public Task TextChanged(TextChangedEventArgs e, int cursorPosition);
     public Task TextCompleted();
     public Task Unfocused();
     //public bool IsNextOrEndingCharacter(string text);

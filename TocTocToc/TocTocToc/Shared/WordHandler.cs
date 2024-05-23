@@ -67,7 +67,16 @@ public class WordHandler
 
     private void CapitalizeFirstLetter()
     {
-        var word = string.IsNullOrEmpty(_word.Dictionary.Word) ? _word.Word : _word.Dictionary.Word;
+        string word;
+
+        if (_word.Dictionary == null)
+        {
+            word = _word.Word;
+        }
+        else
+        {
+            word = string.IsNullOrEmpty(_word.Dictionary.Word) ? _word.Word : _word.Dictionary.Word;
+        }
 
         if (string.IsNullOrWhiteSpace(word)) return;
 
@@ -130,11 +139,12 @@ public class WordHandler
 
     public void FormatWord()
     {
+        if (string.IsNullOrWhiteSpace(_word.Word)) return;
         _word.Word = _word.Word.Trim();
         CapitalizeFirstLetter();
     }
 
-    public void Clear()
+    public void ClearModel()
     {
         _word.Word = string.Empty;
         ClearWordDefinition();

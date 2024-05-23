@@ -4,20 +4,66 @@
              x:Class="TocTocToc.App">
     <Application.Resources>
         <ResourceDictionary>
+
+            <Color x:Key="TextColor">#000000</Color>
+            <Color x:Key="TextColorDark">White</Color>
+
+            <Color x:Key="LabelColor">#61007D</Color>
+            <Color x:Key="LabelColorDark">#61007D</Color>
+
+            <Color x:Key="CardBackground">Violet</Color>
+            <Color x:Key="CardBackgroundDark">Violet</Color>
+            <Color x:Key="CardBorderColor">#C96EE3</Color>
+            <Color x:Key="CardBorderColorDark">#61007D</Color>
+
             <Color x:Key="ButtonColorDetails">#CBA3D8</Color>
             <Color x:Key="ButtonColorValidation">#A05EB5</Color>
             <Color x:Key="ButtonBorderColor">#C96EE3</Color>
+            <Color x:Key="ButtonBorderColorDark">#61007D</Color>
 
-            <Color x:Key="LabelColor">#61007D</Color>
+
+
 
             <Style TargetType="NavigationPage" ApplyToDerivedTypes="True">
-                <Setter Property="BackgroundColor" Value="#FFA83F" />
-                <Setter Property="BarBackgroundColor" Value="#61007D" />
-                <Setter Property="BarTextColor" Value="White" />
+                <Setter Property="BackgroundColor" Value="#FFA83F"/>
+                <Setter Property="BarBackgroundColor" Value="#61007D"/>
+                <Setter Property="BarTextColor" Value="White"/>
             </Style>
             <Style TargetType="ContentPage" ApplyToDerivedTypes="True">
-                <Setter Property="BackgroundColor" Value="#FFA83F" />
+                <Setter Property="BackgroundColor" Value="#FFA83F"/>
             </Style>
+
+            <Style x:Key="BaseLabel" TargetType="Label">
+                <Setter Property="TextColor" Value="{AppThemeBinding Dark={StaticResource TextColorDark}, Light={StaticResource TextColor}}"/>
+            </Style>
+
+            <Style x:Key="LabelMicro" TargetType="Label" BasedOn="{StaticResource BaseLabel}">
+                <Setter Property="FontSize" Value="Micro"/>
+                <Setter Property="FontFamily" Value="LatoThin"/>
+            </Style>
+            <Style x:Key="LabelSmall" TargetType="Label" BasedOn="{StaticResource BaseLabel}">
+                <Setter Property="FontSize" Value="Small"/>
+                <Setter Property="FontFamily" Value="LatoRegular"/>
+            </Style>
+
+            <Style x:Key="LabelMedium" TargetType="Label" BasedOn="{StaticResource BaseLabel}">
+                <Setter Property="FontSize" Value="Medium"/>
+                <Setter Property="FontFamily" Value="LatoRegular"/>
+            </Style>
+
+            <Style x:Key="LabelLarge" TargetType="Label" BasedOn="{StaticResource BaseLabel}">
+                <Setter Property="FontSize" Value="Large"/>
+                <Setter Property="FontFamily" Value="LatoBold"/>
+            </Style>
+
+            <Style x:Key="PostViewCell" TargetType="Frame">
+                <Setter Property="HasShadow" 
+                        Value="{OnPlatform Android=true, iOS=false, Default=true}"/>
+                <Setter Property="CornerRadius" Value="20"/>
+                <Setter Property="BorderColor" Value="{AppThemeBinding Dark={StaticResource CardBorderColorDark}, Light={StaticResource CardBorderColor}}"/>
+                <Setter Property="BackgroundColor" Value="{AppThemeBinding Dark={StaticResource CardBackgroundDark}, Light={StaticResource CardBackground}}"/>
+            </Style>
+
         </ResourceDictionary>
     </Application.Resources>
 </Application>

@@ -6,14 +6,6 @@ namespace TocTocToc.Models.Dto;
 
 public class EPayOrderDtoModel
 {
-
-    public EPayOrderDtoModel()
-    {
-        OrderLines = new List<EPayOrderLinesDtoModel>();
-        BillingAddress = new EPayAddressDtoModel();
-        ShippingAddress = new EPayAddressDtoModel();
-    }
-
     // Order
     [JsonProperty("id")]
     public int Id { get; set; }
@@ -65,13 +57,13 @@ public class EPayOrderDtoModel
 
     // Order lines
     [JsonProperty("orderLines")]
-    public List<EPayOrderLinesDtoModel> OrderLines { get; set; }
+    public List<EPayOrderLinesDtoModel> OrderLines { get; set; } = new();
 
     // Billing address
     [JsonProperty("billingAddress")]
-    public EPayAddressDtoModel BillingAddress { get; set; }
+    public EPayAddressDtoModel BillingAddress { get; set; } = new();
 
     // Delivery address
     [JsonProperty("shippingAddress")]
-    public EPayAddressDtoModel ShippingAddress { get; set; }
+    public EPayAddressDtoModel ShippingAddress { get; set; } = new();
 }

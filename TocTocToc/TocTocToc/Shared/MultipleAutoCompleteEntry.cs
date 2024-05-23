@@ -22,6 +22,7 @@ public class MultipleAutoCompleteEntry: IAutoCompeteEntry
 
     private bool _isEndingChar = false;
     private ErrorModel _error = new();
+    private bool _isEditedText = false;
     public bool IsCompletedEntry { get; set; } = false;
     public bool IsEditing { get; set; } = false;
 
@@ -62,7 +63,7 @@ public class MultipleAutoCompleteEntry: IAutoCompeteEntry
     }
 
 
-    public async Task TextChanged(TextChangedEventArgs e)
+    public async Task TextChanged(TextChangedEventArgs e, int cursorPosition)
     {
         if (_autoCompleteEntry.EventOrder.TextChangedDisable)
         {
@@ -92,6 +93,8 @@ public class MultipleAutoCompleteEntry: IAutoCompeteEntry
     public Task ItemTapped(ItemModel itemModel)
     {
         var word = new WordModel { Word = itemModel?.Item, IsInvalid = false, Dictionary = new DictionaryDtoModel()};
+
+
 
         _text.Words.Add(word);
 
@@ -168,7 +171,7 @@ public class MultipleAutoCompleteEntry: IAutoCompeteEntry
     }
 
 
-    private async Task TextChangedHandler(TextChangedEventArgs e)
+    private Task TextChangedHandler(TextChangedEventArgs e)
     {
         var previousText = e.OldTextValue;
         var newTextValue = e.NewTextValue;
@@ -177,31 +180,8 @@ public class MultipleAutoCompleteEntry: IAutoCompeteEntry
         {
             _autoCompleteEntry.EntryItems.Clear();
             _isEndingChar = false;
-            return;
+            return Task.CompletedTask;
         }
-
-        //if (!string.IsNullOrEmpty(previousText))
-        //{
-        //    var compareText = string.Compare(previousText.Trim(), newTextValue.Trim(), StringComparison.Ordinal);
-        //    if (compareText == 0)
-        //    {
-        //        _isEndingChar = false;
-        //        return;
-        //    }
-        //}
-
-        //(var isEdited, _error) = _textHandler.EditTextHandler(newTextValue, previousText);
-        //if (!isEdited)
-        //{
-        //    var isDeleted = _textHandler.DeleteWordsFromText();
-        //    if (isDeleted)
-        //    {
-        //        _autoCompleteEntry.EntryItems.Clear();
-        //        CopyModel.WordModelsToItems(_text.Words, _autoCompleteEntry.EntryItems);
-        //    }
-        //}
-
-        //HandelError(_error);
 
 
         // Text recognition
@@ -209,12 +189,38 @@ public class MultipleAutoCompleteEntry: IAutoCompeteEntry
         if (_isEndingChar)
         {
             HideSuggestions();
-            return;
+            return Task.CompletedTask;
         }
 
-        HandelError(_error);
+        var isTreatedError = IsHandelError(_error);
+        if (isTreatedError) return Task.CompletedTask;
 
-        _textHandler.RefreshTextHandler();
+        if (!string.IsNullOrEmpty(previousText))
+        {
+            var compareText = string.Compare(previousText.Trim(), newTextValue.Trim(), StringComparison.Ordinal);
+            if (compareText == 0)
+            {
+                _isEndingChar = false;
+                return Task.CompletedTask;
+            }
+        }
+
+        (_isEditedText, _error) = _textHandler.EditTextHandler(newTextValue, previousText);
+        if (!_isEditedText)
+        {
+            var isDeleted = _textHandler.DeleteWordsFromText();
+            if (isDeleted)
+            {
+                _autoCompleteEntry.EntryItems.Clear();
+                CopyModel.WordModelsToItems(_text.Words, _autoCompleteEntry.EntryItems);
+            }
+        }
+
+        IsHandelError(_error);
+        return Task.CompletedTask;
+
+
+        //_textHandler.RefreshTextHandler();
     }
 
 
@@ -224,7 +230,7 @@ public class MultipleAutoCompleteEntry: IAutoCompeteEntry
         _autoCompleteEntry.EventOrder.TextCompletedDisable = true;
         _autoCompleteEntry.EventOrder.TextChangedDisable = true;
 
-        if (_text.Words is { Count: > 0 })
+        if (_text.Words is { Count: > 0 } && _text.IsInvalid && _isEditedText)
         {
             await _textHandler.CheckWordsValidityTask();
         }
@@ -235,6 +241,9 @@ public class MultipleAutoCompleteEntry: IAutoCompeteEntry
 
         if (_text.IsInvalid)
         {
+            _textHandler.DeleteInvalidWords();
+            _text.Text = string.Empty;
+            _textHandler.AddWordsToText();
             DeleteInvalidItems();
             HideSuggestions();
             return;
@@ -290,10 +299,11 @@ public class MultipleAutoCompleteEntry: IAutoCompeteEntry
     }
 
 
-    
 
-    private void HandelError(ErrorModel error)
+    private bool IsHandelError(ErrorModel error)
     {
+        var isTreatedError = true;
+
         if (error != null && (error.IsWrongChar || error.IsWrongWord))
         {
             _autoCompleteEntry.EventOrder.TextChangedDisable = true;
@@ -317,10 +327,14 @@ public class MultipleAutoCompleteEntry: IAutoCompeteEntry
                 }
                 NOTIFICATION_HANDLER.SendNotification(ENotificationType.IncorrectValidWord, null);
             }
-
-            _autoCompleteEntry.Error = error;
-                
         }
+        else
+        {
+            isTreatedError = false;
+        }
+
+        _autoCompleteEntry.Error = error;
+        return isTreatedError;
     }
 
 

@@ -20,9 +20,9 @@ public class AutoCompleteEntryHandler: IAutoCompleteEntryHandler
     }
 
 
-    public async Task TextChanged(TextChangedEventArgs e)
+    public async Task TextChanged(TextChangedEventArgs e, int cursorPosition)
     {
-        await _autoCompeteEntry.TextChanged(e);
+        await _autoCompeteEntry.TextChanged(e, cursorPosition);
     }
 
     public async Task ItemTapped(ItemModel itemModel)

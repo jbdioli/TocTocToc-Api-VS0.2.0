@@ -18,10 +18,10 @@ public class AdvertisingHistoryViewModel : BaseViewModel
     private readonly NotificationChannelHandler _notificationChannelHandler = new(new DisplayNotification());
     private readonly HttpRequestChannelHandler _httpRequestChannelHandler = new(new AdvertisingStorageServiceChannel());
 
-    public ObservableCollection<AdvertisingModel> ObserverAdvertisingViewModels { get; set; } = new ();
+    public ObservableCollection<AdvertisingModel> ObserverAdvertisingViewModels { get; set; } = [];
 
-    private List<AdvertisingModel> _advertisingModel = new();
-    private List<AdvertisingDtoModel> _advertisementsDto = new();
+    private List<AdvertisingModel> _advertisingModel = [];
+    private List<AdvertisingDtoModel> _advertisementsDto = [];
 
     private IDisposable _disposed = null;
 

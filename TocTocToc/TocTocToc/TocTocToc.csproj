@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
@@ -12,9 +12,35 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Resources\Fonts\Lato\Lato-Black.ttf" />
+    <None Remove="Resources\Fonts\Lato\Lato-BlackItalic.ttf" />
+    <None Remove="Resources\Fonts\Lato\Lato-Bold.ttf" />
+    <None Remove="Resources\Fonts\Lato\Lato-BoldItalic.ttf" />
+    <None Remove="Resources\Fonts\Lato\Lato-Italic.ttf" />
+    <None Remove="Resources\Fonts\Lato\Lato-Light.ttf" />
+    <None Remove="Resources\Fonts\Lato\Lato-LightItalic.ttf" />
+    <None Remove="Resources\Fonts\Lato\Lato-Regular.ttf" />
+    <None Remove="Resources\Fonts\Lato\Lato-Thin.ttf" />
+    <None Remove="Resources\Fonts\Lato\Lato-ThinItalic.ttf" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\Fonts\Lato\Lato-Black.ttf" />
+    <EmbeddedResource Include="Resources\Fonts\Lato\Lato-BlackItalic.ttf" />
+    <EmbeddedResource Include="Resources\Fonts\Lato\Lato-Bold.ttf" />
+    <EmbeddedResource Include="Resources\Fonts\Lato\Lato-BoldItalic.ttf" />
+    <EmbeddedResource Include="Resources\Fonts\Lato\Lato-Italic.ttf" />
+    <EmbeddedResource Include="Resources\Fonts\Lato\Lato-Light.ttf" />
+    <EmbeddedResource Include="Resources\Fonts\Lato\Lato-LightItalic.ttf" />
+    <EmbeddedResource Include="Resources\Fonts\Lato\Lato-Regular.ttf" />
+    <EmbeddedResource Include="Resources\Fonts\Lato\Lato-Thin.ttf" />
+    <EmbeddedResource Include="Resources\Fonts\Lato\Lato-ThinItalic.ttf" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.2" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
-    <PackageReference Include="Stripe.net" Version="43.7.0" />
+    <PackageReference Include="Stripe.net" Version="43.17.0" />
     <PackageReference Include="System.Reactive" Version="6.0.0" />
     <PackageReference Include="Xamarin.CommunityToolkit" Version="2.0.6" />
     <PackageReference Include="Xamarin.Forms" Version="5.0.0.2622" />
@@ -43,9 +69,15 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>AppResources.resx</DependentUpon>
     </Compile>
+    <Compile Update="Views\BlogAddOrEditPage.xaml.cs">
+      <DependentUpon>BlogAddOrEditPage.xaml</DependentUpon>
+    </Compile>
   </ItemGroup>
 
   <ItemGroup>
+    <EmbeddedResource Update="Cells\BlogPostViewCell.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
     <EmbeddedResource Update="Popup\AdvertisingDisplayPopup.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
@@ -85,6 +117,9 @@
     </EmbeddedResource>
     <EmbeddedResource Update="Views\AuthPage.xaml">
       <Generator>MSBuild:Compile</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Views\BlogAddOrEditPage.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
     <EmbeddedResource Update="Views\BlogPage.xaml">
       <Generator>MSBuild:Compile</Generator>

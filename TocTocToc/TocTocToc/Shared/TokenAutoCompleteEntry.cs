@@ -27,7 +27,7 @@ public class TokenAutoCompleteEntry: IAutoCompeteEntry
     }
 
 
-    public Task TextChanged(TextChangedEventArgs e)
+    public Task TextChanged(TextChangedEventArgs e, int cursorPosition)
     {
         if (IsEditing)
         {

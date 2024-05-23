@@ -1,17 +1,61 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:view="clr-namespace:TocTocToc.Models.View;assembly=TocTocToc"
+             xmlns:cells="clr-namespace:TocTocToc.Cells;assembly=TocTocToc"
              x:Class="TocTocToc.Views.BlogPage">
+    <ContentPage.BindingContext>
+        <view:BlogViewModel/>
+    </ContentPage.BindingContext>
     <ContentPage.ToolbarItems>
         <ToolbarItem Text="Blog"
                      Order="Primary"
                      Priority="0" />
     </ContentPage.ToolbarItems>
     <ContentPage.Content>
-        <StackLayout>
-            <Label Text="Welcome to Xamarin.Forms!"
-                VerticalOptions="CenterAndExpand"
-                HorizontalOptions="CenterAndExpand" />
-        </StackLayout>
+        <Grid RowDefinitions="*, Auto" ColumnDefinitions="Auto">
+            <ActivityIndicator Grid.RowSpan="1" IsVisible="{Binding IsBusy}" IsRunning="{Binding IsBusy}"  Margin="150"  Color="White"/>
+
+            <ScrollView Grid.Row="0">
+
+                <Grid RowDefinitions="*, Auto" ColumnDefinitions="Auto">
+                    <StackLayout Grid.Row="0">
+                        <Grid RowDefinitions="200" ColumnDefinitions="150, *">
+                            <Image Grid.Column="0"
+                                   Source="Johnny_Depp.jpg"
+                                   HeightRequest="180" WidthRequest="180"
+                                   HorizontalOptions="Center" VerticalOptions="Center"/>
+                            <Frame Grid.Column="1" 
+                                   BorderColor="DarkViolet" BackgroundColor="Violet"
+                                   CornerRadius="20" WidthRequest="150" HeightRequest="150"
+                                   VerticalOptions="Center" HorizontalOptions="Center">
+                            </Frame>
+                        </Grid>
+                    </StackLayout>
+                    <CollectionView Grid.Row="1"
+                                ItemsSource="{Binding PostsCollection}"
+                                BackgroundColor="Transparent">
+                        <CollectionView.EmptyView>
+                            <StackLayout Padding="20">
+                                <Label HorizontalOptions="Center" Text="No Blog yet ..." TextColor="Black" FontSize="Title"/>
+                            </StackLayout>
+                        </CollectionView.EmptyView>
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate>
+                                <cells:BlogPostViewCell/>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+                </Grid>
+
+            </ScrollView>
+        <Button Grid.Row="1"
+                Command="{Binding OpenAddOrHistoryBlogPageTaskCommand}"
+                ImageSource="add_circle_white.png"
+                BorderColor="#C96EE3"
+                BorderWidth="1"
+                BackgroundColor="#61007D"/>
+
+        </Grid>
     </ContentPage.Content>
 </ContentPage>

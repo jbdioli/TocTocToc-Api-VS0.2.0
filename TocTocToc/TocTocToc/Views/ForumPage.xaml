@@ -1,17 +1,55 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="TocTocToc.Views.ForumPage">
+             xmlns:view="clr-namespace:TocTocToc.Models.View;assembly=TocTocToc"
+             xmlns:xct="http://xamarin.com/schemas/2020/toolkit"
+             x:Class="TocTocToc.Views.ForumPage"
+             x:DataType="view:ForumViewModel">
+    <ContentPage.BindingContext>
+        <view:ForumViewModel/>
+    </ContentPage.BindingContext>
     <ContentPage.ToolbarItems>
         <ToolbarItem Text="Forum"
                      Order="Primary"
                      Priority="0" />
     </ContentPage.ToolbarItems>
     <ContentPage.Content>
-        <StackLayout>
-            <Label Text="Welcome to Xamarin.Forms!"
-                VerticalOptions="CenterAndExpand"
-                HorizontalOptions="CenterAndExpand" />
-        </StackLayout>
+        <Grid RowDefinitions="*, Auto" ColumnDefinitions="Auto">
+            <ActivityIndicator Grid.RowSpan="1" Margin="150"  Color="White"/>
+            <ScrollView Grid.Row="0">
+                <Grid RowDefinitions="40,40,*" ColumnDefinitions="20,*,20">
+                    <Entry Grid.Row="1" Grid.Column="1" 
+                           IsEnabled="{Binding IsEnabled}"
+                           Text="{Binding TextTest}"
+                           CursorPosition="{Binding TextCursorPosition, Mode=TwoWay}"
+                           Margin="0"
+                           TextColor="Black"
+                           IsSpellCheckEnabled="True"
+                           Placeholder="{xct:Translate LabelInterests}">
+                        <Entry.Behaviors>
+                            <xct:EventToCommandBehavior
+                                EventName="TextChanged"
+                                Command="{Binding TextChangedAsyncCommand}"/>
+                            <xct:EventToCommandBehavior 
+                                EventName="Unfocused"
+                                Command="{Binding UnfocusedAsyncCommand}"/>
+                        </Entry.Behaviors>
+                    </Entry>
+                </Grid>
+            </ScrollView>
+
+            <Button Grid.Row="1"
+                    Command="{Binding IsAsyncCommand}"
+                    Text="Enable Entry"
+                    BorderWidth="1"/>
+        </Grid>
     </ContentPage.Content>
 </ContentPage>
+
+
+<!--<Button Grid.Row="1"
+                    Command="{Binding IsAsyncCommand}"
+                    ImageSource="add_circle_white.png"
+                    BorderColor="#C96EE3"
+                    BorderWidth="1"
+                    BackgroundColor="#61007D"/>-->

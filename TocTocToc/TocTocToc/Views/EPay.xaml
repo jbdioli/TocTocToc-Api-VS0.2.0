@@ -137,7 +137,7 @@
                            x:Name="XNameState"
                            Placeholder="State" FontSize="Body"
                            TextColor="{Binding IsState, Converter={StaticResource isValidValue}, ConverterParameter='TextError'}"
-                           Text="{Binding AddressDetails.State}" PropertyChanged="OnState" Completed="OnStateEnterKey"/>
+                           Text="{Binding EPayOrder.BillingAddress.State}" PropertyChanged="OnState" Completed="OnStateEnterKey"/>
                     <Entry Grid.Row="3" Grid.Column="1"
                            x:Name="XNameCountry"
                            Placeholder="Country" FontSize="Body"

@@ -38,7 +38,7 @@ public class SingleAutoCompleteEntry: IAutoCompeteEntry
     }
 
 
-    public async Task TextChanged(TextChangedEventArgs e)
+    public async Task TextChanged(TextChangedEventArgs e, int cursorPosition)
     {
         if (IsEditing)
         {

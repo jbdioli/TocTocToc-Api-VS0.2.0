@@ -466,7 +466,7 @@ public partial class AreaSelectPopupViewModel : AreaSelectedModel
         }
 
         IsStateReturnButton = !string.IsNullOrEmpty(e.NewTextValue);
-        await _autoCompleteStateEntryHandler.TextChanged(e);
+        await _autoCompleteStateEntryHandler.TextChanged(e, 0); // Attention CursorPosition a faire
 
         IsStateSuggestion = AutoCompleteStateEntry.IsSuggestionView;
         
@@ -629,7 +629,7 @@ public partial class AreaSelectPopupViewModel : AreaSelectedModel
 
 
         IsCountyReturnButton = !string.IsNullOrEmpty(e.NewTextValue);
-        await _autoCompleteCountyEntryHandler.TextChanged(e);
+        await _autoCompleteCountyEntryHandler.TextChanged(e, 0); // cursor position a faire
 
         IsCountySuggestion = AutoCompleteCountyEntry.IsSuggestionView;
         CountiesSuggestion.Clear();
@@ -763,7 +763,7 @@ public partial class AreaSelectPopupViewModel : AreaSelectedModel
         if (_isCityTapped) return;
 
         IsCityReturnButton = !string.IsNullOrEmpty(e.NewTextValue);
-        await _autoCompleteCityEntryHandler.TextChanged(e);
+        await _autoCompleteCityEntryHandler.TextChanged(e, 0); // Attention cursor 
 
         IsCitySuggestion = AutoCompleteCityEntry.IsSuggestionView;
         CitiesSuggestion.Clear();
